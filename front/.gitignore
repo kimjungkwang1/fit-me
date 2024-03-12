@@ -9,7 +9,6 @@ package-lock.json
 
 # testing
 /coverage
-/src/test.tsx
 
 # production
 /build
@@ -28,3 +27,6 @@ yarn-error.log*
 
 # Contentlayer
 .contentlayer
+
+# Test File
+src/pages/test.tsx
