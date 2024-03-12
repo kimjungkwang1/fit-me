@@ -3,6 +3,8 @@ package site.chachacha.fitme.product.entity;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -31,7 +33,14 @@ public class Product extends BaseEntity {
 
     private String name;
 
+    @Enumerated(EnumType.ORDINAL)
+    private Gender gender;  // MALE = 0, FEMALE = 1, UNISEX = 2
+
+    private String ageRange;
+
     private Integer price;
 
-    private String imgUrl;
+    private String mainImageUrl;
+
+    private String detailImageUrl;
 }
