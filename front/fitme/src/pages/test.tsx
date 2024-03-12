@@ -5,7 +5,11 @@ import TestPage from '../pages/login';
 const test: React.FC = () => {
   return (
     <>
-      <TestPage></TestPage>
+      <div className='flex justify-center'>
+        <div className='aspect-iphone h-screen'>
+          <TestPage></TestPage>
+        </div>
+      </div>
     </>
   );
 };
