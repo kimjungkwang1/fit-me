@@ -9,6 +9,7 @@ package-lock.json
 
 # testing
 /coverage
+/src/test.tsx
 
 # production
 /build
