@@ -1,6 +1,5 @@
 import React from 'react';
-import { Tabs } from 'flowbite-react';
-import { Button } from 'flowbite-react';
+import { Tabs, Button } from 'flowbite-react';
 import DressroomNowFitting from '../components/dressroom/dressroomNowFitting';
 import DressroomItemList from '../components/dressroom/dressroomItemList';
 import DressroomMyFittingList from '../components/dressroom/dressroomMyFittingList';
