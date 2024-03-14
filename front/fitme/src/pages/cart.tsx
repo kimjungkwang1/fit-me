@@ -38,20 +38,24 @@ const address = {
 export default function Cart() {
   return (
     <>
-      <Button color='gray' className='mb-2 w-[100%]'>
-        피팅룸 가기
-      </Button>
-      <CartItem item={item1}></CartItem>
-      <CartItem item={item2}></CartItem>
-      <CartItem item={item3}></CartItem>
-      <CartItem item={item3}></CartItem>
-      <CartItem item={item3}></CartItem>
-      <CartItem item={item3}></CartItem>
-      <CartItem item={item3}></CartItem>
-      <CartAddress address={address}></CartAddress>
-      <Button color='gray' className='my-2 w-[100%]'>
-        결제하기 |200,000
-      </Button>
+      <div className='flex justify-center'>
+        <div className='aspect-iphone h-screen'>
+          <Button color='gray' className='mb-2 w-[100%]'>
+            피팅룸 가기
+          </Button>
+          <CartItem item={item1}></CartItem>
+          <CartItem item={item2}></CartItem>
+          <CartItem item={item3}></CartItem>
+          <CartItem item={item3}></CartItem>
+          <CartItem item={item3}></CartItem>
+          <CartItem item={item3}></CartItem>
+          <CartItem item={item3}></CartItem>
+          <CartAddress address={address}></CartAddress>
+          <Button color='gray' className='my-2 w-[100%]'>
+            결제하기 |200,000
+          </Button>
+        </div>
+      </div>
     </>
   );
 }
