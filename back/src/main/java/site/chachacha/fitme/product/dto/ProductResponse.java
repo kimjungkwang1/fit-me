@@ -14,9 +14,9 @@ public class ProductResponse {
     private Integer price;
     private String mainImageUrl;
     private BrandResponse brand;
-    private Integer likeCount;
-    private Double reviewRating;
-    private Integer reviewCount;
+    private int likeCount;
+    private double reviewRating;
+    private int reviewCount;
 
     public ProductResponse(Long id, String name, Integer price, String mainImageUrl, BrandResponse brand, Integer likeCount, Double reviewRating,
         Integer reviewCount) {
