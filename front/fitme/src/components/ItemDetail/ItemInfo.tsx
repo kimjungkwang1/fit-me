@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ItemImg from '../../assets/temp_item_detail.png';
+import { TbThumbUpFilled } from 'react-icons/tb';
 import Tags from '../Common/Tags';
 
 export default function ItemInfo() {
+  const [like, setLike] = useState(false);
+  const likeHandler = () => {
+    setLike(!like);
+  };
+
   return (
     <div>
       {/* 상품 이미지 */}
-      <div className='flex w-full aspect-square bg-orange-100 justify-center'>
+      <div className='flex w-full aspect-square bg-orange-100 justify-center relative'>
         <img src={ItemImg} alt='item_detail' className='h-full' />
+        {like ? (
+          <TbThumbUpFilled
+            onClick={likeHandler}
+            className='absolute bottom-[5px] right-[5px] w-10 h-10 text-brown bg-lightbrown rounded-full p-1'
+          />
+        ) : (
+          <TbThumbUpFilled
+            onClick={likeHandler}
+            className='absolute bottom-[5px] right-[5px] w-10 h-10 text-white bg-lightbrown rounded-full p-1'
+          />
+        )}
       </div>
 
       {/* 상품 정보 */}
