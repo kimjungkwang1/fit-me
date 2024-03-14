@@ -1,4 +1,4 @@
-package site.chachacha.fitme.category.entity;
+package site.chachacha.fitme.tag.entity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -9,11 +9,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -21,8 +20,7 @@ public class Category {
 
     private String name;
 
-    public Category(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 }
-
