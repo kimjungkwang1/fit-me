@@ -33,16 +33,23 @@ repositories {
 
 dependencies {
 	// Web
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	// Security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'com.auth0:java-jwt:4.4.0'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+
+		// JWT
+		implementation 'com.auth0:java-jwt:4.4.0'
 
 	// DB
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// MySql
-	implementation 'mysql:mysql-connector-java:8.0.33'
+		// JPA
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+		// MySql
+		implementation 'mysql:mysql-connector-java:8.0.33'
+		// Redis
+		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 		// Querydsl
 		implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
 		annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
@@ -57,7 +64,9 @@ dependencies {
 		// AWS Parameter Store
 		implementation 'io.awspring.cloud:spring-cloud-starter-aws-parameter-store-config:2.3.3'
 
+	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 }
 
 tasks.named('test') {
@@ -77,6 +86,6 @@ tasks.withType(JavaCompile) {
 }
 
 clean.doLast {
-	file(querydslDir).deleteDir()
+	file(generated).deleteDir()
 }
 // querydsl 추가 끝
