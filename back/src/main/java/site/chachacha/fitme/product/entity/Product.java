@@ -62,20 +62,28 @@ public class Product extends BaseEntity {
 
     private int likeCount = 0;
 
-    private String mainImageUrl;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<MainImage> mainImage;
 
-    private String detailImageUrl;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<DetailImage> detailImage;
 
     @Builder
-    public Product(Brand brand, Category category, String name, Gender gender, String ageRange, Integer price, String mainImageUrl,
-        String detailImageUrl) {
+    public Product(Brand brand, Category category, String name, Gender gender, String ageRange, Integer price) {
         this.brand = brand;
         this.category = category;
         this.name = name;
         this.gender = gender;
         this.ageRange = ageRange;
         this.price = price;
-        this.mainImageUrl = mainImageUrl;
-        this.detailImageUrl = detailImageUrl;
+    }
+
+    // == 연관관계 메소드 == //
+    public void addMainImage(MainImage mainImage) {
+        this.mainImage.add(mainImage);
+    }
+
+    public void addDetailImage(DetailImage detailImage) {
+        this.detailImage.add(detailImage);
     }
 }
