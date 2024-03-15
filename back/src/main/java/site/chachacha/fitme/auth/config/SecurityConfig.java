@@ -27,20 +27,12 @@ import site.chachacha.fitme.auth.service.JwtService;
 //@EnableGlobalMethodSecurity(securedEnabled = true) // secured 어노테이션 활성화
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    //    private final MemberAuthenticationProvider memberAuthenticationProvider;
-    private final MemberLogInSuccessHandler memberLogInSuccessHandler;
-    private final MemberLogInFailureHandler memberLogInFailureHandler;
-
     // JWT
-    private final JwtService jwtService;
     private final JwtLogoutHandler jwtLogoutHandler;
 
     private final AuthenticationProcessFilter authenticationProcessFilter;
 
     private final CorsConfig corsConfig;
-
-    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
