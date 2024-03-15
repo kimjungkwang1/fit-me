@@ -36,8 +36,6 @@ public class AuthRestController {
     private final AuthService authService;
     private final OAuthService oauthService;
 
-    private final ObjectMapper objectMapper;
-
     @Value("${KAKAO.CLIENT.ID}")
     private String kakaoClientId;
 
@@ -69,9 +67,9 @@ public class AuthRestController {
         KakaoOAuthResponse kakaoOAuthResponse = oauthService.requestKakao(provider, code, requestUrl);
 
         // DB에 사용자 정보, Access Token, Refresh Token 저장
-        MemberResponse member = authService.signIn(kakaoOAuthResponse, response);
+        MemberResponse memberResponse = authService.signIn(kakaoOAuthResponse, response);
 
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(memberResponse);
     }
 
     @PostMapping(value = "/reissue/v1", consumes = APPLICATION_JSON_VALUE)
@@ -89,7 +87,7 @@ public class AuthRestController {
 
     // Refresh Token이 유효하지 않으면 || Refresh Token이 DB에 없으면 || Device Token이 DB에 없으면
     @ExceptionHandler({JWTVerificationException.class, NoSuchRefreshTokenException.class,
-        InvalidRefreshTokenException.class})
+        InvalidRefreshTokenException.class, IOException.class})
 //    , NoSuchDeviceTokenException.class
     public ResponseEntity<?> handleUnauthorized(Exception e, HttpServletResponse response) {
         // ToDo: null 해도 되는지 테스트

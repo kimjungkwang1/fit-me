@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.chachacha.fitme.auth.entity.Token;
 import site.chachacha.fitme.entity.BaseEntity;
+import site.chachacha.fitme.member.dto.MemberUpdate;
 import site.chachacha.fitme.util.RandomNickname;
 
 @Getter
@@ -66,4 +67,11 @@ public class Member extends BaseEntity {
     }
 
     // == 비즈니스 로직 == //
+    public void updateProfile(MemberUpdate memberUpdate) {
+        this.nickname = memberUpdate.getNickname();
+        this.gender = memberUpdate.getGender();
+        this.phoneNumber = memberUpdate.getPhoneNumber();
+        this.birthYear = memberUpdate.getBirthYear();
+        this.address = memberUpdate.getAddress();
+    }
 }
