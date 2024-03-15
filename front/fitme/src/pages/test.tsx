@@ -5,7 +5,7 @@ import ItemDetailPage from './FeedDetailPage';
 const test: React.FC = () => {
   return (
     <>
-      <SearchPage />
+      <ItemDetailPage />
     </>
   );
 };
