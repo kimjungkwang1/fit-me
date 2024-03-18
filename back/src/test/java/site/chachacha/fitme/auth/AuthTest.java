@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -45,24 +46,17 @@ public class AuthTest {
 
     @BeforeAll
     void setUp() {
-        // given
-        // 회원을 추가한다.
-        String query = "insert into token(id, resource_access_token, resource_refresh_token)\n"
-            + "values (1, 'Lvh31CT47fVR1jjBjbyaXb4YktdIV0CH-esKPXSYAAABjjGdF93dCc_9be4aqQ', 'A5VQHjXAbo8CE4SxPvAEleohB33aUGh-afAKPXSYAAABjjGdF9bdCc_9be4aqQ');\n"
-            + "\n"
-            + "insert into member(id, provider_id, nickname, is_deleted, created_date, last_modified_date, token_id)\n"
-            + "values (1, 3385504415, 'Cha Cha', 0, '2024-03-12 16:42:42.836998', '2024-03-12 16:42:43.216710', 1);";
-
-        // RefreshToken을 Redis에 저장한다.
-        refreshToken = jwtService.issueJwts(1L)[1];
-        jwtService.saveRefreshTokenToRedis(refreshToken, 1L);
-
+        // 테스트용 데이터베이스 초기화
         try (Connection connection = dataSource.getConnection()) {
-            executeSqlScript(connection, new ByteArrayResource(query.getBytes()));
+            executeSqlScript(connection, new FileSystemResource("src/test/resources/sql/data-h2.sql"));
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        // RefreshToken을 Redis에 저장한다.
+        refreshToken = jwtService.issueJwts(1L)[1];
+        jwtService.saveRefreshTokenToRedis(refreshToken, 1L);
     }
 
     @Test
