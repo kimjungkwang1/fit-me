@@ -5,7 +5,7 @@ spring:
     config:
         import: 'aws-parameterstore:'
         activate:
-            on-profile: local
+            on-profile: dev
 
     datasource:
         url: jdbc:mysql://${MY_SQL.HOST}:${MY_SQL.PORT}/${MY_SQL.DATABASE}?useSSL=false&serverTimezone=Asia/Seoul
