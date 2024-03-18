@@ -21,7 +21,7 @@ spring:
                 format_sql: true
 
     redis:
-        host: localhost
+        host: ${REDIS.HOST}
         port: 6379
 
 # JWT
