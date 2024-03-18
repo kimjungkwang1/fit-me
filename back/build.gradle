@@ -65,8 +65,13 @@ dependencies {
 		implementation 'io.awspring.cloud:spring-cloud-starter-aws-parameter-store-config:2.3.3'
 
 	// Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+		// H2
+		testImplementation 'com.h2database:h2'
+		// Redis
+		testImplementation 'it.ozimov:embedded-redis:0.7.2'
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'org.junit.jupiter:junit-jupiter-api'
 }
 
 tasks.named('test') {
