@@ -18,7 +18,9 @@ import site.chachacha.fitme.entity.BaseEntity;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class DetailImage extends BaseEntity {
-    @Id @GeneratedValue(strategy = IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @NotBlank
@@ -31,7 +33,6 @@ public class DetailImage extends BaseEntity {
     private DetailImage(String url, Product product) {
         this.url = url;
         this.product = product;
-
         this.product.addDetailImage(this);
     }
 }
