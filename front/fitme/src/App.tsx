@@ -1,10 +1,47 @@
-import React from 'react';
 import Test from './pages/test';
+import { Route, Routes } from 'react-router-dom';
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/login';
+import SignupPage from './pages/signup';
+import CategoryPage from './pages/CategoryPage';
+import ItemDetailPage from './pages/ItemDetailPage';
+import SearchPage from './pages/SearchPage';
+import CartPage from './pages/cart';
+import DressroomPage from './pages/dressroom';
+import FeedPage from './pages/FeedPage';
+import FeedDetailPage from './pages/FeedDetailPage';
+import MyFeedPage from './pages/MyFeedPage';
+import FeedWritePage from './pages/FeedWritePage';
+// import HeaderBar from './components/headerBar';
+// import FooterBar from './components/footerBar';
 
 function App() {
   return (
     <>
-      <Test></Test>
+      <Routes>
+        {/* Test 페이지 남겨뒀습니다 */}
+        <Route path='/test' element={<Test />} />
+
+        <Route path='/' element={<MainPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/signup' element={<SignupPage />} />
+        <Route path='/category' element={<CategoryPage />} />
+        <Route path='/detail/:item_code' element={<ItemDetailPage />} />
+        <Route path='/search' element={<SearchPage />} />
+        <Route path='/cart' element={<CartPage />} />
+        {/* /payment/complete 페이지 아직 없음 */}
+        <Route path='/payment/complete' element={<LoginPage />} />
+        <Route path='/dressroom' element={<DressroomPage />} />
+        {/* /mypage 페이지 아직 없음 */}
+        <Route path='/mypage' element={<LoginPage />} />
+        <Route path='/feed' element={<FeedPage />} />
+        <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
+        <Route path='/feed/myfeed' element={<MyFeedPage />} />
+        <Route path='/feed/write' element={<FeedWritePage />} />
+      </Routes>
+
+      {/* <HeaderBar /> */}
+      {/* <FooterBar /> */}
     </>
   );
 }
