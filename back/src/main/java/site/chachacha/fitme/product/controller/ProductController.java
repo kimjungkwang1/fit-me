@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import site.chachacha.fitme.annotation.MemberId;
 import site.chachacha.fitme.product.dto.ProductDetailResponse;
 import site.chachacha.fitme.product.dto.ProductResponse;
 import site.chachacha.fitme.product.dto.ProductSearchRequest;
@@ -18,9 +19,6 @@ import site.chachacha.fitme.product.service.ProductService;
 @RequiredArgsConstructor
 @RestController
 public class ProductController {
-
-    //TODO: 커스텀 어노테이션 구현 후 변경 예정
-    private Long meberId = 1L;
 
     private final ProductService productService;
 
@@ -33,8 +31,8 @@ public class ProductController {
 
     // 상품 상세 조회
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable Long productId) {
-        ProductDetailResponse response = productService.getProduct(productId, meberId);
+    public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable(name = "productId") Long productId, @MemberId Long memberId) {
+        ProductDetailResponse response = productService.getProduct(productId, memberId);
         return ResponseEntity.ok(response);
     }
 }

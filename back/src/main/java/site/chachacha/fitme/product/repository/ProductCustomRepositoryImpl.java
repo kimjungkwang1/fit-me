@@ -4,7 +4,9 @@ import static site.chachacha.fitme.brand.entity.QBrand.brand;
 import static site.chachacha.fitme.product.entity.QProduct.product;
 import static site.chachacha.fitme.review.entity.QProductReview.productReview;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
 import java.util.List;
@@ -20,7 +22,6 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     //Querydsl을 사용하여 JPA 쿼리를 생성하고 실행하기 위한 클래스
     private final JPAQueryFactory queryFactory;
 
-    //TODO: sortBy 조건 고려해서 바꿔야함
     @Override
     public List<Product> findAllByProductConditions(Long lastId, Integer size, Integer gender, String ageRange, List<Long> brandIds,
         List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
@@ -39,8 +40,24 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
                 loeEndPrice(endPrice)
             )
             .limit(size)
-            .orderBy(product.id.desc())
+            .orderBy(getOrderSpecifier(sortBy))
             .fetch();
+    }
+
+    // 정렬 조건 반환
+    private OrderSpecifier<?>[] getOrderSpecifier(String sortBy) {
+
+        // 최신순 정렬
+        if ("latest".equals(sortBy)) {
+            return new OrderSpecifier<?>[]{product.id.desc()};
+        }
+
+        // 인기순 정렬
+        // 구매(7), 좋아요(2), 조회(1)
+        NumberExpression<Integer> popularityScore = product.orderCount.multiply(7)
+            .add(product.likeCount.multiply(2))
+            .add(product.viewCount);
+        return new OrderSpecifier<?>[]{popularityScore.desc()};
     }
 
     private BooleanExpression gtLastId(Long lastId) {
