@@ -3,7 +3,35 @@ import ItemImg from '../../assets/temp_item_detail.png';
 import { TbThumbUpFilled } from 'react-icons/tb';
 import Tags from '../Common/Tags';
 
-export default function ItemInfo() {
+type BrandType = {
+  id: number;
+  name: string;
+};
+
+type TagType = {
+  id: number;
+  name: string;
+};
+
+type ItemInfoProps = {
+  mainImageUrl: string[];
+  likeCount: number;
+  liked: boolean;
+  brand: BrandType;
+  name: string;
+  price: number;
+  tags: TagType;
+};
+
+export default function ItemInfo({
+  mainImageUrl,
+  likeCount,
+  liked,
+  brand,
+  name,
+  price,
+  tags,
+}: ItemInfoProps) {
   const [like, setLike] = useState(false);
   const likeHandler = () => {
     setLike(!like);
@@ -30,15 +58,22 @@ export default function ItemInfo() {
       {/* 상품 정보 */}
       <div className='m-[3%]'>
         <div>
-          <span className='text-sm font-semibold'>쇼핑몰 이름</span>
-        </div>
-        <div>
-          <span className='text-lg font-semibold'>
-            상품이름이아주길고길고긴데정말길어도잘리지않고아랫줄로내려가요
+          <span className='text-sm font-semibold'>
+            {/* 브랜드 이름 */}
+            {brand.name}
           </span>
         </div>
         <div>
-          <span className='text-2xl font-bold'>23,900원</span>
+          <span className='text-lg font-semibold'>
+            {/* 상품 이름 */}
+            {name}
+          </span>
+        </div>
+        <div>
+          <span className='text-2xl font-bold'>
+            {/* 상품 가격 */}
+            {price.toLocaleString()}
+          </span>
         </div>
         <div>
           <Tags tag='하의' />
