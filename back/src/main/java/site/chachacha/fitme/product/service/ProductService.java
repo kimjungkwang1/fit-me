@@ -26,7 +26,6 @@ public class ProductService {
     private final ProductCustomRepository productCustomRepository;
     private final ProductLikeRepository productLikeRepository;
 
-    //TODO: sortBy 조건 고려해서 바꿔야함, 현재는 최신 등록순으로 상품 가져옴
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
 
         List<Product> products = productCustomRepository.findAllByProductConditions(
@@ -44,13 +43,13 @@ public class ProductService {
     }
 
     public ProductDetailResponse getProduct(Long productId, Long memberId) {
-
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         boolean liked = productLikeRepository.existsByProductAndMemberId(product, memberId);
         Integer reviewCount = product.getProductReviews().size();
         Double reviewRating = calculateReviewRating(product.getProductReviews());
         return ProductDetailResponse.of(product, liked, reviewRating, reviewCount);
     }
+
 
     private double calculateReviewRating(List<ProductReview> productReviews) {
         if (productReviews.isEmpty()) {
