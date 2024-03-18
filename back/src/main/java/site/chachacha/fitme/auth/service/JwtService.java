@@ -67,9 +67,13 @@ public class JwtService {
 
     // access token, refresh token을 발급, DB에 저장한다.
 //    @Transactional
-    public String[] issueJwts(@NotNull Long memberId) {
+    public String[] issueJwts(@NotNull Long memberId) throws NoSuchMemberException {
 //        , Member member
 //        , DeviceToken deviceToken) {
+        // member를 DB에서 조회한다.
+        Member member = memberRepository.findNotDeletedById(memberId)
+            .orElseThrow(NoSuchMemberException::new);
+
         // refresh token을 발급한다.
         String newRefreshToken = JWT.create()
             .withIssuer("FitMe")
