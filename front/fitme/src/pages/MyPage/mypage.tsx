@@ -21,27 +21,23 @@ const Mypage: React.FC = () => {
 
   return (
     <>
-      <div className='flex justify-center'>
-        <div className='aspect-iphone h-screen'>
-          <div className='bg-white'>
-            <nav className='flex'>
-              <button className={getButtonStyle('bought')} onClick={() => setSelectedTab('bought')}>
-                구매 목록
-              </button>
-              <button className={getButtonStyle('fav')} onClick={() => setSelectedTab('fav')}>
-                좋아요 한 상품
-              </button>
-              <button className={getButtonStyle('order')} onClick={() => setSelectedTab('order')}>
-                주문내역
-              </button>
-              <button className={getButtonStyle('modify')} onClick={() => setSelectedTab('modify')}>
-                정보 수정
-              </button>
-            </nav>
-          </div>
-          {getContent(selectedTab)}
-        </div>
+      <div className='bg-white'>
+        <nav className='flex'>
+          <button className={getButtonStyle('bought')} onClick={() => setSelectedTab('bought')}>
+            구매 목록
+          </button>
+          <button className={getButtonStyle('fav')} onClick={() => setSelectedTab('fav')}>
+            좋아요 한 상품
+          </button>
+          <button className={getButtonStyle('order')} onClick={() => setSelectedTab('order')}>
+            주문내역
+          </button>
+          <button className={getButtonStyle('modify')} onClick={() => setSelectedTab('modify')}>
+            정보 수정
+          </button>
+        </nav>
       </div>
+      {getContent(selectedTab)}
     </>
   );
 };
