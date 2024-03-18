@@ -45,6 +45,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductLike> productLikes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ProductView> productViews = new ArrayList<>();
+
     @OneToMany(mappedBy = "product")
     private List<ProductReview> productReviews = new ArrayList<>();
 
@@ -60,11 +63,9 @@ public class Product extends BaseEntity {
 
     private Integer price;
 
-    private int orderCount = 0;
-
     private int likeCount = 0;
 
-    private int viewCount = 0;
+    private int monthlyPopularityScore = 0;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductOption> productOptions;
