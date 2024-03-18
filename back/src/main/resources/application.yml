@@ -38,8 +38,8 @@ logging:
 
 # aws paramstore
 aws:
-  paramstore:
-    enabled: true
-    prefix: /FitMe
-    name: WAS
-    profileSeparator: _
+    paramstore:
+        enabled: true
+        prefix: /FitMe
+        name: WAS
+        profileSeparator: _
