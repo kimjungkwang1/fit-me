@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.chachacha.fitme.annotation.MemberId;
 import site.chachacha.fitme.product.dto.ProductDetailResponse;
+import site.chachacha.fitme.product.dto.ProductOptionResponse;
 import site.chachacha.fitme.product.dto.ProductResponse;
 import site.chachacha.fitme.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.product.service.ProductService;
@@ -34,5 +35,12 @@ public class ProductController {
     public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable(name = "productId") Long productId, @MemberId Long memberId) {
         ProductDetailResponse response = productService.getProduct(productId, memberId);
         return ResponseEntity.ok(response);
+    }
+
+    // 상품 옵션 목록 조회
+    @GetMapping("/{productId}/options")
+    public ResponseEntity<List<ProductOptionResponse>> getProductOptions(@PathVariable(name = "productId") Long productId) {
+        List<ProductOptionResponse> responses = productService.getProductOptions(productId);
+        return ResponseEntity.ok(responses);
     }
 }
