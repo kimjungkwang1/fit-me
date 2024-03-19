@@ -8,11 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.like.repository.ProductLikeRepository;
 import site.chachacha.fitme.product.dto.ProductDetailResponse;
+import site.chachacha.fitme.product.dto.ProductOptionResponse;
+import site.chachacha.fitme.product.dto.ProductRankingListResponse;
 import site.chachacha.fitme.product.dto.ProductResponse;
 import site.chachacha.fitme.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.product.entity.Product;
+import site.chachacha.fitme.product.entity.ProductOption;
 import site.chachacha.fitme.product.exception.ProductNotFoundException;
 import site.chachacha.fitme.product.repository.ProductCustomRepository;
+import site.chachacha.fitme.product.repository.ProductOptionRepository;
 import site.chachacha.fitme.product.repository.ProductRepository;
 import site.chachacha.fitme.review.entity.ProductReview;
 
@@ -25,6 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductCustomRepository productCustomRepository;
     private final ProductLikeRepository productLikeRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
 
@@ -50,6 +55,15 @@ public class ProductService {
         return ProductDetailResponse.of(product, liked, reviewRating, reviewCount);
     }
 
+    public List<ProductOptionResponse> getProductOptions(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        List<ProductOption> productOptions = productOptionRepository.findAllByProduct(product);
+        return productOptions.stream().map(ProductOptionResponse::from).toList();
+    }
+
+    public ProductRankingListResponse getProductRanking() {
+        return null;
+    }
 
     private double calculateReviewRating(List<ProductReview> productReviews) {
         if (productReviews.isEmpty()) {
