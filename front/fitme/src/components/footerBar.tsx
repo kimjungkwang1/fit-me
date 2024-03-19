@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FooterBar: React.FC = () => {
   // 현재 선택된 탭을 관리하기 위한 상태
   const [selectedTab, setSelectedTab] = useState<string>('');
+  const navigate = useNavigate();
 
   // 버튼의 스타일을 결정하는 함수
   const getButtonStyle = (tabName: string) => {
@@ -15,11 +17,16 @@ const FooterBar: React.FC = () => {
     return `${selectedTab === tabName ? '#000000' : '#ffffff'}`;
   };
 
+  const handleClick = (tabName: string) => {
+    setSelectedTab(tabName);
+    navigate(tabName);
+  };
+
   return (
-    <>
+    <footer>
       <div className='bg-white'>
         <nav className='flex'>
-          <button className={getButtonStyle('category')} onClick={() => setSelectedTab('category')}>
+          <button className={getButtonStyle('category')} onClick={() => handleClick('category')}>
             <svg width='50%' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
                 d='M8 6L21 6.00078M8 12L21 12.0008M8 18L21 18.0007M3 6.5H4V5.5H3V6.5ZM3 12.5H4V11.5H3V12.5ZM3 18.5H4V17.5H3V18.5Z'
@@ -31,7 +38,7 @@ const FooterBar: React.FC = () => {
             </svg>
             카테고리
           </button>
-          <button className={getButtonStyle('feed')} onClick={() => setSelectedTab('feed')}>
+          <button className={getButtonStyle('feed')} onClick={() => handleClick('feed')}>
             <svg
               version='1.0'
               xmlns='http://www.w3.org/2000/svg'
@@ -55,7 +62,7 @@ const FooterBar: React.FC = () => {
             </svg>
             피드
           </button>
-          <button className={getButtonStyle('home')} onClick={() => setSelectedTab('home')}>
+          <button className={getButtonStyle('home')} onClick={() => handleClick('home')}>
             <svg
               version='1.0'
               xmlns='http://www.w3.org/2000/svg'
@@ -71,10 +78,7 @@ const FooterBar: React.FC = () => {
 
             <div>홈</div>
           </button>
-          <button
-            className={getButtonStyle('dressroom')}
-            onClick={() => setSelectedTab('dressroom')}
-          >
+          <button className={getButtonStyle('dressroom')} onClick={() => handleClick('dressroom')}>
             <svg
               version='1.0'
               xmlns='http://www.w3.org/2000/svg'
@@ -92,7 +96,7 @@ const FooterBar: React.FC = () => {
             </svg>
             <div>드레스룸</div>
           </button>
-          <button className={getButtonStyle('mypage')} onClick={() => setSelectedTab('mypage')}>
+          <button className={getButtonStyle('mypage')} onClick={() => handleClick('mypage')}>
             <div className='w-1/2'></div>
             <svg version='1.0' xmlns='http://www.w3.org/2000/svg' width='50%' viewBox='0 0 512 512'>
               <path
@@ -104,7 +108,7 @@ const FooterBar: React.FC = () => {
           </button>
         </nav>
       </div>
-    </>
+    </footer>
   );
 };
 
