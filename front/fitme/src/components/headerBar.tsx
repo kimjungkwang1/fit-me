@@ -105,13 +105,13 @@ const HeaderBar: React.FC = () => {
   }
 
   return (
-    <>
+    <header>
       <div className='h-20 bg-white flex justify-between'>
         <div className='w-36 flex justify-evenly items-center justify-center'>{left}</div>
         <div className='grow flex items-center justify-center text-xl font-bold'>{content}</div>
         <div className='w-36 flex justify-evenly items-center justify-center'>{right}</div>
       </div>
-    </>
+    </header>
   );
 };
 
