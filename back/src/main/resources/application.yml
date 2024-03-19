@@ -1,40 +1,40 @@
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-    jpa:
-        database: mysql
-        database-platform: org.hibernate.dialect.MySQLDialect
-        open-in-view: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
 
-        properties:
-            hibernate:
-                default_batch_fetch_size: 100
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
 
 # JWT
 jwt:
-    secret: ${JWT.SECRET}
-    token:
-        access:
-            header: Authorization
-        refresh:
-            expiration: 604_800_000 # 7? (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> d) * 7L(d -> w))
-            header: AuthorizationRefresh
+  secret: ${JWT.SECRET}
+  token:
+    access:
+      header: Authorization
+    refresh:
+      expiration: 604_800_000 # 7? (1000L(ms -> s) * 60L(s -> m) * 60L(m -> h) * 24L(h -> d) * 7L(d -> w))
+      header: AuthorizationRefresh
 
 server:
-    error:
-        include-message: always
-        include-binding-errors: always
-        include-stacktrace: on_param
-        include-exception: true
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: true
 
 # p6spy
 logging:
-    file:
-        path: ./logs
-    logback:
-        rollingpolicy:
-            max-file-size: 50MB
-            max-history: 10
+  file:
+    path: ./logs
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 10
 
 # aws paramstore
 aws:
