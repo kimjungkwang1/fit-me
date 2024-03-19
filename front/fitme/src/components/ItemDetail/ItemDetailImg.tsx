@@ -1,11 +1,20 @@
-import React from 'react';
-import ItemImg from '../../assets/temp_item_detail2.jpg';
+type ImageType = {
+  id: number;
+  url: string;
+};
 
-export default function ItemDetailImg() {
+type ItemDetailImgProps = {
+  detailImages: ImageType[];
+};
+
+export default function ItemDetailImg({ detailImages }: ItemDetailImgProps) {
   return (
     <>
       <div>
-        <img src={ItemImg} alt='제품 상세 설명 이미지' className='w-full' />
+        {/* 상품 상세 이미지 */}
+        {detailImages.map((img, index) => (
+          <img src={img.url} alt='detail_image' key={index} className='w-full' />
+        ))}
       </div>
     </>
   );
