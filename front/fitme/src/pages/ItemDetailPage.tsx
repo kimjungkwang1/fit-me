@@ -7,6 +7,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
+type ImageType = {
+  id: number;
+  url: string;
+};
+
 type BrandType = {
   id: number;
   name: string;
@@ -21,21 +26,19 @@ type ItemType = {
   id: number;
   name: string;
   price: number;
-  mainImageUrl: string[];
+  mainImages: ImageType[];
   brand: BrandType;
   likeCount: number;
   reviewRating: number;
   reviewCount: number;
-  detailImageUrl: string[];
+  detailImages: ImageType[];
   liked: boolean;
-  tags: TagType;
+  tags: TagType[];
 };
 
 export default function ItemDetailPage() {
   const [item, setItem] = useState<ItemType>();
-
   const { item_id } = useParams();
-
   useEffect(() => {
     axios.get(`http://j10a306.p.ssafy.io:8080/api/products/${item_id}`).then(({ data }) => {
       setItem(data);
@@ -46,7 +49,7 @@ export default function ItemDetailPage() {
     <div className='mb-[53.6px]'>
       {item && (
         <ItemInfo
-          mainImageUrl={item.mainImageUrl}
+          mainImages={item.mainImages}
           likeCount={item.likeCount}
           liked={item.liked}
           brand={item.brand}
@@ -55,7 +58,8 @@ export default function ItemDetailPage() {
           tags={item.tags}
         />
       )}
-      <ItemDetailImg />
+
+      {item && <ItemDetailImg detailImages={item.detailImages} />}
       <RecommendedItems />
       <ItemReview />
       <PurchaseBtn />
