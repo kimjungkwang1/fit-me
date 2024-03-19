@@ -6,9 +6,9 @@ export default function RecommendedItems() {
     <div className='m-[3%]'>
       <span className='text-sm font-semibold'>함께 보면 좋은 상품</span>
       <div className='flex flex-row justify-between mt-1'>
+        {/* <Item />
         <Item />
-        <Item />
-        <Item />
+        <Item /> */}
       </div>
     </div>
   );

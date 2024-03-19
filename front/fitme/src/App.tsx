@@ -31,7 +31,7 @@ function App() {
               <Route path='/login' element={<LoginPage />} />
               <Route path='/signup' element={<SignupPage />} />
               <Route path='/category' element={<CategoryPage />} />
-              <Route path='/detail/:item_code' element={<ItemDetailPage />} />
+              <Route path='/detail/:item_id' element={<ItemDetailPage />} />
               <Route path='/search' element={<SearchPage />} />
               <Route path='/cart' element={<CartPage />} />
               {/* /payment/complete 페이지 아직 없음 */}
