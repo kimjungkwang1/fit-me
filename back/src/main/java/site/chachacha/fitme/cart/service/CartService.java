@@ -1,11 +1,14 @@
 package site.chachacha.fitme.cart.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.chachacha.fitme.cart.dto.CartListResponse;
 import site.chachacha.fitme.cart.dto.CartOptionRequest;
 import site.chachacha.fitme.cart.dto.CartRequest;
+import site.chachacha.fitme.cart.dto.CartResponse;
 import site.chachacha.fitme.cart.entity.Cart;
 import site.chachacha.fitme.cart.exception.DuplicateCartException;
 import site.chachacha.fitme.cart.exception.InvalidProductRelationException;
@@ -35,13 +38,25 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
 
+    // 장바구니 상품 추가
     @Transactional
     public void createCartProduct(CartRequest request, Long productId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         request.getOptions().forEach(option -> createSingleCartProduct(member, product, option));
     }
-    
+
+    // 장바구니 상품 목록 조회
+    public CartListResponse getCartProducts(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);
+        List<Cart> carts = cartRepository.findByMember(member);
+        List<CartResponse> cartResponses = carts.stream().map(CartResponse::from).toList();
+        int totalProductCount = cartResponses.size();
+        int totalCartPrice = cartResponses.stream().mapToInt(CartResponse::getProductTotalPrice).sum();
+        return new CartListResponse(cartResponses, totalProductCount, totalCartPrice);
+    }
+
+
     private void createSingleCartProduct(Member member, Product product, CartOptionRequest option) {
         ProductOption productOption = productOptionRepository.findById(option.getProductOptionId())
             .orElseThrow(() -> new ProductOptionNotFoundException(option.getProductOptionId()));
