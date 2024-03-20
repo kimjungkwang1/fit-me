@@ -22,20 +22,19 @@ public class ProductSize {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "product_color_id")
+    @JoinColumn(name = "product_option_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private ProductColor productColor;
+    private ProductOption productOption;
 
     private String size;
 
     private int stockQuantity;
 
     @Builder
-    private ProductSize(ProductColor productColor, String size, int stockQuantity) {
-        this.productColor = productColor;
-        this.productColor.addProductSize(this);
-
+    private ProductSize(ProductOption productOption, String size, int stockQuantity) {
+        this.productOption = productOption;
         this.size = size;
         this.stockQuantity = stockQuantity;
+        this.productOption.addProductSize(this);
     }
 }

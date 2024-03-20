@@ -1,5 +1,7 @@
 package site.chachacha.fitme.product.dto;
 
+import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import site.chachacha.fitme.product.entity.ProductOption;
 
@@ -8,17 +10,20 @@ public class ProductOptionResponse {
 
     private Long id;
     private String color;
-    private String size;
-    private int stockQuantity;
+    private List<ProductSizeResponse> sizes;
 
-    public ProductOptionResponse(Long id, String color, String size, int stockQuantity) {
+    @Builder
+    private ProductOptionResponse(Long id, String color, List<ProductSizeResponse> sizes) {
         this.id = id;
         this.color = color;
-        this.size = size;
-        this.stockQuantity = stockQuantity;
+        this.sizes = sizes;
     }
 
     public static ProductOptionResponse from(ProductOption productOption) {
-        return new ProductOptionResponse(productOption.getId(), productOption.getColor(), productOption.getSize(), productOption.getStockQuantity());
+        return ProductOptionResponse.builder()
+            .id(productOption.getId())
+            .color(productOption.getColor())
+            .sizes(productOption.getProductSize().stream().map(ProductSizeResponse::from).toList())
+            .build();
     }
 }
