@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.like.repository.ProductLikeRepository;
 import site.chachacha.fitme.product.dto.ProductDetailResponse;
 import site.chachacha.fitme.product.dto.ProductOptionResponse;
-import site.chachacha.fitme.product.dto.ProductRankingListResponse;
 import site.chachacha.fitme.product.dto.ProductResponse;
 import site.chachacha.fitme.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.product.entity.Product;
@@ -61,9 +60,9 @@ public class ProductService {
         return productOptions.stream().map(ProductOptionResponse::from).toList();
     }
 
-    public ProductRankingListResponse getProductRanking() {
-        return null;
-    }
+//    public ProductRankingListResponse getProductRanking() {
+//        return null;
+//    }
 
     private double calculateReviewRating(List<ProductReview> productReviews) {
         if (productReviews.isEmpty()) {
