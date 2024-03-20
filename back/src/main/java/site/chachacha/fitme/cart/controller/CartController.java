@@ -12,14 +12,15 @@ import site.chachacha.fitme.annotation.MemberId;
 import site.chachacha.fitme.cart.dto.CartRequest;
 import site.chachacha.fitme.cart.service.CartService;
 
-@RequestMapping("/api/products")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @RestController
 public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("{productId}/carts")
+    // 장바구니 상품 추가
+    @PostMapping("/products/{productId}/carts")
     public ResponseEntity<Void> createCartProduct(@RequestBody @Validated CartRequest request, @PathVariable(name = "productId") Long productId,
         @MemberId Long memberId) {
         cartService.createCartProduct(request, productId, memberId);
