@@ -4,7 +4,6 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static site.chachacha.fitme.enumstorage.messages.role.MemberRole.ADMIN;
 import static site.chachacha.fitme.enumstorage.messages.role.MemberRole.MEMBER;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,15 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import site.chachacha.fitme.auth.filter.AuthenticationProcessFilter;
 import site.chachacha.fitme.auth.handler.JwtLogoutHandler;
-import site.chachacha.fitme.auth.handler.MemberLogInFailureHandler;
-import site.chachacha.fitme.auth.handler.MemberLogInSuccessHandler;
-import site.chachacha.fitme.auth.service.JwtService;
 
 @Configuration
 @EnableWebSecurity // Spring Securty 필터가 Spring Filter Chain에 등록된다.
 //@EnableGlobalMethodSecurity(securedEnabled = true) // secured 어노테이션 활성화
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     // JWT
     private final JwtLogoutHandler jwtLogoutHandler;
 
@@ -50,6 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/products/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/api/members/**").permitAll()
+                .requestMatchers("/api/carts/**").permitAll()
                 .anyRequest().authenticated()
 
             );
