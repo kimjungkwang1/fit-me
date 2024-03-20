@@ -2,7 +2,9 @@ package site.chachacha.fitme.config;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import site.chachacha.fitme.auth.service.JwtService;
 import site.chachacha.fitme.resolver.MemberIdResolver;
@@ -19,5 +21,15 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new MemberIdResolver(jwtService));
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedOrigins("https://fit-me.site", "https://j10a306.p.ssafy.io", "http://localhost:3000")
+            .allowedHeaders("*")
+            .allowCredentials(true)
+            .exposedHeaders(HttpHeaders.LOCATION);
     }
 }
