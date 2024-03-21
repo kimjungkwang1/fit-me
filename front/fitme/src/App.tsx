@@ -19,8 +19,8 @@ import FooterBar from './components/footerBar';
 function App() {
   return (
     <>
-      <div className='flex justify-center'>
-        <div className='aspect-iphone h-screen select-none flex flex-col '>
+      <div className='flex justify-center bg-gray-200'>
+        <div className='aspect-iphone h-screen select-none flex flex-col bg-white'>
           <HeaderBar />
           <div className='flex-grow overflow-auto hide-scrollbar'>
             <Routes>
