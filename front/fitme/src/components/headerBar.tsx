@@ -1,7 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const HeaderBar: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('mypage');
+  const location = useLocation();
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/':
+      case '/home':
+        setCurrentTab('home');
+        break;
+      case '/mypage':
+        setCurrentTab('mypage');
+        break;
+      case '/login':
+        setCurrentTab('login');
+        break;
+      case '/signup':
+        setCurrentTab('signup');
+        break;
+      case '/category':
+        setCurrentTab('category');
+        break;
+      case '/search':
+        setCurrentTab('search');
+        break;
+      case '/feed':
+      case '/feed/:feed_no':
+      case '/feed/myfeed':
+      case '/feed/write':
+        setCurrentTab('feed');
+        break;
+      default:
+        setCurrentTab('home');
+        break;
+    }
+  }, [location.pathname]);
 
   let left, right, content;
   if (currentTab === 'mypage' || currentTab === 'home') {
@@ -36,7 +71,7 @@ const HeaderBar: React.FC = () => {
     );
   }
 
-  if (currentTab === 'login') {
+  if (currentTab === 'signup') {
     right = <div></div>;
   } else {
     let additionalElement;
@@ -94,8 +129,8 @@ const HeaderBar: React.FC = () => {
     right = [basicElement, additionalElement];
   }
 
-  if (currentTab === 'login') {
-    content = '로그인';
+  if (currentTab === 'signup') {
+    content = '회원 정보 입력';
   } else if (currentTab === 'mypage') {
     content = '마이페이지';
   } else if (currentTab === 'feed') {
@@ -105,13 +140,15 @@ const HeaderBar: React.FC = () => {
   }
 
   return (
-    <>
-      <div className='h-20 bg-white flex justify-between'>
-        <div className='w-36 flex justify-evenly items-center justify-center'>{left}</div>
-        <div className='grow flex items-center justify-center text-xl font-bold'>{content}</div>
-        <div className='w-36 flex justify-evenly items-center justify-center'>{right}</div>
-      </div>
-    </>
+    <header>
+      {currentTab !== 'login' && (
+        <div className='h-20 bg-white flex justify-between border-b-2 border-gray-300'>
+          <div className='w-36 flex justify-evenly items-center justify-center'>{left}</div>
+          <div className='grow flex items-center justify-center text-xl font-bold'>{content}</div>
+          <div className='w-36 flex justify-evenly items-center justify-center'>{right}</div>
+        </div>
+      )}
+    </header>
   );
 };
 
