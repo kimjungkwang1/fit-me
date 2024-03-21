@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tabs, Button } from 'flowbite-react';
+import { Tabs } from 'flowbite-react';
 import DressroomNowFitting from '../components/dressroom/dressroomNowFitting';
 import DressroomItemList from '../components/dressroom/dressroomItemList';
 import DressroomMyFittingList from '../components/dressroom/dressroomMyFittingList';
-
+import DressroomButton from '../components/dressroom/DressroomButton';
 export default function Dressroom() {
   return (
     <>
@@ -19,9 +19,7 @@ export default function Dressroom() {
                     </div>
                     <div className='flex flex-col flex-grow p-2'>
                       <div className='w-[50%] pb-[69.33%] bg-gray-100 mx-auto m-2'></div>
-                      <Button className='w-[50%] mx-auto' color='gray'>
-                        피팅저장
-                      </Button>
+                      <DressroomButton></DressroomButton>
                     </div>
                   </div>
                   <Tabs style='fullWidth'>
