@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FooterBar: React.FC = () => {
   // 현재 선택된 탭을 관리하기 위한 상태
   const [selectedTab, setSelectedTab] = useState<string>('');
   const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/category':
+        setSelectedTab('category');
+        break;
+      case '/feed':
+      case '/feed/:feed_no':
+      case '/feed/myfeed':
+      case '/feed/write':
+        setSelectedTab('feed');
+        break;
+      case '/':
+      case '/home':
+        setSelectedTab('home');
+        break;
+      case '/dressroom':
+        setSelectedTab('dressroom');
+        break;
+      case '/mypage':
+        setSelectedTab('mypage');
+        break;
+      default:
+        setSelectedTab('');
+        break;
+    }
+  }, [location.pathname]);
 
   // 버튼의 스타일을 결정하는 함수
   const getButtonStyle = (tabName: string) => {
