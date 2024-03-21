@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedOrigins("https://fit-me.site", "https://j10a306.p.ssafy.io",
-                "http://fit-me.site", "http://j10a306.p.ssafy.io", "http://localhost:3000")
+                "http://fit-me.site", "http://j10a306.p.ssafy.io", "http://localhost:3000","http://j10a306.p.ssafy.io:80","http://j10a306.p.ssafy.io:443")
             .allowedHeaders("*")
             .allowCredentials(true)
             .exposedHeaders(HttpHeaders.LOCATION);
