@@ -2,7 +2,7 @@ import ItemInfo from '../components/ItemDetail/ItemInfo';
 import RecommendedItems from '../components/ItemDetail/RecommendedItems';
 import ItemDetailImg from '../components/ItemDetail/ItemDetailImg';
 import ItemReview from '../components/ItemDetail/ItemReview';
-import PurchaseBtn from '../components/ItemDetail/PurchaseBtn';
+import ItemOption from '../components/ItemDetail/ItemObtion';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -62,7 +62,7 @@ export default function ItemDetailPage() {
       {item && <ItemDetailImg detailImages={item.detailImages} />}
       <RecommendedItems />
       <ItemReview />
-      <PurchaseBtn />
+      <ItemOption />
     </div>
   );
 }

@@ -20,7 +20,7 @@ function App() {
   return (
     <>
       <div className='flex justify-center'>
-        <div className='aspect-iphone h-screen select-none flex flex-col '>
+        <div className='max-w-[600px] h-screen select-none flex flex-col '>
           <HeaderBar />
           <div className='flex-grow overflow-auto hide-scrollbar'>
             <Routes>
