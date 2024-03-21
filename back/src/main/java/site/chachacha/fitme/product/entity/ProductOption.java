@@ -8,6 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,15 +31,17 @@ public class ProductOption {
 
     private String color;
 
-    private String size;
-
-    private int stockQuantity;
+    @OneToMany(mappedBy = "productOption")
+    private List<ProductSize> productSize = new ArrayList<>();
 
     @Builder
-    public ProductOption(Product product, String color, String size, int stockQuantity) {
+    public ProductOption(Product product, String color) {
         this.product = product;
         this.color = color;
-        this.size = size;
-        this.stockQuantity = stockQuantity;
+    }
+
+    // == 연관 관계 메서드 == //
+    public void addProductSize(ProductSize productSize) {
+        this.productSize.add(productSize);
     }
 }
