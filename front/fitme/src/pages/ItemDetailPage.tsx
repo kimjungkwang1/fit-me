@@ -2,7 +2,7 @@ import ItemInfo from '../components/ItemDetail/ItemInfo';
 import RecommendedItems from '../components/ItemDetail/RecommendedItems';
 import ItemDetailImg from '../components/ItemDetail/ItemDetailImg';
 import ItemReview from '../components/ItemDetail/ItemReview';
-import ItemOption from '../components/ItemDetail/ItemObtion';
+import ItemOption from '../components/ItemDetail/ItemOption';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
