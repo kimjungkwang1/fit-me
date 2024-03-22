@@ -1,42 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const HeaderBar: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('mypage');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    switch (location.pathname) {
-      case '/':
-      case '/home':
-        setCurrentTab('home');
-        break;
-      case '/mypage':
-        setCurrentTab('mypage');
-        break;
-      case '/login':
-        setCurrentTab('login');
-        break;
-      case '/signup':
-        setCurrentTab('signup');
-        break;
-      case '/category':
-        setCurrentTab('category');
-        break;
-      case '/search':
-        setCurrentTab('search');
-        break;
-      case '/feed':
-      case '/feed/:feed_no':
-      case '/feed/myfeed':
-      case '/feed/write':
-        setCurrentTab('feed');
-        break;
-      default:
-        setCurrentTab('home');
-        break;
+    if (location.pathname === '/' || location.pathname === '/home') {
+      setCurrentTab('home');
+    } else if (location.pathname === '/mypage') {
+      setCurrentTab('mypage');
+    } else if (location.pathname === '/login') {
+      setCurrentTab('login');
+    } else if (location.pathname === '/signup') {
+      setCurrentTab('signup');
+    } else if (location.pathname === '/category') {
+      setCurrentTab('category');
+    } else if (location.pathname === '/dressroom') {
+      setCurrentTab('dressroom');
+    } else if (location.pathname === '/search') {
+      setCurrentTab('search');
+    } else if (location.pathname === '/feed') {
+      setCurrentTab('feed');
+    } else if (location.pathname.startsWith('/feed/')) {
+      setCurrentTab('feedDetail');
+    } else {
+      setCurrentTab('');
     }
   }, [location.pathname]);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   let left, right, content;
   if (currentTab === 'mypage' || currentTab === 'home') {
@@ -56,18 +52,21 @@ const HeaderBar: React.FC = () => {
         />
       </svg>
     );
+  } else if (currentTab === 'dressroom' || currentTab === 'feed' || currentTab === 'category') {
   } else {
     left = (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        fill='none'
-        viewBox='0 0 24 24'
-        strokeWidth={1.5}
-        stroke='currentColor'
-        className='w-8 h-8'
-      >
-        <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
-      </svg>
+      <button onClick={handleBack}>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          fill='none'
+          viewBox='0 0 24 24'
+          strokeWidth={1.5}
+          stroke='currentColor'
+          className='w-8 h-8'
+        >
+          <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5 8.25 12l7.5-7.5' />
+        </svg>
+      </button>
     );
   }
 
@@ -94,6 +93,7 @@ const HeaderBar: React.FC = () => {
     if (currentTab === 'feed') {
       additionalElement = (
         <svg
+          key='additionalElement'
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
@@ -111,6 +111,7 @@ const HeaderBar: React.FC = () => {
     } else {
       additionalElement = (
         <svg
+          key='additionalElement'
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
@@ -126,7 +127,7 @@ const HeaderBar: React.FC = () => {
         </svg>
       );
     }
-    right = [basicElement, additionalElement];
+    right = [{ ...basicElement, key: 'basicElement' }, additionalElement];
   }
 
   if (currentTab === 'signup') {
