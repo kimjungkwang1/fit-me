@@ -15,7 +15,7 @@ import FeedWritePage from './pages/FeedWritePage';
 import HeaderBar from './components/headerBar';
 import FooterBar from './components/footerBar';
 
-function App() {
+const App: React.FC = () => {
   return (
     <>
       <div className='flex justify-center'>
@@ -46,6 +46,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;
