@@ -2,12 +2,12 @@ module.exports = {
   devServer: {
     port: 3000,
     liveReload: true,
-    host: '0.0.0.0',
+    host: 'fit-me.site',
     allowedHosts: 'all',
     open: true,
     client: {
       overlay: true,
-      webSocketURL: 'ws://0.0.0.0:80/ws',
+      webSocketURL: 'ws://fit-me.site/ws',
     },
     compress: true,
   },
