@@ -5,13 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.chachacha.fitme.cart.dto.CartCreateRequest;
+import site.chachacha.fitme.cart.dto.CartDeleteRequest;
 import site.chachacha.fitme.cart.dto.CartListResponse;
 import site.chachacha.fitme.cart.dto.CartOptionRequest;
-import site.chachacha.fitme.cart.dto.CartRequest;
 import site.chachacha.fitme.cart.dto.CartResponse;
 import site.chachacha.fitme.cart.entity.Cart;
 import site.chachacha.fitme.cart.exception.DuplicateCartException;
 import site.chachacha.fitme.cart.exception.InvalidProductRelationException;
+import site.chachacha.fitme.cart.exception.UnauthorizedCartAccessException;
 import site.chachacha.fitme.cart.repository.CartRepository;
 import site.chachacha.fitme.member.entity.Member;
 import site.chachacha.fitme.member.exception.NoSuchMemberException;
@@ -40,7 +42,7 @@ public class CartService {
 
     // 장바구니 상품 추가
     @Transactional
-    public void createCartProduct(CartRequest request, Long productId, Long memberId) {
+    public void createCartProduct(CartCreateRequest request, Long productId, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);
         Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
         request.getOptions().forEach(option -> createSingleCartProduct(member, product, option));
@@ -56,6 +58,17 @@ public class CartService {
         return new CartListResponse(cartResponses, totalProductCount, totalCartPrice);
     }
 
+    // 장바구니 상품 삭제
+    @Transactional
+    public void removeCartProducts(CartDeleteRequest request, Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);
+
+        // 요청된 모든 장바구니 ID가 주어진 회원에 속하는지 한 번에 확인
+        List<Cart> carts = cartRepository.findAllByIdAndMemberId(request.getCartIds(), memberId);
+        validateCartOwnership(carts.size(), request.getCartIds().size());
+        cartRepository.deleteAll(carts);
+    }
 
     private void createSingleCartProduct(Member member, Product product, CartOptionRequest option) {
         ProductOption productOption = productOptionRepository.findById(option.getProductOptionId())
@@ -87,6 +100,12 @@ public class CartService {
     private void validateProductOptionAndSize(Product product, ProductOption productOption, ProductSize productSize) {
         if (!product.equals(productOption.getProduct()) || !productOption.equals(productSize.getProductOption())) {
             throw new InvalidProductRelationException();
+        }
+    }
+
+    private void validateCartOwnership(int cartsSize, int cartIdsSize) {
+        if (cartsSize != cartIdsSize) {
+            throw new UnauthorizedCartAccessException();
         }
     }
 }
