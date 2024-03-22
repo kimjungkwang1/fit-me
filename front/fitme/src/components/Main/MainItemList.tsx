@@ -27,7 +27,7 @@ export default function MainItemList() {
   const [list, setList] = useState<ItemType[]>();
 
   useEffect(() => {
-    axios.get(`http://j10a306.p.ssafy.io:8080/api/products`).then(({ data }) => {
+    axios.get(`https://fit-me.site/api/products`).then(({ data }) => {
       setList(data);
     });
   }, []);
