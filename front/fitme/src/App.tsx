@@ -1,4 +1,3 @@
-import Test from './pages/test';
 import { Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/login';
@@ -20,12 +19,10 @@ function App() {
   return (
     <>
       <div className='flex justify-center'>
-        <div className='aspect-iphone h-screen select-none flex flex-col '>
+        <div className='max-w-[600px] h-screen select-none flex flex-col '>
           <HeaderBar />
           <div className='flex-grow overflow-auto hide-scrollbar'>
             <Routes>
-              {/* Test 페이지 남겨뒀습니다 */}
-              <Route path='/test' element={<Test />} />
               <Route path='/' element={<MainPage />} />
               <Route path='/home' element={<MainPage />} />
               <Route path='/login' element={<LoginPage />} />
