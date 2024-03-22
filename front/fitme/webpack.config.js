@@ -1,14 +1,19 @@
 module.exports = {
   devServer: {
+    host: '0.0.0.0',
     port: 3000,
+    hot: true,
     liveReload: true,
-    host: 'fit-me.site',
-    allowedHosts: 'all',
-    open: true,
     client: {
-      overlay: true,
-      webSocketURL: 'wss://fit-me.site:443/ws',
+      logging: 'none',
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+      reconnect: 10,
     },
-    compress: true,
+    devMiddleware: {
+      publicPath: '/ws',
+    },
   },
 };
