@@ -1,4 +1,3 @@
-import Test from './pages/test';
 import { Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/login';
@@ -24,8 +23,6 @@ function App() {
           <HeaderBar />
           <div className='flex-grow overflow-auto hide-scrollbar'>
             <Routes>
-              {/* Test 페이지 남겨뒀습니다 */}
-              <Route path='/test' element={<Test />} />
               <Route path='/' element={<MainPage />} />
               <Route path='/home' element={<MainPage />} />
               <Route path='/login' element={<LoginPage />} />
