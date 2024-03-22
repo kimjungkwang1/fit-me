@@ -40,29 +40,30 @@ export default function ItemDetailPage() {
   const [item, setItem] = useState<ItemType>();
   const { item_id } = useParams();
   useEffect(() => {
-    axios.get(`http://j10a306.p.ssafy.io:8080/api/products/${item_id}`).then(({ data }) => {
+    axios.get(`https://fit-me.site/api/products/${item_id}`).then(({ data }) => {
       setItem(data);
     });
   }, [item_id]);
 
   return (
-    <div className='mb-[53.6px]'>
+    <>
       {item && (
-        <ItemInfo
-          mainImages={item.mainImages}
-          likeCount={item.likeCount}
-          liked={item.liked}
-          brand={item.brand}
-          name={item.name}
-          price={item.price}
-          tags={item.tags}
-        />
+        <div className='mb-[53.6px]'>
+          <ItemInfo
+            mainImages={item.mainImages}
+            likeCount={item.likeCount}
+            liked={item.liked}
+            brand={item.brand}
+            name={item.name}
+            price={item.price}
+            tags={item.tags}
+          />
+          <ItemDetailImg detailImages={item.detailImages} />
+          <RecommendedItems />
+          <ItemReview />
+          <ItemOption price={item.price} />
+        </div>
       )}
-
-      {item && <ItemDetailImg detailImages={item.detailImages} />}
-      <RecommendedItems />
-      <ItemReview />
-      <ItemOption />
-    </div>
+    </>
   );
 }
