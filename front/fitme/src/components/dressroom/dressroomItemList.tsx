@@ -21,7 +21,7 @@ export default function DressroomItemLst() {
           하의
         </Button>
       </div>
-      <div className='flex overflow-y-auto h-[30vh] flex-wrap'>
+      {/* <div className='flex overflow-y-auto h-[30vh] flex-wrap'>
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
@@ -37,6 +37,24 @@ export default function DressroomItemLst() {
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
         <div className='w-[20%] pt-[26.66%] bg-green-500 m-2 flex-shrink-0'></div>
+      </div> */}
+      <div className='grid grid-cols-5 gap-2 overflow-hidden hover:overflow-auto  h-[30vh]'>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
+        <div className='aspect-square bg-green-500'></div>
       </div>
     </>
   );
