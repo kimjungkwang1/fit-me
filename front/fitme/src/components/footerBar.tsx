@@ -10,8 +10,6 @@ const FooterBar: React.FC = () => {
   useEffect(() => {
     if (location.pathname === '/category') {
       setSelectedTab('category');
-    } else if (location.pathname === '/feed') {
-      setSelectedTab('feed_main');
     } else if (location.pathname.startsWith('/feed')) {
       setSelectedTab('feed');
     } else if (location.pathname === '/' || location.pathname === '/home') {
@@ -53,9 +51,9 @@ const FooterBar: React.FC = () => {
                 <path
                   d='M8 6L21 6.00078M8 12L21 12.0008M8 18L21 18.0007M3 6.5H4V5.5H3V6.5ZM3 12.5H4V11.5H3V12.5ZM3 18.5H4V17.5H3V18.5Z'
                   stroke={iconColorStyle('category')}
-                  stroke-width='2'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
               </svg>
               카테고리
