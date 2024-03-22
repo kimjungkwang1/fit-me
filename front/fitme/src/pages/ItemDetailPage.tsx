@@ -43,6 +43,17 @@ export default function ItemDetailPage() {
     axios.get(`http://j10a306.p.ssafy.io:8080/api/products/${item_id}`).then(({ data }) => {
       setItem(data);
     });
+
+    // 우클릭 방지 메서드
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+      alert('상품설명 무단도용방지를 위하여 마우스 오른쪽 버튼은 사용하실 수 없습니다.');
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
   }, [item_id]);
 
   return (
