@@ -38,7 +38,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    // 장바구니 상품 삭제 구현
+    // 장바구니 상품 삭제
     @DeleteMapping("/carts")
     public ResponseEntity<Void> removeCartProducts(@RequestBody @Validated CartDeleteRequest request, @MemberId Long memberId) {
         cartService.removeCartProducts(request, memberId);

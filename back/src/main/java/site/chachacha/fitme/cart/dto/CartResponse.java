@@ -32,6 +32,7 @@ public class CartResponse {
             .id(cart.getId())
             .product(
                 new ProductResponse(product.getId(), product.getName(),
+                    product.getCategory().getId(),
                     product.getMainImage().stream().map(MainImageResponse::from).toList()))
             .productOption(
                 new ProductOptionResponse(productOption.getId(), productOption.getColor(), cart.getProductSize().getSize(),
@@ -46,6 +47,7 @@ public class CartResponse {
 
         private Long id;
         private String name;
+        private Long categoryId;
         private List<MainImageResponse> mainImages;
     }
 
