@@ -23,7 +23,11 @@ type SelectedType = {
   quantity: number;
 };
 
-export default function ItemOption() {
+type ItemOptionProps = {
+  price: number;
+};
+
+export default function ItemOption({ price }: ItemOptionProps) {
   // 옵션 선택창 오픈 함수
   const [openModal, setOpenModal] = useState(false);
   const modalHandler = () => {
@@ -56,7 +60,7 @@ export default function ItemOption() {
   const [options, setOptions] = useState<ColorType[]>();
   const { item_id } = useParams();
   useEffect(() => {
-    axios.get(`http://j10a306.p.ssafy.io:8080/api/products/${item_id}/options`).then(({ data }) => {
+    axios.get(`https://fit-me.site/api/products/${item_id}/options`).then(({ data }) => {
       setOptions(data);
     });
   }, [item_id]);
@@ -102,6 +106,7 @@ export default function ItemOption() {
       ];
     });
   };
+
   // 선택된 옵션 초기화 함수
   const resetOption = () => {
     setSelected({
@@ -111,6 +116,22 @@ export default function ItemOption() {
       size: '',
       quantity: 0,
     });
+  };
+
+  // 선택된 옵션 수량 변경 함수
+  const updateOption = (idx: number, update: number) => {
+    const newList = selectedList ? [...selectedList] : [];
+    const newOption = newList[idx];
+    newOption.quantity += update;
+    newList.splice(idx, 1, newOption);
+    setSelectedList(newList);
+  };
+
+  // 선택된 옵션 삭제 함수
+  const deleteOption = (idx: number) => {
+    const newList = selectedList ? [...selectedList] : [];
+    newList.splice(idx, 1);
+    setSelectedList(newList);
   };
 
   return (
@@ -138,11 +159,13 @@ export default function ItemOption() {
                   selectedList.map((select, index) => (
                     <ItemOptionSelected
                       key={index}
-                      idColor={select.idColor}
+                      index={index}
                       color={select.color}
-                      idSize={select.idSize}
                       size={select.size}
                       quantity={select.quantity}
+                      updateOption={updateOption}
+                      deleteOption={deleteOption}
+                      price={price}
                     />
                   ))}
               </div>
@@ -213,20 +236,35 @@ export default function ItemOption() {
         )}
 
         {/* 하단 버튼 */}
-        <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
-          {/* 입어보기 버튼 */}
-          <div className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'>
-            <span>입어보기(장바구니)</span>
-          </div>
+        {openModal ? (
+          <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
+            {/* 입어보기 버튼 */}
+            <div
+              onClick={modalHandler}
+              className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
+            >
+              <span>입어보기(장바구니)</span>
+            </div>
 
-          {/* 구매하기 버튼 */}
-          <div
-            onClick={modalHandler}
-            className='w-full bg-bluegray border border-solid border-black rounded-lg px-2 py-3 text-center text-white text-sm font-semibold'
-          >
-            <span>구매하기</span>
+            {/* 구매하기 버튼 */}
+            <div
+              onClick={modalHandler}
+              className='w-full bg-bluegray border border-solid border-black rounded-lg px-2 py-3 text-center text-white text-sm font-semibold'
+            >
+              <span>바로구매</span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
+            {/* 입어보기 버튼 */}
+            <div
+              onClick={modalHandler}
+              className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
+            >
+              <span>옵션선택</span>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
