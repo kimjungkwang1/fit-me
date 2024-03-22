@@ -7,7 +7,7 @@ module.exports = {
     open: true,
     client: {
       overlay: true,
-      webSocketURL: 'ws://fit-me.site/ws',
+      webSocketURL: 'wss://fit-me.site:443/ws',
     },
     compress: true,
   },
