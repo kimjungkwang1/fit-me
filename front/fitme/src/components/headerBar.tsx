@@ -93,6 +93,7 @@ const HeaderBar: React.FC = () => {
     if (currentTab === 'feed') {
       additionalElement = (
         <svg
+          key='additionalElement'
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
@@ -110,6 +111,7 @@ const HeaderBar: React.FC = () => {
     } else {
       additionalElement = (
         <svg
+          key='additionalElement'
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
           viewBox='0 0 24 24'
@@ -125,7 +127,7 @@ const HeaderBar: React.FC = () => {
         </svg>
       );
     }
-    right = [basicElement, additionalElement];
+    right = [{ ...basicElement, key: 'basicElement' }, additionalElement];
   }
 
   if (currentTab === 'signup') {
