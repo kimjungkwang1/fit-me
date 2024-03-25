@@ -6,8 +6,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import site.chachacha.fitme.annotation.MemberId;
-import site.chachacha.fitme.auth.service.JwtService;
+import site.chachacha.fitme.common.annotation.MemberId;
+import site.chachacha.fitme.domain.auth.service.JwtService;
 
 public class MemberIdResolver implements HandlerMethodArgumentResolver {
 
