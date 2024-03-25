@@ -77,27 +77,28 @@ const HeaderBar: React.FC = () => {
   } else {
     let additionalElement;
     const basicElement = (
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        fill='none'
-        viewBox='0 0 24 24'
-        strokeWidth={1.5}
-        stroke='currentColor'
-        className='w-8 h-8'
-      >
-        <path
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'
-        />
-      </svg>
+      <button key='basicElement'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          fill='none'
+          viewBox='0 0 24 24'
+          strokeWidth={1.5}
+          stroke='currentColor'
+          className='w-8 h-8'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'
+          />
+        </svg>
+      </button>
     );
     if (currentTab === 'cart') {
     } else if (currentTab === 'feed' || currentTab === 'feedDetail') {
       additionalElement = (
-        <button onClick={() => navigate('/feed/myfeed')}>
+        <button onClick={() => navigate('/feed/myfeed')} key='additionalElement'>
           <svg
-            key='additionalElement'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
@@ -115,9 +116,8 @@ const HeaderBar: React.FC = () => {
       );
     } else {
       additionalElement = (
-        <button onClick={() => navigate('/cart')}>
+        <button onClick={() => navigate('/cart')} key='additionalElement'>
           <svg
-            key='additionalElement'
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
             viewBox='0 0 24 24'
@@ -134,7 +134,10 @@ const HeaderBar: React.FC = () => {
         </button>
       );
     }
-    right = [{ ...basicElement, key: 'basicElement' }, additionalElement];
+    right = [
+      <React.Fragment key='basicElement'>{basicElement}</React.Fragment>,
+      <React.Fragment key='additionalElement'>{additionalElement}</React.Fragment>,
+    ];
   }
 
   if (currentTab === 'signup') {
