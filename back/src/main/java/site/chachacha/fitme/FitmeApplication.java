@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableJpaAuditing
+@SpringBootApplication
 public class FitmeApplication {
 
     public static void main(String[] args) {

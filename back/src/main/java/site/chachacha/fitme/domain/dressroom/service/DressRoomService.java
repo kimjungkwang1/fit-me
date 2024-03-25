@@ -3,10 +3,10 @@ package site.chachacha.fitme.domain.dressroom.service;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.chachacha.fitme.advice.exception.BadRequestException;
 import site.chachacha.fitme.advice.exception.GoneException;
 import site.chachacha.fitme.domain.dressroom.dto.DressRoomResponse;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
@@ -35,26 +35,37 @@ public class DressRoomService {
     }
 
     // DressRoom 조회
-    public Optional<DressRoomResponse> findByIdAndMemberId(Long memberId, Long dressRoomId) {
-        return dressRoomRepository.findByIdAndMemberId(memberId, dressRoomId)
-            .map(DressRoomResponse::of);
+    public DressRoomResponse findByIdAndMemberId(Long memberId, Long dressRoomId) {
+        return DressRoomResponse.of(dressRoomRepository.findByIdAndMemberId(memberId, dressRoomId)
+            .orElseThrow(() -> new GoneException("해당 드레스룸이 존재하지 않습니다.")));
     }
 
     // DressRoom 생성
     @Transactional
-    public DressRoom createDressRoom(Long memberId, Long modelId, Long productTopId,
-        Long productBottomId) {
+    public DressRoomResponse createDressRoom(Long memberId, Long modelId, Long productTopId,
+        Long productBottomId) throws BadRequestException, GoneException {
+        // productTopId, productBottomId 둘 다 null이면 BadRequestException 발생
+        if (productTopId == null && productBottomId == null) {
+            throw new BadRequestException("상의나 하의 중 하나는 선택해야 합니다.");
+        }
+
         Member member = memberRepository.findNotDeletedById(memberId)
             .orElseThrow(() -> new GoneException("존재하지 않는 회원입니다."));
 
         Model model = modelRepository.findById(modelId)
             .orElseThrow(() -> new GoneException("존재하지 않는 모델입니다."));
 
-        Product top = productRepository.findById(productTopId)
-            .orElseThrow(() -> new GoneException("존재하지 않는 상의입니다."));
+        Product top = null;
+        if (productTopId != null) {
+            top = productRepository.findById(productTopId)
+                .orElseThrow(() -> new GoneException("존재하지 않는 상의입니다."));
+        }
 
-        Product bottom = productRepository.findById(productBottomId)
-            .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
+        Product bottom = null;
+        if (productBottomId != null) {
+            bottom = productRepository.findById(productBottomId)
+                .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
+        }
 
         DressRoom dressRoom = DressRoom.builder()
             .model(model)
@@ -63,7 +74,7 @@ public class DressRoomService {
             .member(member)
             .build();
 
-        return dressRoomRepository.save(dressRoom);
+        return DressRoomResponse.of(dressRoomRepository.save(dressRoom));
     }
 
     // DressRoom 삭제
