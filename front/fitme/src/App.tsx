@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
+import KakaoAuthHandler from './services/KakaoAuthHandler';
 import CategoryPage from './pages/CategoryPage';
 import ItemDetailPage from './pages/ItemDetailPage';
 import SearchPage from './pages/SearchPage';
@@ -27,6 +28,7 @@ const App: React.FC = () => {
               <Route path='/home' element={<MainPage />} />
               <Route path='/login' element={<LoginPage />} />
               <Route path='/signup' element={<SignupPage />} />
+              <Route path='/auth/login/oauth2/code/kakao' element={<KakaoAuthHandler />} />
               <Route path='/category' element={<CategoryPage />} />
               <Route path='/detail/:item_id' element={<ItemDetailPage />} />
               <Route path='/search' element={<SearchPage />} />
