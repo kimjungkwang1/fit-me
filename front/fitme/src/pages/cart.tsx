@@ -2,6 +2,7 @@ import * as React from 'react';
 import CartItem from '../components/cart/cartItem';
 import CartAddress from '../components/cart/cartAddress';
 import { Button } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 const item1 = {
   name: '맨투맨1',
   price: 20000,
@@ -36,12 +37,14 @@ const address = {
 };
 
 export default function Cart() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className='flex justify-center'>
         <div className='aspect-iphone h-screen'>
-          <Button color='gray' className='mb-2 w-[100%]'>
-            피팅룸 가기
+          <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
+            드레스룸 가기
           </Button>
           <CartItem item={item1}></CartItem>
           <CartItem item={item2}></CartItem>
