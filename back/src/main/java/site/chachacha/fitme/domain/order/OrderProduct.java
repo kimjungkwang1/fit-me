@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.product.entity.Product;
 
 @Getter

@@ -1,4 +1,4 @@
-package site.chachacha.fitme.product.repository.support;
+package site.chachacha.fitme.domain.product.repository.support;
 
 public interface ProductScore {
 
