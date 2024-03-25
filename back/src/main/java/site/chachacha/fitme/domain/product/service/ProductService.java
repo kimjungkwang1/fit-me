@@ -13,15 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
 import site.chachacha.fitme.domain.product.dto.ProductDetailResponse;
+import site.chachacha.fitme.domain.product.dto.ProductOptionResponse;
+import site.chachacha.fitme.domain.product.dto.ProductRankingListResponse;
+import site.chachacha.fitme.domain.product.dto.ProductRankingResponse;
 import site.chachacha.fitme.domain.product.dto.ProductResponse;
 import site.chachacha.fitme.domain.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.entity.ProductOption;
 import site.chachacha.fitme.domain.product.exception.ProductNotFoundException;
 import site.chachacha.fitme.domain.product.repository.ProductCustomRepository;
-import site.chachacha.fitme.domain.product.repository.ProductRepository;
-import site.chachacha.fitme.domain.product.dto.ProductOptionResponse;
 import site.chachacha.fitme.domain.product.repository.ProductOptionRepository;
+import site.chachacha.fitme.domain.product.repository.ProductRepository;
 import site.chachacha.fitme.domain.review.entity.ProductReview;
 
 @Slf4j

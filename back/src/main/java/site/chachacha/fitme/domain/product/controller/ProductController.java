@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import site.chachacha.fitme.common.annotation.MemberId;
 import site.chachacha.fitme.domain.product.dto.ProductDetailResponse;
 import site.chachacha.fitme.domain.product.dto.ProductOptionResponse;
+import site.chachacha.fitme.domain.product.dto.ProductRankingListResponse;
 import site.chachacha.fitme.domain.product.dto.ProductResponse;
 import site.chachacha.fitme.domain.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.domain.product.service.ProductService;
@@ -47,7 +48,8 @@ public class ProductController {
 
     // 실시간 상품 랭킹 조회
     @GetMapping("/rankings")
-    public ResponseEntity<ProductRankingListResponse> getProductRankings(@RequestParam(defaultValue = "0", name = "lastRank") Integer lastRank,
+    public ResponseEntity<ProductRankingListResponse> getProductRankings(
+        @RequestParam(defaultValue = "0", name = "lastRank") Integer lastRank,
         @RequestParam(defaultValue = "30", name = "size") Integer size) {
         ProductRankingListResponse responses = productService.getProductRankings(lastRank, size);
         return ResponseEntity.ok(responses);

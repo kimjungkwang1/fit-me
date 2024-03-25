@@ -67,6 +67,8 @@ public class Product extends BaseEntity {
 
     private int monthlyPopularityScore = 0;
 
+//    private int weeklyPopularityScore = 0;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductOption> productOptions;
 
