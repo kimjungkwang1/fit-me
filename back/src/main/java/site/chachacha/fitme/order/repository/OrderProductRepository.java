@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import site.chachacha.fitme.order.entity.OrderProduct;
-import site.chachacha.fitme.product.repository.support.ProductScore;
+import site.chachacha.fitme.domain.order.OrderProduct;
+import site.chachacha.fitme.domain.product.repository.support.ProductScore;
 
 @Repository
 public interface OrderProductRepository extends JpaRepository<OrderProduct, Long> {

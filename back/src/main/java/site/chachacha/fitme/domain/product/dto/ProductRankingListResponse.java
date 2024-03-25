@@ -1,4 +1,4 @@
-package site.chachacha.fitme.product.dto;
+package site.chachacha.fitme.domain.product.dto;
 
 import java.util.List;
 import lombok.Getter;

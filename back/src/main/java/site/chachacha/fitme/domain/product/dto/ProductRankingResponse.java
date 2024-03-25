@@ -1,12 +1,12 @@
-package site.chachacha.fitme.product.dto;
+package site.chachacha.fitme.domain.product.dto;
 
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.chachacha.fitme.brand.dto.BrandResponse;
-import site.chachacha.fitme.product.entity.Product;
+import site.chachacha.fitme.domain.brand.dto.BrandResponse;
+import site.chachacha.fitme.domain.product.entity.Product;
 
 @Getter
 @Setter

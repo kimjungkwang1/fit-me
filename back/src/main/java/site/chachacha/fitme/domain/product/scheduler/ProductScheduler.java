@@ -1,4 +1,4 @@
-package site.chachacha.fitme.product.scheduler;
+package site.chachacha.fitme.domain.product.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,12 +16,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import site.chachacha.fitme.like.repository.ProductLikeRepository;
+import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
+import site.chachacha.fitme.domain.product.dto.ProductRankingResponse;
+import site.chachacha.fitme.domain.product.entity.Product;
+import site.chachacha.fitme.domain.product.repository.ProductRepository;
+import site.chachacha.fitme.domain.review.entity.ProductReview;
 import site.chachacha.fitme.order.repository.OrderProductRepository;
-import site.chachacha.fitme.product.dto.ProductRankingResponse;
-import site.chachacha.fitme.product.entity.Product;
-import site.chachacha.fitme.product.repository.ProductRepository;
-import site.chachacha.fitme.review.entity.ProductReview;
 
 @Slf4j
 @RequiredArgsConstructor
