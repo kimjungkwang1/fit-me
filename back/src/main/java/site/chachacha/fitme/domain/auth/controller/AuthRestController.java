@@ -50,7 +50,7 @@ public class AuthRestController {
     public void oAuth2AuthorizationV1(@PathVariable(name = "provider") String provider, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestUrl = getHttpAndDomain(request);
 
-        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoClientId + "&redirect_uri=" + requestUrl + "/api/auth/login/oauth2/code/" + provider);
+        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoClientId + "&redirect_uri=" + requestUrl + "/auth/login/oauth2/code/" + provider);
     }
 
     @GetMapping(value = "/login/oauth2/code/{provider}")
