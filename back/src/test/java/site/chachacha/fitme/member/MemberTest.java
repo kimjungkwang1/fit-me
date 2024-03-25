@@ -9,9 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,16 +22,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.TransactionSystemException;
-import site.chachacha.fitme.auth.service.JwtService;
-import site.chachacha.fitme.member.dto.MemberResponse;
-import site.chachacha.fitme.member.dto.MemberUpdate;
-import site.chachacha.fitme.member.service.MemberService;
+import site.chachacha.fitme.domain.auth.service.JwtService;
+import site.chachacha.fitme.domain.member.dto.MemberResponse;
+import site.chachacha.fitme.domain.member.dto.MemberUpdate;
 
 @TestInstance(PER_CLASS)
 @SpringBootTest(properties = "spring.profiles.active=test")
