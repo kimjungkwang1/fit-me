@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
+
     private final EntityManagerFactory emf;
 
     @Value("${spring.redis.host}")
@@ -32,9 +32,11 @@ public class RedisConfig {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
 //        redisTemplate.setEnableTransactionSupport(true); // 트랜잭션 지원
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-
 //    @Bean
 //    public PlatformTransactionManager transactionManager() {
 //        return new JpaTransactionManager(emf);
