@@ -18,12 +18,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import site.chachacha.fitme.auth.service.JwtService;
+import site.chachacha.fitme.domain.auth.service.JwtService;
 
 @TestInstance(PER_CLASS)
 @SpringBootTest(properties = "spring.profiles.active=test")
