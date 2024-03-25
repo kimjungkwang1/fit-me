@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Validated
-public class CartRequest {
+public class CartCreateRequest {
 
     @Valid
     private List<CartOptionRequest> options;

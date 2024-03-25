@@ -13,25 +13,25 @@ export default function Dressroom() {
             <div className='flex flex-col'>
               <div className='flex items-center justify-center'>
                 <div className='w-[35%] p-2'>
-                  <DressroomNowFitting></DressroomNowFitting>
+                  <DressroomNowFitting />
                 </div>
                 <div className='flex flex-col flex-grow p-2'>
                   <div className='w-[50%] pb-[69.33%] bg-gray-100 mx-auto m-2'></div>
-                  <DressroomButton></DressroomButton>
+                  <DressroomButton />
                 </div>
               </div>
               <Tabs style='fullWidth'>
                 <Tabs.Item active title='장바구니'>
-                  <DressroomItemList></DressroomItemList>
+                  <DressroomItemList />
                 </Tabs.Item>
                 <Tabs.Item title='구매 목록'>
-                  <DressroomItemList></DressroomItemList>
+                  <DressroomItemList />
                 </Tabs.Item>
               </Tabs>
             </div>
           </Tabs.Item>
           <Tabs.Item title='내 피팅목록'>
-            <DressroomMyFittingList></DressroomMyFittingList>
+            <DressroomMyFittingList />
           </Tabs.Item>
         </Tabs>
       </div>

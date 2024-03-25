@@ -1,9 +1,13 @@
 package site.chachacha.fitme.cart.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import site.chachacha.fitme.cart.entity.Cart;
+import site.chachacha.fitme.product.dto.MainImageResponse;
+import site.chachacha.fitme.product.entity.Product;
+import site.chachacha.fitme.product.entity.ProductOption;
 
 @Getter
 public class CartResponse {
@@ -22,11 +26,16 @@ public class CartResponse {
     }
 
     public static CartResponse from(Cart cart) {
+        Product product = cart.getProduct();
+        ProductOption productOption = cart.getProductOption();
         return CartResponse.builder()
             .id(cart.getId())
-            .product(new ProductResponse(cart.getProduct().getId(), cart.getProduct().getName()))
+            .product(
+                new ProductResponse(product.getId(), product.getName(),
+                    product.getCategory().getId(),
+                    product.getMainImage().stream().map(MainImageResponse::from).toList()))
             .productOption(
-                new ProductOptionResponse(cart.getProductOption().getId(), cart.getProductOption().getColor(), cart.getProductSize().getSize(),
+                new ProductOptionResponse(productOption.getId(), productOption.getColor(), cart.getProductSize().getSize(),
                     cart.getQuantity()))
             .productTotalPrice(cart.getTotalPrice())
             .build();
@@ -38,6 +47,8 @@ public class CartResponse {
 
         private Long id;
         private String name;
+        private Long categoryId;
+        private List<MainImageResponse> mainImages;
     }
 
     @Getter
