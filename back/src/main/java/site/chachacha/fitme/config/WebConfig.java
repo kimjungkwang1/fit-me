@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import site.chachacha.fitme.auth.service.JwtService;
+import site.chachacha.fitme.domain.auth.service.JwtService;
 import site.chachacha.fitme.resolver.MemberIdResolver;
 
 @Configuration
