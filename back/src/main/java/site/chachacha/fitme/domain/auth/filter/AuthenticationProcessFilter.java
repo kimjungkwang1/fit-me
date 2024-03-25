@@ -26,7 +26,7 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    private static final List<String> NO_CHECK_URL = List.of("/api/auth", "/api/products", "/auth/login",
+    private static final List<String> NO_CHECK_URL = List.of("/api/auth", "/api/products", "/api/brands", "/auth/login",
         "/error", "/css", "/js", "/img", "/favicon.ico");
 
     /**
