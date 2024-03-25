@@ -21,7 +21,9 @@ import site.chachacha.fitme.domain.product.entity.Product;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class DressRoom extends BaseEntity {
-    @Id @GeneratedValue(strategy = IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     Long id;
 
     // 최종 결과물 이미지 URL
@@ -32,12 +34,10 @@ public class DressRoom extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Model model;
 
-    @NotNull
     @JoinColumn(name = "product_id_top")
     @ManyToOne(fetch = LAZY)
     private Product productTop;
 
-    @NotNull
     @JoinColumn(name = "product_id_bottom")
     @ManyToOne(fetch = LAZY)
     private Product productBottom;

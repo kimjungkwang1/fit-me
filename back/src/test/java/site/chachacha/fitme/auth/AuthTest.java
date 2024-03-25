@@ -29,6 +29,7 @@ import site.chachacha.fitme.domain.auth.service.JwtService;
 @AutoConfigureMockMvc
 @TestMethodOrder(value = OrderAnnotation.class)
 public class AuthTest {
+
     @Autowired
     private DataSource dataSource;
 
@@ -47,9 +48,9 @@ public class AuthTest {
     void setUp() {
         // 테스트용 데이터베이스 초기화
         try (Connection connection = dataSource.getConnection()) {
-            executeSqlScript(connection, new FileSystemResource("src/test/resources/sql/data-h2.sql"));
-        }
-        catch (Exception e) {
+            executeSqlScript(connection,
+                new FileSystemResource("src/test/resources/sql/member.sql"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -68,12 +69,13 @@ public class AuthTest {
                 .header("AuthorizationRefresh", "Bearer " + refreshToken)
                 .header("Content-Type", "application/json"))
 
-        // then
-        // 200인지 확인
-        .andExpect(status().isOk()).andReturn();
+            // then
+            // 200인지 확인
+            .andExpect(status().isOk()).andReturn();
 
         // 응답 헤더에 있는 RefreshToken 꺼내기
-        String refreshToken = result.getResponse().getHeader("AuthorizationRefresh").replace("Bearer ", "");
+        String refreshToken = result.getResponse().getHeader("AuthorizationRefresh")
+            .replace("Bearer ", "");
 
         this.refreshToken = refreshToken;
 
@@ -99,9 +101,9 @@ public class AuthTest {
         MvcResult result = mockMvc.perform(post("/api/auth/reissue/v1")
                 .header("Content-Type", "application/json"))
 
-        // then
-        // 400인지 확인
-        .andExpect(status().isBadRequest()).andReturn();
+            // then
+            // 400인지 확인
+            .andExpect(status().isBadRequest()).andReturn();
 
         // 응답 헤더에 AccessToken과 RefreshToken이 없어야 한다.
         assertThat(result.getResponse().getHeader("Authorization")).isEqualTo(null);
@@ -119,9 +121,9 @@ public class AuthTest {
                 .header("AuthorizationRefresh", "Bearer " + refreshToken + "error")
                 .header("Content-Type", "application/json"))
 
-        // then
-        // 400인지 확인
-        .andExpect(status().isUnauthorized()).andReturn();
+            // then
+            // 400인지 확인
+            .andExpect(status().isUnauthorized()).andReturn();
 
         // 응답 헤더에 AccessToken과 RefreshToken이 없어야 한다.
         assertThat(result.getResponse().getHeader("Authorization")).isEqualTo(null);
@@ -142,9 +144,9 @@ public class AuthTest {
                 .header("AuthorizationRefresh", "Bearer " + refreshToken)
                 .header("Content-Type", "application/json"))
 
-        // then
-        // 401인지 확인
-        .andExpect(status().isUnauthorized()).andReturn();
+            // then
+            // 401인지 확인
+            .andExpect(status().isUnauthorized()).andReturn();
 
         // 응답 헤더에 AccessToken과 RefreshToken이 없어야 한다.
         assertThat(result.getResponse().getHeader("Authorization")).isEqualTo(null);
