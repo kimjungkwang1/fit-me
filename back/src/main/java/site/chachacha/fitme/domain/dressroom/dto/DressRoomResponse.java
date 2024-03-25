@@ -21,6 +21,6 @@ public class DressRoomResponse {
     }
 
     public static DressRoomResponse of(DressRoom dressRoom) {
-        return new DressRoomResponse(dressRoom.getId(), dressRoom.getImage_url());
+        return new DressRoomResponse(dressRoom.getId(), dressRoom.getImageUrl());
     }
 }
