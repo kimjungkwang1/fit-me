@@ -13,11 +13,11 @@ public class DressRoomResponse {
     @NotNull
     private Long id;
 
-    private String image_url;
+    private String imageUrl;
 
-    private DressRoomResponse(Long id, String image_url) {
+    private DressRoomResponse(Long id, String imageUrl) {
         this.id = id;
-        this.image_url = image_url;
+        this.imageUrl = imageUrl;
     }
 
     public static DressRoomResponse of(DressRoom dressRoom) {
