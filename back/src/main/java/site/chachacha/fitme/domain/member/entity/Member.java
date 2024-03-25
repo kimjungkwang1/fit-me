@@ -10,15 +10,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.chachacha.fitme.domain.auth.entity.Token;
 import site.chachacha.fitme.common.entity.BaseEntity;
+import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.member.dto.MemberUpdate;
 import site.chachacha.fitme.util.RandomNickname;
 
@@ -60,6 +64,9 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "token_id")
     private Token token;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DressRoom> dressRooms = new ArrayList<>();
+
     @Builder
     protected Member(Long providerId) {
         this.providerId = providerId;
@@ -73,5 +80,10 @@ public class Member extends BaseEntity {
         this.phoneNumber = memberUpdate.getPhoneNumber();
         this.birthYear = memberUpdate.getBirthYear();
         this.address = memberUpdate.getAddress();
+    }
+
+    // == 연관관계 메서드 =
+    public void addDressRoom(DressRoom dressRoom) {
+        dressRooms.add(dressRoom);
     }
 }
