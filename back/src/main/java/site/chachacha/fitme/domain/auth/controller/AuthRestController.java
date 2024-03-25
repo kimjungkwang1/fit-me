@@ -56,6 +56,7 @@ public class AuthRestController {
     public void oAuth2AuthorizationV1(@PathVariable(name = "provider") String provider,
         HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestUrl = getHttpAndDomain(request);
+        log.info("requestUrl: " + requestUrl);
 
         response.sendRedirect(
             "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoClientId
@@ -124,34 +125,22 @@ public class AuthRestController {
     }
 
     private String getHttpAndDomain(HttpServletRequest request) {
-        String host = request.getHeader("host");
-        if (!host.isBlank()) {
-            log.info("host: " + host);
-            return "https://" + host;
-        }
-
         // request의 domain을 가져온다.
         String xForwardedHost = request.getHeader("x-forwarded-host");
         log.info("x-forwarded-host: " + xForwardedHost);
-        // http://localhost:3000/auth/login/oauth2/code/kakao?code=EGhvUbUYMBzvBOTjYaZlN5HDY-ST_SFqVyCH1IaxHfdfK4PNaKB066Q7kH0KPXNOAAABjbYKJreo9NUiJo7xnA
-        if (xForwardedHost != null && xForwardedHost.contains("localhost")) {
-            // 프론트 local
-            String result = "http://" + xForwardedHost;
-            log.info("result: " + result);
-            return result;
-        }
 
         String origin = request.getHeader(HttpHeaders.ORIGIN);
         log.info("origin: " + origin);
 
-        if (origin != null) {
-            // 프론트 local, 백엔드 dev
-            log.info("origin: " + origin);
-            return origin;
-        } else {
-            // 프론트 dev, 백엔드 dev
-            log.info("frontend: " + frontend);
-            return frontend;
+        // x-forwarded-host와 origin이 모두 null이면
+        if (xForwardedHost == null && origin == null) {
+            // 둘 다 로컬
+            return "http://localhost:8080";
+        }
+        // x-forwarded-host가 null이 아니면
+        else {
+            // x-forwarded-host를 반환
+            return "https://" + xForwardedHost;
         }
     }
 }
