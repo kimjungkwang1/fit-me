@@ -25,7 +25,7 @@ public class DressRoom extends BaseEntity {
     Long id;
 
     // 최종 결과물 이미지 URL
-    private String image_url;
+    private String imageUrl;
 
     @NotNull
     @JoinColumn(name = "model_id")
