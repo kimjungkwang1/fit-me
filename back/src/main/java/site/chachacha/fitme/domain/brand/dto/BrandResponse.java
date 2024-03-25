@@ -3,6 +3,8 @@ package site.chachacha.fitme.domain.brand.dto;
 import lombok.Getter;
 import site.chachacha.fitme.domain.brand.entity.Brand;
 
+@Setter
+@NoArgsConstructor
 @Getter
 public class BrandResponse {
 

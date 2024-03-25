@@ -5,7 +5,10 @@ import lombok.Getter;
 import site.chachacha.fitme.domain.product.entity.MainImage;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class MainImageResponse {
+
     private Long id;
     private String url;
 
