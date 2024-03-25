@@ -13,8 +13,9 @@ const KakaoAuthHandler: React.FC = () => {
     if (code) {
       console.log('받은 코드:', code);
       axios
-        .get('https://fit-me.site/api/auth/login/oauth2/code/kakao' + code)
+        .get('https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code)
         .then((res) => {
+          console.log(res.status);
           if (res.status === 200) {
             let accessToken = res.headers.Authorization;
             let refreshToken = res.headers.AuthorizationRefresh;
