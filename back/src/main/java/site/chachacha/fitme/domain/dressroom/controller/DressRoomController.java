@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import site.chachacha.fitme.advice.exception.GoneException;
 import site.chachacha.fitme.common.annotation.MemberId;
 import site.chachacha.fitme.domain.dressroom.dto.DressRoomResponse;
-import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.dressroom.entity.Model;
 import site.chachacha.fitme.domain.dressroom.service.DressRoomService;
 import site.chachacha.fitme.domain.dressroom.service.ModelService;
@@ -48,29 +47,23 @@ public class DressRoomController {
     public DressRoomResponse getDressRoom(@MemberId Long memberId,
         @NotNull @RequestParam(name = "dressRoomId") Long dressRoomId) throws GoneException {
         // 회원의 id로 DressRoom 조회
-        DressRoomResponse dressRoomResponse = dressRoomService.findByIdAndMemberId(memberId,
-                dressRoomId)
-            .orElseThrow(() -> new GoneException("해당 드레스룸이 존재하지 않습니다."));
-
-        if (dressRoomResponse.getImageUrl() == null) {
-            throw new GoneException("해당 드레스룸이 존재하지 않습니다.");
-        }
-
-        return dressRoomResponse;
+        return dressRoomService.findByIdAndMemberId(memberId,
+            dressRoomId);
     }
 
     // DressRoom 생성
     @PostMapping
     public ResponseEntity<?> createDressRoom(@MemberId Long memberId,
         @NotNull @RequestParam(name = "modelId") Long modelId,
-        @NotNull @RequestParam(name = "productTopId") Long productTopId,
-        @NotNull @RequestParam(name = "productBottomId") Long productBottomId)
+        @RequestParam(name = "productTopId", required = false) Long productTopId,
+        @RequestParam(name = "productBottomId", required = false) Long productBottomId)
         throws GoneException {
         // DressRoom 생성
-        DressRoom dressRoom = dressRoomService.createDressRoom(memberId, modelId, productTopId,
+        DressRoomResponse dressRoom = dressRoomService.createDressRoom(memberId, modelId,
+            productTopId,
             productBottomId);
 
-        // AI 서버에 처리 요청
+        // ToDo: AI 서버에 처리 요청
 
         return ResponseEntity.ok(dressRoom);
     }
