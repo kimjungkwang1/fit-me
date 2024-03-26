@@ -1,8 +1,129 @@
+import axios from 'axios';
 import { Button, Modal } from 'flowbite-react';
-import React, { useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import FilterButton from './FilterButton';
+import { BiSearch } from 'react-icons/bi';
+
+type OptionType = {
+  id: number;
+  name: string;
+  selected: boolean;
+};
 
 export default function FilterBar() {
   const [openModal, setOpenModal] = useState(false);
+
+  // 브랜드 목록 구성
+  const [brands, setBrands] = useState<OptionType[]>([]);
+  useEffect(() => {
+    axios.get(`https://fit-me.site/api/brands`).then(({ data }) => {
+      setBrands(data);
+    });
+  }, []);
+
+  // 카테고리 목록 구성
+  const [categories, setCategories] = useState<OptionType[]>([]);
+  useEffect(() => {
+    function createCategory(id: number, name: string): OptionType {
+      return {
+        id,
+        name,
+        selected: false,
+      };
+    }
+
+    const initialCategories: OptionType[] = [
+      createCategory(1005, '맨투맨/스웨트셔츠'),
+      createCategory(1006, '니트/스웨터'),
+      createCategory(1010, '셔츠/블라우스'),
+      createCategory(1001, '반소매 티셔츠'),
+      createCategory(1004, '후드 티셔츠'),
+      createCategory(1003, '피케/카라 티셔츠'),
+      createCategory(1008, '기타상의'),
+      createCategory(1013, '스포츠상의'),
+      createCategory(1011, '민소매상의'),
+      createCategory(3002, '데님 팬츠'),
+      createCategory(3007, '코튼 팬츠'),
+      createCategory(3004, '트레이닝/조거팬츠'),
+      createCategory(3008, '슈트팬츠/슬랙스'),
+      createCategory(3006, '기타바지'),
+      createCategory(3011, '스포츠하의'),
+      createCategory(3009, '숏팬츠'),
+      createCategory(3005, '레깅스'),
+    ];
+
+    setCategories(initialCategories);
+  }, []);
+
+  // 보여줄 브랜드 목록 구성
+  const [showBrands, setShowBrands] = useState<OptionType[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const searchKeywordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setSearchKeyword(input);
+  };
+  useEffect(() => {
+    if (searchKeyword === '') {
+      setShowBrands([...brands].slice(0, 16));
+    } else {
+      const filteredBrands = brands.filter((brand) =>
+        brand.name.toLowerCase().includes(searchKeyword.toLowerCase())
+      );
+      setShowBrands(filteredBrands.slice(0, 16));
+    }
+  }, [brands, searchKeyword]);
+
+  // 선택된 브랜드 목록 구성
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const selectedBrandsHandler = (id: number, index: number) => {
+    if (selectedBrands) {
+      const index = selectedBrands.indexOf(id);
+
+      if (index !== -1) {
+        // 요소를 제거
+        const updated = [...selectedBrands];
+        updated.splice(index, 1);
+        setSelectedBrands(updated);
+      } else {
+        // 요소를 추가
+        setSelectedBrands([...selectedBrands, id]);
+      }
+    }
+
+    if (brands) {
+      const updated = [...brands];
+      const temp = brands[index];
+      temp.selected = !temp.selected;
+      updated.splice(index, 1, temp);
+      setBrands(updated);
+    }
+  };
+
+  // 선택된 카테고리 목록 구성
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const selectedCategoriesHandler = (id: number, index: number) => {
+    if (selectedCategories) {
+      const selectedIndex = selectedCategories.indexOf(id);
+
+      if (selectedIndex !== -1) {
+        // 요소를 제거
+        const updatedSelected = [...selectedCategories];
+        updatedSelected.splice(selectedIndex, 1);
+        setSelectedCategories(updatedSelected);
+      } else {
+        // 요소를 추가
+        setSelectedCategories([...selectedCategories, id]);
+      }
+    }
+
+    if (categories) {
+      const updated = [...categories];
+      const temp = categories[index];
+      temp.selected = !temp.selected;
+      updated.splice(index, 1, temp);
+      setCategories(updated);
+    }
+  };
 
   return (
     <div className='flex flex-row gap-1 mx-[3%] mt-2 mb-1'>
@@ -19,64 +140,48 @@ export default function FilterBar() {
         <Modal.Body>
           <div>
             <span className='flex font-semibold mt-2 mb-1'>브랜드</span>
+            <div className='bg-gray-200 rounded-lg my-2 px-2 py-1 text-sm flex flex-row items-center'>
+              <BiSearch className='text-gray-500 text-lg mx-1' />
+              <input
+                type='text'
+                placeholder='브랜드를 검색해보세요'
+                className='bg-gray-200 w-full focus: outline-none ml-1'
+                onChange={searchKeywordHandler}
+              />
+            </div>
             <div className='flex flex-row flex-wrap gap-2'>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
-              <Button size='xs' color='light'>
-                브랜드이름
-              </Button>
+              {showBrands &&
+                showBrands.map((brand, index) => (
+                  <FilterButton
+                    key={index}
+                    index={index}
+                    id={brand.id}
+                    name={brand.name}
+                    selected={brand.selected}
+                    handler={selectedBrandsHandler}
+                  />
+                ))}
             </div>
           </div>
           <div>
             <span className='flex font-semibold mt-2 mb-1'>카테고리</span>
             <div className='flex flex-row flex-wrap gap-2'>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
-              <Button size='xs' color='light'>
-                카테고리이름
-              </Button>
+              {categories &&
+                categories.map((category, index) => (
+                  <FilterButton
+                    key={index}
+                    index={index}
+                    id={category.id}
+                    name={category.name}
+                    selected={category.selected}
+                    handler={selectedCategoriesHandler}
+                  />
+                ))}
             </div>
           </div>
           <div>
             <span className='flex font-semibold mt-2 mb-1'>가격</span>
+            <div></div>
           </div>
           <Button size='sm' onClick={() => setOpenModal(false)}>
             적용
