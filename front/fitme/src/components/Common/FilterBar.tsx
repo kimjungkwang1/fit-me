@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { Button, Modal } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import FilterButton from './FilterButton';
+import { BiSearch } from 'react-icons/bi';
 
 type OptionType = {
   id: number;
@@ -13,7 +14,7 @@ export default function FilterBar() {
   const [openModal, setOpenModal] = useState(false);
 
   // 브랜드 목록 구성
-  const [brands, setBrands] = useState<OptionType[]>();
+  const [brands, setBrands] = useState<OptionType[]>([]);
   useEffect(() => {
     axios.get(`https://fit-me.site/api/brands`).then(({ data }) => {
       setBrands(data);
@@ -21,7 +22,7 @@ export default function FilterBar() {
   }, []);
 
   // 카테고리 목록 구성
-  const [categories, setCategories] = useState<OptionType[]>();
+  const [categories, setCategories] = useState<OptionType[]>([]);
   useEffect(() => {
     function createCategory(id: number, name: string): OptionType {
       return {
@@ -54,6 +55,24 @@ export default function FilterBar() {
     setCategories(initialCategories);
   }, []);
 
+  // 보여줄 브랜드 목록 구성
+  const [showBrands, setShowBrands] = useState<OptionType[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const searchKeywordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setSearchKeyword(input);
+  };
+  useEffect(() => {
+    if (searchKeyword === '') {
+      setShowBrands([...brands].slice(0, 16));
+    } else {
+      const filteredBrands = brands.filter((brand) =>
+        brand.name.toLowerCase().includes(searchKeyword.toLowerCase())
+      );
+      setShowBrands(filteredBrands.slice(0, 16));
+    }
+  }, [brands, searchKeyword]);
+
   // 선택된 브랜드 목록 구성
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const selectedBrandsHandler = (id: number, index: number) => {
@@ -78,8 +97,6 @@ export default function FilterBar() {
       updated.splice(index, 1, temp);
       setBrands(updated);
     }
-
-    console.log(selectedBrands);
   };
 
   // 선택된 카테고리 목록 구성
@@ -106,8 +123,6 @@ export default function FilterBar() {
       updated.splice(index, 1, temp);
       setCategories(updated);
     }
-
-    console.log(selectedCategories);
   };
 
   return (
@@ -125,9 +140,18 @@ export default function FilterBar() {
         <Modal.Body>
           <div>
             <span className='flex font-semibold mt-2 mb-1'>브랜드</span>
+            <div className='bg-gray-200 rounded-lg my-2 px-2 py-1 text-sm flex flex-row items-center'>
+              <BiSearch className='text-gray-500 text-lg mx-1' />
+              <input
+                type='text'
+                placeholder='브랜드를 검색해보세요'
+                className='bg-gray-200 w-full focus: outline-none ml-1'
+                onChange={searchKeywordHandler}
+              />
+            </div>
             <div className='flex flex-row flex-wrap gap-2'>
-              {brands &&
-                brands.map((brand, index) => (
+              {showBrands &&
+                showBrands.map((brand, index) => (
                   <FilterButton
                     key={index}
                     index={index}
@@ -157,6 +181,7 @@ export default function FilterBar() {
           </div>
           <div>
             <span className='flex font-semibold mt-2 mb-1'>가격</span>
+            <div></div>
           </div>
           <Button size='sm' onClick={() => setOpenModal(false)}>
             적용
