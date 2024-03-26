@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import loginImg from '../assets/images/kakao_login.png';
 import loginBg from '../assets/images/login_bg.png';
-import axios from 'axios';
 
 const Login: React.FC = () => {
   const KAKAO_CODE_URL = 'https://fit-me.site/api/auth/login/oauth2/authorization/kakao';
