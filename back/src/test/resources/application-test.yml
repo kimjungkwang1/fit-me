@@ -13,8 +13,7 @@ spring:
         username: sa
         password:
         initialization-mode: always
-        schema: classpath:sql/schema-h2.sql
-        data: classpath:sql/data-h2.sql
+        schema: classpath:sql/schema.sql
 
     redis:
         host: localhost

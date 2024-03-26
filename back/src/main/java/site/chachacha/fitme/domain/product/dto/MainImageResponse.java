@@ -2,10 +2,15 @@ package site.chachacha.fitme.domain.product.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import site.chachacha.fitme.domain.product.entity.MainImage;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class MainImageResponse {
+
     private Long id;
     private String url;
 

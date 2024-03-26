@@ -1,4 +1,4 @@
-package site.chachacha.fitme.domain.dressroom;
+package site.chachacha.fitme.domain.dressroom.entity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -6,16 +6,23 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.chachacha.fitme.common.entity.BaseEntity;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-public class DressRoom extends BaseEntity {
+public class Model {
     @Id @GeneratedValue(strategy = IDENTITY)
-    Long id;
+    private Long id;
 
-    private String imageUrl;
+    @NotBlank
+    private String url;
+
+    @Builder
+    private Model(String url) {
+        this.url = url;
+    }
 }

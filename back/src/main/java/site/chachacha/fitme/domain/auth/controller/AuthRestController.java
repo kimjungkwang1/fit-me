@@ -1,16 +1,28 @@
 package site.chachacha.fitme.domain.auth.controller;
 
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.GONE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static site.chachacha.fitme.domain.auth.service.JwtService.ACCESS_TOKEN_HEADER;
+import static site.chachacha.fitme.domain.auth.service.JwtService.BEARER;
+import static site.chachacha.fitme.domain.auth.service.JwtService.REFRESH_TOKEN_HEADER;
+
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import site.chachacha.fitme.domain.auth.dto.KakaoOAuthResponse;
 import site.chachacha.fitme.domain.auth.exception.InvalidRefreshTokenException;
 import site.chachacha.fitme.domain.auth.exception.NoSuchRefreshTokenException;
@@ -19,18 +31,12 @@ import site.chachacha.fitme.domain.auth.service.OAuthService;
 import site.chachacha.fitme.domain.member.dto.MemberResponse;
 import site.chachacha.fitme.domain.member.exception.NoSuchMemberException;
 
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.springframework.http.HttpStatus.GONE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static site.chachacha.fitme.domain.auth.service.JwtService.ACCESS_TOKEN_HEADER;
-import static site.chachacha.fitme.domain.auth.service.JwtService.BEARER;
-import static site.chachacha.fitme.domain.auth.service.JwtService.REFRESH_TOKEN_HEADER;
-
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/auth")
 @RestController
 public class AuthRestController {
+
     private final AuthService authService;
     private final OAuthService oauthService;
 
@@ -47,14 +53,20 @@ public class AuthRestController {
     private String activeProfile;
 
     @GetMapping(value = "/login/oauth2/authorization/{provider}")
-    public void oAuth2AuthorizationV1(@PathVariable(name = "provider") String provider, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void oAuth2AuthorizationV1(@PathVariable(name = "provider") String provider,
+        HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestUrl = getHttpAndDomain(request);
+        log.info("requestUrl: " + requestUrl);
 
-        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoClientId + "&redirect_uri=" + requestUrl + "/api/auth/login/oauth2/code/" + provider);
+        response.sendRedirect(
+            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + kakaoClientId
+                + "&redirect_uri=" + requestUrl + "/auth/login/oauth2/code/" + provider);
     }
 
     @GetMapping(value = "/login/oauth2/code/{provider}")
-    public ResponseEntity<?> oAuth2CodeV1(@PathVariable(name = "provider") String provider, @RequestParam(name = "code") String code, HttpServletRequest request, HttpServletResponse response) throws IOException, NoSuchMemberException {
+    public ResponseEntity<?> oAuth2CodeV1(@PathVariable(name = "provider") String provider,
+        @RequestParam(name = "code") String code, HttpServletRequest request,
+        HttpServletResponse response) throws IOException, NoSuchMemberException {
         log.info("code: " + code);
 
         // 요청한 url을 가져온다.
@@ -62,7 +74,8 @@ public class AuthRestController {
         log.info("requestUrl: " + requestUrl);
 
         // Kakao에 Access Token을 요청한다.
-        KakaoOAuthResponse kakaoOAuthResponse = oauthService.requestKakao(provider, code, requestUrl);
+        KakaoOAuthResponse kakaoOAuthResponse = oauthService.requestKakao(provider, code,
+            requestUrl);
 
         // DB에 사용자 정보, Access Token, Refresh Token 저장
         MemberResponse memberResponse = authService.signIn(kakaoOAuthResponse, response);
@@ -71,7 +84,8 @@ public class AuthRestController {
     }
 
     @PostMapping(value = "/reissue/v1", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> reissueJwtsV1(HttpServletRequest request, HttpServletResponse response) throws IllegalArgumentException, JWTVerificationException, IOException {
+    public ResponseEntity<?> reissueJwtsV1(HttpServletRequest request, HttpServletResponse response)
+        throws IllegalArgumentException, JWTVerificationException, IOException {
 //        , NoSuchDeviceTokenException
         String[] jwts = authService.reissueJwts(request);
 
@@ -111,34 +125,22 @@ public class AuthRestController {
     }
 
     private String getHttpAndDomain(HttpServletRequest request) {
-        String host = request.getHeader("host");
-        if (!host.isBlank()) {
-            return "http://" + host;
-        }
-
         // request의 domain을 가져온다.
         String xForwardedHost = request.getHeader("x-forwarded-host");
         log.info("x-forwarded-host: " + xForwardedHost);
-        // http://localhost:3000/auth/login/oauth2/code/kakao?code=EGhvUbUYMBzvBOTjYaZlN5HDY-ST_SFqVyCH1IaxHfdfK4PNaKB066Q7kH0KPXNOAAABjbYKJreo9NUiJo7xnA
-        if (xForwardedHost != null && xForwardedHost.contains("localhost")) {
-            // 프론트 local
-            String result = "http://" + xForwardedHost;
-            log.info("result: " + result);
-            return result;
-        }
 
         String origin = request.getHeader(HttpHeaders.ORIGIN);
         log.info("origin: " + origin);
 
-        if (origin != null) {
-            // 프론트 local, 백엔드 dev
-            log.info("origin: " + origin);
-            return origin;
+        // x-forwarded-host와 origin이 모두 null이면
+        if (xForwardedHost == null && origin == null) {
+            // 둘 다 로컬
+            return "http://localhost:8080";
         }
+        // x-forwarded-host가 null이 아니면
         else {
-            // 프론트 dev, 백엔드 dev
-            log.info("frontend: " + frontend);
-            return frontend;
+            // x-forwarded-host를 반환
+            return "https://" + xForwardedHost;
         }
     }
 }

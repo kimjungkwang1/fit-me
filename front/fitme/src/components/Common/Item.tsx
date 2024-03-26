@@ -37,15 +37,11 @@ export default function Item({
       <div className='flex-col w-[32%]'>
         <Link to={`/detail/${id}`}>
           <div>
-            {mainImages[0] ? (
-              <img
-                src={mainImages[0].url}
-                alt='main_image'
-                className='aspect-[3/4] object-cover rounded-lg'
-              />
-            ) : (
-              <div className='bg-bluegray aspect-[3/4] object-cover rounded-lg' />
-            )}
+            <img
+              src={mainImages[0].url}
+              alt='main_image'
+              className='aspect-[3/4] object-cover rounded-lg'
+            />
           </div>
           <div className='justify-start text-start'>
             <p className='text-xs'>{brand.name}</p>
