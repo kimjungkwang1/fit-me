@@ -1,4 +1,3 @@
-import React from 'react';
 import FilterBar from '../components/Common/FilterBar';
 import CategoryItemList from '../components/Category/CategoryItemList';
 import SortBar from '../components/Common/SortBar';
