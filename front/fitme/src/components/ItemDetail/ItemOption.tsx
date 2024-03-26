@@ -134,6 +134,31 @@ export default function ItemOption({ price }: ItemOptionProps) {
     setSelectedList(newList);
   };
 
+  // 선택된 옵션 장바구니에 모두 추가
+  const addToCart = () => {
+    modalHandler();
+  };
+  // const addToCart = () => {
+  //   axios.post(
+  //     `https://fit-me.site/api/products/${item_id}/carts`,
+  //     {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //     },
+  //     {
+  //       options: selectedList && [
+  //         selectedList.map(({ idColor: productOptionId, idSize: productSizeId, quantity }) => ({
+  //           productOptionId,
+  //           productSizeId,
+  //           quantity,
+  //         })),
+  //       ],
+  //     }
+  //   );
+  //   modalHandler();
+  // };
+
   return (
     <>
       <div className='flex justify-center'>
@@ -238,9 +263,9 @@ export default function ItemOption({ price }: ItemOptionProps) {
         {/* 하단 버튼 */}
         {openModal ? (
           <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
-            {/* 입어보기 버튼 */}
+            {/* 입어보기(장바구니) 버튼 */}
             <div
-              onClick={modalHandler}
+              onClick={addToCart}
               className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
             >
               <span>입어보기(장바구니)</span>
@@ -259,7 +284,7 @@ export default function ItemOption({ price }: ItemOptionProps) {
             {/* 입어보기 버튼 */}
             <div
               onClick={modalHandler}
-              className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
+              className='w-full bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
             >
               <span>옵션선택</span>
             </div>
