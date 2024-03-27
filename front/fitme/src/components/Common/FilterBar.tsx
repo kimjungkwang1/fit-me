@@ -18,6 +18,10 @@ type FilterBarProps = {
   categories: OptionType[];
   selectedCategories: number[];
   selectedCategoriesHandler: (id: number) => void;
+
+  ages: OptionType[];
+  selectedAges: number[];
+  selectedAgesHandler: (id: number) => void;
 };
 
 export default function FilterBar({
@@ -27,6 +31,9 @@ export default function FilterBar({
   categories,
   selectedCategories,
   selectedCategoriesHandler,
+  ages,
+  selectedAges,
+  selectedAgesHandler,
 }: FilterBarProps) {
   const [openModal, setOpenModal] = useState(false);
 
@@ -50,22 +57,51 @@ export default function FilterBar({
 
   return (
     <div className='flex flex-row gap-1 mx-[3%] mt-2 mb-1'>
-      <Button color='light' size='xs' onClick={() => setOpenModal(true)}>
-        브랜드
-      </Button>
-      <Button color='light' size='xs' onClick={() => setOpenModal(true)}>
-        카테고리
-      </Button>
-      <Button color='light' size='xs' onClick={() => setOpenModal(true)}>
+      <div
+        className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+        onClick={() => setOpenModal(true)}
+      >
+        {selectedBrands.length > 0
+          ? selectedBrands.length === 1
+            ? brands.find((brand) => brand.id === selectedBrands[0])?.name
+            : `${selectedBrands.length}개 브랜드 필터`
+          : `브랜드`}
+      </div>
+      <div
+        className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+        onClick={() => setOpenModal(true)}
+      >
+        {selectedCategories.length > 0
+          ? selectedCategories.length === 1
+            ? categories.find((category) => category.id === selectedCategories[0])?.name
+            : `${selectedCategories.length}개 카테고리 필터`
+          : `카테고리`}
+      </div>
+      <div
+        className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+        onClick={() => setOpenModal(true)}
+      >
         가격
-      </Button>
+      </div>
+      <div
+        className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+        onClick={() => setOpenModal(true)}
+      >
+        {selectedAges.length > 0
+          ? selectedAges.length === 1
+            ? ages.find((age) => age.id === selectedAges[0])?.name
+            : `${selectedAges.length}개 연령대 필터`
+          : `연령대`}
+      </div>
 
       {/* 옵션 선택 모달 */}
       <Modal show={openModal} popup>
         <Modal.Body>
           {/* 선택된 옵션 리스트 */}
           <div>
-            {selectedBrands.length !== 0 || selectedCategories.length !== 0 ? (
+            {selectedBrands.length !== 0 ||
+            selectedCategories.length !== 0 ||
+            selectedAges.length !== 0 ? (
               <>
                 <span className='flex font-semibold mt-2 mb-1'>선택된 옵션</span>
                 <div className='flex flex-row flex-wrap gap-2 mb-2'>
@@ -77,14 +113,20 @@ export default function FilterBar({
                       handler={selectedBrandsHandler}
                     />
                   ))}
-                </div>
-                <div className='flex flex-row flex-wrap gap-2'>
                   {selectedCategories.map((selectedCategory, index) => (
                     <FilterSelected
                       key={index}
                       id={selectedCategory}
                       name={categories.find((category) => category.id === selectedCategory)!.name}
                       handler={selectedCategoriesHandler}
+                    />
+                  ))}
+                  {selectedAges.map((selectedAge, index) => (
+                    <FilterSelected
+                      key={index}
+                      id={selectedAge}
+                      name={ages.find((age) => age.id === selectedAge)!.name}
+                      handler={selectedAgesHandler}
                     />
                   ))}
                 </div>
@@ -140,6 +182,25 @@ export default function FilterBar({
             <span className='flex font-semibold mt-2 mb-1'>가격</span>
             <div></div>
           </div>
+
+          {/* 연령대 선택 */}
+          <div>
+            <span className='flex font-semibold mt-2 mb-1'>연령대</span>
+            <div className='flex flex-row flex-wrap gap-2'>
+              {ages &&
+                ages.map((age, index) => (
+                  <FilterButton
+                    key={index}
+                    id={age.id}
+                    name={age.name}
+                    selected={age.selected}
+                    handler={selectedAgesHandler}
+                  />
+                ))}
+            </div>
+          </div>
+
+          {/* 닫는 버튼 */}
           <Button size='sm' onClick={() => setOpenModal(false)}>
             적용
           </Button>

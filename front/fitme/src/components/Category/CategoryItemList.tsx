@@ -26,11 +26,13 @@ type ItemType = {
 type CategoryItemListProps = {
   selectedBrands: number[];
   selectedCategories: number[];
+  selectedAges: number[];
 };
 
 export default function CategoryItemList({
   selectedBrands,
   selectedCategories,
+  selectedAges,
 }: CategoryItemListProps) {
   const [list, setList] = useState<ItemType[]>([]);
 
@@ -51,6 +53,13 @@ export default function CategoryItemList({
       };
     }
 
+    if (selectedAges.length > 0) {
+      params = {
+        ...params,
+        ageRanges: selectedAges.map((age) => `${age}s`).join(','),
+      };
+    }
+
     axios
       .get(`https://fit-me.site/api/products`, {
         params: params,
@@ -58,7 +67,7 @@ export default function CategoryItemList({
       .then(({ data }) => {
         setList(data);
       });
-  }, [selectedBrands, selectedCategories]);
+  }, [selectedBrands, selectedCategories, selectedAges]);
 
   return (
     <div>
