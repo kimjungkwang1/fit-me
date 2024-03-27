@@ -6,7 +6,6 @@ const KakaoAuthHandler: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   let count = 0;
-  let accessToken, refreshToken;
 
   useEffect(() => {
     if (count === 0) {
@@ -28,10 +27,10 @@ const KakaoAuthHandler: React.FC = () => {
 
             if (res.status === 200) {
               console.log('여기까지 왔다');
-              accessToken = res.headers.Authorization;
-              refreshToken = res.headers.AuthorizationRefresh;
-              console.log('refresh 토큰 :', res.headers.AuthorizationRefresh);
+              console.log('refresh 토큰 :', res.headers['Authorizationrefresh']);
+              console.log('refresh 토큰 :', res.headers.Authorizationrefresh);
               console.log('access 토큰 :', res.headers.Authorization);
+              console.log('access 토큰 :', res.headers['Authorization']);
               console.log('로그인 성공');
               navigate('/signup');
             } else {
@@ -40,9 +39,7 @@ const KakaoAuthHandler: React.FC = () => {
             }
           })
           .catch((error) => {
-            console.log('여기까지 6');
             console.log('안돼');
-
             console.log(error);
           });
       }
