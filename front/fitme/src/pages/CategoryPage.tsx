@@ -1,7 +1,6 @@
 import axios from 'axios';
 import FilterBar from '../components/Common/FilterBar';
 import CategoryItemList from '../components/Category/CategoryItemList';
-import SortBar from '../components/Common/SortBar';
 import { useState, useEffect } from 'react';
 
 type OptionType = {
@@ -145,6 +144,11 @@ export default function CategoryPage() {
     }
   };
 
+  const [sortBy, setSortBy] = useState<string>('');
+  const sortByHandler = (sort: string) => {
+    setSortBy(sort);
+  };
+
   return (
     <div>
       <FilterBar
@@ -157,12 +161,14 @@ export default function CategoryPage() {
         ages={ages}
         selectedAges={selectedAges}
         selectedAgesHandler={selectedAgesHandler}
+        sortBy={sortBy}
+        sortByHandler={sortByHandler}
       />
-      <SortBar />
       <CategoryItemList
         selectedBrands={selectedBrands}
         selectedCategories={selectedCategories}
         selectedAges={selectedAges}
+        sortBy={sortBy}
       />
     </div>
   );
