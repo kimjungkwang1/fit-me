@@ -1,5 +1,13 @@
 package site.chachacha.fitme.config;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.PATCH;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,16 +16,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.OPTIONS;
-
 @Slf4j
 @Configuration
 public class CorsConfig {
+
     @Value("${FRONTEND}")
     private String frontend;
 
@@ -35,8 +37,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 //        config.setAllowCredentials(true); // Whether user credentials are supported.
 
-        config.setAllowedHeaders(List.of("Authorization", "AuthorizationRefresh, DeviceToken"));
-        config.setExposedHeaders(List.of("Authorization", "AuthorizationRefresh, DeviceToken"));
+        config.setAllowedHeaders(List.of("Authorization", "AuthorizationRefresh"));
+        config.setExposedHeaders(List.of("Authorization", "AuthorizationRefresh"));
 
         // Allowed Origins
         String localhostWithPort = "http://localhost:3000";
@@ -57,7 +59,9 @@ public class CorsConfig {
         log.info("httpsDomainWithPort is " + httpsDomainWithPort);
 
         // Allowed Methods
-        config.setAllowedMethods(List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(), OPTIONS.name()));
+        config.setAllowedMethods(
+            List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(),
+                OPTIONS.name()));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

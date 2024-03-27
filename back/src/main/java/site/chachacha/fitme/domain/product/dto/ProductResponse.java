@@ -15,20 +15,22 @@ public class ProductResponse {
     private Integer price;
     private List<MainImageResponse> mainImages;
     private BrandResponse brand;
+    private int popularityScore;
     private int likeCount;
     private double reviewRating;
     private int reviewCount;
 
-    public static ProductResponse of(Product product, Double reviewRating, Integer reviewCount) {
+    public static ProductResponse from(Product product) {
         return ProductResponse.builder()
             .id(product.getId())
             .name(product.getName())
             .price(product.getPrice())
             .mainImages(product.getMainImage().stream().map(MainImageResponse::from).toList())
             .brand(BrandResponse.from(product.getBrand()))
+            .popularityScore(product.getMonthlyPopularityScore())
             .likeCount(product.getLikeCount())
-            .reviewRating(reviewRating)
-            .reviewCount(reviewCount)
+            .reviewRating(product.getReviewRating())
+            .reviewCount(product.getReviewCount())
             .build();
     }
 }
