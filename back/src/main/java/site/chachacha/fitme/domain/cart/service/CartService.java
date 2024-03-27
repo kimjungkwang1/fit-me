@@ -54,8 +54,7 @@ public class CartService {
         List<Cart> carts = cartRepository.findByMember(member);
         List<CartResponse> cartResponses = carts.stream().map(CartResponse::from).toList();
         int totalProductCount = cartResponses.size();
-        int totalCartPrice = cartResponses.stream().mapToInt(CartResponse::getProductTotalPrice).sum();
-        return new CartListResponse(cartResponses, totalProductCount, totalCartPrice);
+        return new CartListResponse(cartResponses, totalProductCount);
     }
 
     // 장바구니 상품 삭제

@@ -8,11 +8,9 @@ public class CartListResponse {
 
     private List<CartResponse> carts;
     private int totalProductCount;
-    private int totalCartPrice;
 
-    public CartListResponse(List<CartResponse> carts, int totalProductCount, int totalCartPrice) {
+    public CartListResponse(List<CartResponse> carts, int totalProductCount) {
         this.carts = carts;
         this.totalProductCount = totalProductCount;
-        this.totalCartPrice = totalCartPrice;
     }
 }
