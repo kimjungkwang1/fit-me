@@ -11,7 +11,11 @@ public class ProductSearchRequest {
 
     private Long lastId;
 
+    private Integer lastPopularityScore;
+
     private Integer size = 30;
+
+    private String keyword;
 
     private Integer gender;
 

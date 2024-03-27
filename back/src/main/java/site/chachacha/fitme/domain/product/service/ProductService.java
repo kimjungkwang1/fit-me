@@ -66,18 +66,13 @@ public class ProductService {
 
     // 상품 목록 조회
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
-
         List<Product> products = productCustomRepository.findAllByProductConditions(
-            request.getLastId(), request.getSize(), request.getGender(), request.getAgeRange(), request.getBrandIds(), request.getCategoryIds(),
-            request.getStartPrice(), request.getEndPrice(), request.getSortBy());
-
+            request.getLastId(), request.getLastPopularityScore(), request.getSize(), request.getKeyword(), request.getGender(),
+            request.getAgeRange(),
+            request.getBrandIds(), request.getCategoryIds(), request.getStartPrice(), request.getEndPrice(), request.getSortBy());
         return products
             .stream()
-            .map(product -> {
-                Integer reviewCount = product.getProductReviews().size();
-                Double reviewRating = calculateReviewRating(product.getProductReviews());
-                return ProductResponse.of(product, reviewRating, reviewCount);
-            })
+            .map(ProductResponse::from)
             .collect(Collectors.toList());
     }
 
