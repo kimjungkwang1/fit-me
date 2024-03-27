@@ -18,10 +18,11 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.brand.entity.Brand;
 import site.chachacha.fitme.domain.category.entity.Category;
-import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.like.entity.ProductLike;
+import site.chachacha.fitme.domain.order.OrderProduct;
 import site.chachacha.fitme.domain.review.entity.ProductReview;
 import site.chachacha.fitme.domain.tag.entity.ProductTag;
 
@@ -48,8 +49,12 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductView> productViews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductReview> productReviews = new ArrayList<>();
+
+    private int reviewCount = 0;
+
+    private double reviewRating = 0.0;
 
     @OneToMany(mappedBy = "product")
     private List<ProductTag> productTags;
@@ -78,9 +83,13 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<DetailImage> detailImage;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
     @Builder
     public Product(Brand brand, Category category, String name, Gender gender, String ageRange,
-        List<ProductTag> productTags, Integer price, List<ProductOption> productOptions, List<MainImage> mainImages, List<DetailImage> detailImages) {
+        List<ProductTag> productTags, Integer price, List<ProductOption> productOptions,
+        List<MainImage> mainImages, List<DetailImage> detailImages) {
         this.brand = brand;
         this.category = category;
         this.name = name;
@@ -93,6 +102,15 @@ public class Product extends BaseEntity {
         this.productTags = productTags;
     }
 
+    // == 비즈니스 로직 == //
+    public void addReview(Double rating) {
+        this.reviewRating = (this.reviewRating * this.reviewCount + rating) / (++this.reviewCount);
+    }
+
+    public void deleteReview(Double rating) {
+        this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
+    }
+
     // == 연관관계 메소드 == //
     public void addMainImage(MainImage mainImage) {
         this.mainImage.add(mainImage);
@@ -100,5 +118,13 @@ public class Product extends BaseEntity {
 
     public void addDetailImage(DetailImage detailImage) {
         this.detailImage.add(detailImage);
+    }
+
+    public void addProductReview(ProductReview productReview) {
+        productReviews.add(productReview);
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
     }
 }
