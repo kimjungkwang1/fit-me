@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Button, Modal } from 'flowbite-react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import FilterButton from './FilterButton';
+import FilterSelected from './FilterSelected';
 import { BiSearch } from 'react-icons/bi';
 
 type OptionType = {
@@ -64,25 +65,25 @@ export default function FilterBar() {
   };
   useEffect(() => {
     if (searchKeyword === '') {
-      setShowBrands([...brands].slice(0, 16));
+      setShowBrands([...brands].slice(0, 10));
     } else {
       const filteredBrands = brands.filter((brand) =>
         brand.name.toLowerCase().includes(searchKeyword.toLowerCase())
       );
-      setShowBrands(filteredBrands.slice(0, 16));
+      setShowBrands(filteredBrands.slice(0, 10));
     }
   }, [brands, searchKeyword]);
 
   // 선택된 브랜드 목록 구성
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
-  const selectedBrandsHandler = (id: number, index: number) => {
+  const selectedBrandsHandler = (id: number) => {
     if (selectedBrands) {
-      const index = selectedBrands.indexOf(id);
+      const selectedIndex = selectedBrands.indexOf(id);
 
-      if (index !== -1) {
+      if (selectedIndex !== -1) {
         // 요소를 제거
         const updated = [...selectedBrands];
-        updated.splice(index, 1);
+        updated.splice(selectedIndex, 1);
         setSelectedBrands(updated);
       } else {
         // 요소를 추가
@@ -91,17 +92,18 @@ export default function FilterBar() {
     }
 
     if (brands) {
+      const selectedIndex = brands.findIndex((brand) => brand.id === id);
       const updated = [...brands];
-      const temp = brands[index];
+      const temp = brands[selectedIndex];
       temp.selected = !temp.selected;
-      updated.splice(index, 1, temp);
+      updated.splice(selectedIndex, 1, temp);
       setBrands(updated);
     }
   };
 
   // 선택된 카테고리 목록 구성
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const selectedCategoriesHandler = (id: number, index: number) => {
+  const selectedCategoriesHandler = (id: number) => {
     if (selectedCategories) {
       const selectedIndex = selectedCategories.indexOf(id);
 
@@ -117,10 +119,11 @@ export default function FilterBar() {
     }
 
     if (categories) {
+      const selectedIndex = categories.findIndex((category) => category.id === id);
       const updated = [...categories];
-      const temp = categories[index];
+      const temp = categories[selectedIndex];
       temp.selected = !temp.selected;
-      updated.splice(index, 1, temp);
+      updated.splice(selectedIndex, 1, temp);
       setCategories(updated);
     }
   };
@@ -136,9 +139,41 @@ export default function FilterBar() {
       <Button color='light' size='xs' onClick={() => setOpenModal(true)}>
         가격
       </Button>
+
+      {/* 옵션 선택 모달 */}
       <Modal show={openModal} popup>
         <Modal.Body>
+          {/* 선택된 옵션 리스트 */}
           <div>
+            {selectedBrands.length !== 0 || selectedCategories.length !== 0 ? (
+              <>
+                <span className='flex font-semibold mt-2 mb-1'>선택된 옵션</span>
+                <div className='flex flex-row flex-wrap gap-2 mb-2'>
+                  {selectedBrands.map((selectedBrand, index) => (
+                    <FilterSelected
+                      key={index}
+                      id={selectedBrand}
+                      name={brands.find((brand) => brand.id === selectedBrand)!.name}
+                      handler={selectedBrandsHandler}
+                    />
+                  ))}
+                </div>
+                <div className='flex flex-row flex-wrap gap-2'>
+                  {selectedCategories.map((selectedCategory, index) => (
+                    <FilterSelected
+                      key={index}
+                      id={selectedCategory}
+                      name={categories.find((category) => category.id === selectedCategory)!.name}
+                      handler={selectedCategoriesHandler}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div />
+            )}
+
+            {/* 브랜드 선택 */}
             <span className='flex font-semibold mt-2 mb-1'>브랜드</span>
             <div className='bg-gray-200 rounded-lg my-2 px-2 py-1 text-sm flex flex-row items-center'>
               <BiSearch className='text-gray-500 text-lg mx-1' />
@@ -154,7 +189,6 @@ export default function FilterBar() {
                 showBrands.map((brand, index) => (
                   <FilterButton
                     key={index}
-                    index={index}
                     id={brand.id}
                     name={brand.name}
                     selected={brand.selected}
@@ -163,6 +197,8 @@ export default function FilterBar() {
                 ))}
             </div>
           </div>
+
+          {/* 카테고리 선택 */}
           <div>
             <span className='flex font-semibold mt-2 mb-1'>카테고리</span>
             <div className='flex flex-row flex-wrap gap-2'>
@@ -170,7 +206,6 @@ export default function FilterBar() {
                 categories.map((category, index) => (
                   <FilterButton
                     key={index}
-                    index={index}
                     id={category.id}
                     name={category.name}
                     selected={category.selected}
@@ -179,6 +214,8 @@ export default function FilterBar() {
                 ))}
             </div>
           </div>
+
+          {/* 가격 double range slider */}
           <div>
             <span className='flex font-semibold mt-2 mb-1'>가격</span>
             <div></div>
