@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { PrivateRoute } from './services/PrivateRoute';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
@@ -17,6 +19,10 @@ import HeaderBar from './components/headerBar';
 import FooterBar from './components/footerBar';
 
 const App: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Fit-Me';
+  }, []);
+
   return (
     <>
       <div className='flex justify-center'>
@@ -36,7 +42,7 @@ const App: React.FC = () => {
               {/* /payment/complete 페이지 아직 없음 */}
               <Route path='/payment/complete' element={<LoginPage />} />
               <Route path='/dressroom' element={<DressroomPage />} />
-              <Route path='/mypage' element={<MyPage />} />
+              <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
               <Route path='/feed' element={<FeedPage />} />
               <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
               <Route path='/feed/myfeed' element={<MyFeedPage />} />
