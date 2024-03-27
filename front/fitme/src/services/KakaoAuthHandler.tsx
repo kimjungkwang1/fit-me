@@ -15,10 +15,6 @@ const KakaoAuthHandler: React.FC = () => {
       const code = searchParams.get('code');
 
       if (code) {
-        // console.log('받은 코드:', code);
-        // const AXIOS_URL = 'https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code;
-        // console.log(AXIOS_URL);
-
         axios
           .get('https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code)
           .then((res) => {
@@ -27,9 +23,6 @@ const KakaoAuthHandler: React.FC = () => {
             if (res.status === 200) {
               const refreshToken = res.headers.authorizationrefresh?.replace('Bearer', '').trim();
               const accessToken = res.headers.authorization?.replace('Bearer', '').trim();
-
-              console.log('refresh 토큰 :', refreshToken);
-              console.log('access 토큰 :', accessToken);
 
               localStorage.setItem('refreshToken', refreshToken);
               localStorage.setItem('accessToken', accessToken);
@@ -42,16 +35,14 @@ const KakaoAuthHandler: React.FC = () => {
             }
           })
           .catch((error) => {
-            console.log('안돼');
+            console.log('에러');
             console.log(error);
           });
       }
-
-      console.log('끝까지 왔다');
     }
   }, [location]);
 
-  return <div>카카오 로그인 처리 중...</div>;
+  return <div className='flex justify-center items-center h-full'>카카오 로그인 처리 중...</div>;
 };
 
 export default KakaoAuthHandler;
