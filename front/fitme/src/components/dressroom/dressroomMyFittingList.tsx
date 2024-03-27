@@ -9,7 +9,7 @@ export default function DressroomMyFittingList() {
       <Button className='w-[50%] m-2 ml-auto' color='gray'>
         프로필로 사용
       </Button>
-      <div className='flex flex-wrap justify-center'>
+      <div className='grid grid-cols-2 p-4'>
         <DressroomMyFittingChoose></DressroomMyFittingChoose>
         <DressroomMyfittingShow></DressroomMyfittingShow>
         <DressroomMyfittingShow></DressroomMyfittingShow>

@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal, Button } from 'flowbite-react';
 import DressroomAvatarList from './DressroomAvatarList';
+import { CiCirclePlus } from 'react-icons/ci';
 
 export default function DressroomButton() {
-  const [openSaveModal, setOpenSaveModal] = useState(false);
-  const [openChangeModal, setOpenChangeModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('sample');
+  const [openSaveModal, setOpenSaveModal] = useState<boolean>(false);
+  const [openChangeModal, setOpenChangeModal] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState<'sample' | 'mine'>('sample');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleInput = () => {
+    inputRef.current?.click();
+  };
 
   return (
     <>
@@ -35,23 +41,34 @@ export default function DressroomButton() {
         <Modal.Header>사진 변경</Modal.Header>
         <Modal.Body>
           <div className='p-1'>
-            <div className='flex text-center border-1 border-gray-200 shadow-sm sticky top-0 z-50'>
-              <div
-                className={`w-[50%] p-4 border-r border-gray-200 cursor-pointer ${
-                  selectedTab === 'sample' ? 'bg-gray-300' : 'bg-white'
-                }`}
-                onClick={() => setSelectedTab('sample')}
-              >
-                샘플사진
+            <div className='flex flex-col text-center border-gray-200 shadow-sm sticky top-0 z-50'>
+              <div className='flex'>
+                <div
+                  className={`w-[50%] p-4 border-r border-gray-200 cursor-pointer ${
+                    selectedTab === 'sample' ? 'bg-gray-300' : 'bg-white'
+                  }`}
+                  onClick={() => setSelectedTab('sample')}
+                >
+                  샘플사진
+                </div>
+                <div
+                  className={`w-[50%] p-4  cursor-pointer ${
+                    selectedTab === 'mine' ? 'bg-gray-300' : 'bg-white'
+                  }`}
+                  onClick={() => setSelectedTab('mine')}
+                >
+                  내사진
+                </div>
               </div>
-              <div
-                className={`w-[50%] p-4  cursor-pointer ${
-                  selectedTab === 'mine' ? 'bg-gray-300' : 'bg-white'
-                }`}
-                onClick={() => setSelectedTab('mine')}
-              >
-                내사진
-              </div>
+              {selectedTab === 'mine' && (
+                <div
+                  className='w-full h-10 text-4xl border rounded-lg flex justify-center cursor-pointer sticky bg-white'
+                  onClick={handleInput}
+                >
+                  <CiCirclePlus />
+                  <input type='file' className='hidden' ref={inputRef} />
+                </div>
+              )}
             </div>
             <DressroomAvatarList></DressroomAvatarList>
           </div>
