@@ -1,7 +1,6 @@
 import axios from 'axios';
 import FilterBar from '../components/Common/FilterBar';
 import CategoryItemList from '../components/Category/CategoryItemList';
-import SortBar from '../components/Common/SortBar';
 import { useState, useEffect } from 'react';
 
 type OptionType = {
@@ -53,6 +52,17 @@ export default function CategoryPage() {
     setCategories(initialCategories);
   }, []);
 
+  // 연령 목록 구성
+  const [ages, setAges] = useState<OptionType[]>([]);
+  useEffect(() => {
+    setAges([
+      { id: 10, name: '10대', selected: false },
+      { id: 20, name: '20대', selected: false },
+      { id: 30, name: '30대', selected: false },
+      { id: 40, name: '40대', selected: false },
+    ]);
+  }, []);
+
   // 선택된 브랜드 목록 구성
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const selectedBrandsHandler = (id: number) => {
@@ -61,9 +71,9 @@ export default function CategoryPage() {
 
       if (selectedIndex !== -1) {
         // 요소를 제거
-        const updated = [...selectedBrands];
-        updated.splice(selectedIndex, 1);
-        setSelectedBrands(updated);
+        const updatedSelected = [...selectedBrands];
+        updatedSelected.splice(selectedIndex, 1);
+        setSelectedBrands(updatedSelected);
       } else {
         // 요소를 추가
         setSelectedBrands([...selectedBrands, id]);
@@ -107,6 +117,38 @@ export default function CategoryPage() {
     }
   };
 
+  // 선택된 연령 목록 구성
+  const [selectedAges, setSelectedAges] = useState<number[]>([]);
+  const selectedAgesHandler = (id: number) => {
+    if (selectedAges) {
+      const selectedIndex = selectedAges.indexOf(id);
+
+      if (selectedIndex !== -1) {
+        // 요소를 제거
+        const updatedSelected = [...selectedAges];
+        updatedSelected.splice(selectedIndex, 1);
+        setSelectedAges(updatedSelected);
+      } else {
+        // 요소를 추가
+        setSelectedAges([...selectedAges, id]);
+      }
+    }
+
+    if (ages) {
+      const selectedIndex = ages.findIndex((age) => age.id === id);
+      const updated = [...ages];
+      const temp = ages[selectedIndex];
+      temp.selected = !temp.selected;
+      updated.splice(selectedIndex, 1, temp);
+      setAges(updated);
+    }
+  };
+
+  const [sortBy, setSortBy] = useState<string>('');
+  const sortByHandler = (sort: string) => {
+    setSortBy(sort);
+  };
+
   return (
     <div>
       <FilterBar
@@ -116,9 +158,18 @@ export default function CategoryPage() {
         categories={categories}
         selectedCategories={selectedCategories}
         selectedCategoriesHandler={selectedCategoriesHandler}
+        ages={ages}
+        selectedAges={selectedAges}
+        selectedAgesHandler={selectedAgesHandler}
+        sortBy={sortBy}
+        sortByHandler={sortByHandler}
       />
-      <SortBar />
-      <CategoryItemList selectedBrands={selectedBrands} selectedCategories={selectedCategories} />
+      <CategoryItemList
+        selectedBrands={selectedBrands}
+        selectedCategories={selectedCategories}
+        selectedAges={selectedAges}
+        sortBy={sortBy}
+      />
     </div>
   );
 }
