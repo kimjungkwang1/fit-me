@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Order from './order';
 import Modify from './modify';
+import ItemList from '../../components/MyPage/ItemList';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function useQuery() {
@@ -42,6 +43,7 @@ const Mypage: React.FC = () => {
   const getContent = (tabName: string) => {
     switch (tabName) {
       case 'bougth':
+        return <ItemList />;
       case 'fav':
         return (
           <div className='flex flex-col'>
