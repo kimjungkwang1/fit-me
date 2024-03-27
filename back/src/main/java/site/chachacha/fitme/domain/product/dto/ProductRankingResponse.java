@@ -38,7 +38,7 @@ public class ProductRankingResponse {
         this.reviewCount = reviewCount;
     }
 
-    public static ProductRankingResponse of(int rank, Product product, Double reviewRating, Integer reviewCount) {
+    public static ProductRankingResponse of(int rank, Product product) {
         return ProductRankingResponse.builder()
             .rank(rank)
             .id(product.getId())
@@ -47,8 +47,8 @@ public class ProductRankingResponse {
             .mainImages(product.getMainImage().stream().map(MainImageResponse::from).toList())
             .brand(BrandResponse.from(product.getBrand()))
             .likeCount(product.getLikeCount())
-            .reviewRating(reviewRating)
-            .reviewCount(reviewCount)
+            .reviewRating(product.getReviewRating())
+            .reviewCount(product.getReviewCount())
             .build();
     }
 
