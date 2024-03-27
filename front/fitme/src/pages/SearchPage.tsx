@@ -11,7 +11,7 @@ export default function SearchPage() {
       <SearchHistory />
 
       {/* 검색 결과 */}
-      <FilterBar />
+      {/* <FilterBar /> */}
       <SortBar />
       <SearchResult />
     </div>
