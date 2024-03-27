@@ -15,31 +15,25 @@ const KakaoAuthHandler: React.FC = () => {
       const code = searchParams.get('code');
 
       if (code) {
-        console.log('받은 코드:', code);
-        const AXIOS_URL = 'https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code;
-        console.log(AXIOS_URL);
+        // console.log('받은 코드:', code);
+        // const AXIOS_URL = 'https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code;
+        // console.log(AXIOS_URL);
 
         axios
-          .get(AXIOS_URL)
+          .get('https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code)
           .then((res) => {
             console.log(res.status);
 
             if (res.status === 200) {
-              console.log('여기까지 왔다');
-              console.log('1');
-              console.log('refresh 토큰 :', res.headers['authorizationrefresh']);
-              console.log('2');
-              console.log('refresh 토큰 :', res.headers.authorizationrefresh);
-              console.log('3');
-              console.log('access 토큰 :', res.headers['authorization']);
-              console.log('4');
-              console.log('access 토큰 :', res.headers.authorization);
+              const refreshToken = res.headers.authorizationrefresh?.replace('Bearer', '').trim();
+              const accessToken = res.headers.authorization?.replace('Bearer', '').trim();
 
-              console.log('헤더들');
-              const headers = res.headers;
-              Object.keys(headers).forEach((key) => {
-                console.log(`${key}: ${headers[key]}`);
-              });
+              console.log('refresh 토큰 :', refreshToken);
+              console.log('access 토큰 :', accessToken);
+
+              localStorage.setItem('refreshToken', refreshToken);
+              localStorage.setItem('accessToken', accessToken);
+
               console.log('로그인 성공');
               navigate('/signup');
             } else {
