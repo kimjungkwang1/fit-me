@@ -23,7 +23,7 @@ type ItemType = {
   reviewCount: number;
 };
 
-export default function MainItemList() {
+const ItemList: React.FC = () => {
   const [list, setList] = useState<ItemType[]>();
 
   useEffect(() => {
@@ -52,4 +52,6 @@ export default function MainItemList() {
       </div>
     </div>
   );
-}
+};
+
+export default ItemList;

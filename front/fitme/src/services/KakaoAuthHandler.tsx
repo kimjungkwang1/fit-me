@@ -27,13 +27,13 @@ const KakaoAuthHandler: React.FC = () => {
             if (res.status === 200) {
               console.log('여기까지 왔다');
               console.log('1');
-              console.log('refresh 토큰 :', res.headers['Authorizationrefresh']);
+              console.log('refresh 토큰 :', res.headers['authorizationrefresh']);
               console.log('2');
-              console.log('refresh 토큰 :', res.headers.Authorizationrefresh);
+              console.log('refresh 토큰 :', res.headers.authorizationrefresh);
               console.log('3');
-              console.log('access 토큰 :', res.headers['Authorization']);
+              console.log('access 토큰 :', res.headers['authorization']);
               console.log('4');
-              console.log('access 토큰 :', res.headers.Authorization);
+              console.log('access 토큰 :', res.headers.authorization);
 
               console.log('헤더들');
               const headers = res.headers;
