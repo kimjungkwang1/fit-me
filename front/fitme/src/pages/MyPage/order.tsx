@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import OrderList from '../../components/MyPage/orderList';
+import OrderList from '../../components/MyPage/orderItem';
 import Rating from '../../components/MyPage/rating';
 
 const Order = () => {
