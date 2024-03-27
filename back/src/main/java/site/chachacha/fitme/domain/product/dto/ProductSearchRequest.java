@@ -17,9 +17,7 @@ public class ProductSearchRequest {
 
     private String keyword;
 
-    private Integer gender;
-
-    private String ageRange;
+    private List<String> ageRanges;
 
     private List<Long> brandIds;
 

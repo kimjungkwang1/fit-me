@@ -11,7 +11,6 @@ import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import site.chachacha.fitme.domain.product.entity.Gender;
 import site.chachacha.fitme.domain.product.entity.Product;
 
 @RequiredArgsConstructor
@@ -23,8 +22,8 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     private static final String SORT_BY_LATEST = "latest";
 
     @Override
-    public List<Product> findAllByProductConditions(Long lastId, Integer lastPopularityScore, Integer size, String keyword, Integer gender,
-        String ageRange, List<Long> brandIds, List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
+    public List<Product> findAllByProductConditions(Long lastId, Integer lastPopularityScore, Integer size, String keyword, List<String> ageRanges,
+        List<Long> brandIds, List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
         return queryFactory
             .selectFrom(product)
             .distinct()
@@ -33,8 +32,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             .where(
                 SORT_BY_LATEST.equals(sortBy) ? ltLastId(lastId) : popularCursorCondition(lastPopularityScore, lastId),
                 keywordCondition(keyword),
-                eqGender(gender),
-                eqAgeRange(ageRange),
+                inAgeRanges(ageRanges),
                 inBrandIds(brandIds),
                 inCategoryIds(categoryIds),
                 goeStartPrice(startPrice),
@@ -85,18 +83,11 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             .or(productTag.tag.name.containsIgnoreCase(keyword));
     }
 
-    private BooleanExpression eqGender(Integer gender) {
-        if (gender == null) {
+    private BooleanExpression inAgeRanges(List<String> ageRanges) {
+        if (ageRanges == null) {
             return null;
         }
-        return product.gender.eq(Gender.fromValue(gender));
-    }
-
-    private BooleanExpression eqAgeRange(String ageRange) {
-        if (StringUtils.isBlank(ageRange)) {
-            return null;
-        }
-        return product.ageRange.eq(ageRange);
+        return product.ageRange.in(ageRanges);
     }
 
     private BooleanExpression inBrandIds(List<Long> brandIds) {
