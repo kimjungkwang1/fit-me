@@ -23,14 +23,42 @@ type ItemType = {
   reviewCount: number;
 };
 
-export default function CategoryItemList() {
+type CategoryItemListProps = {
+  selectedBrands: number[];
+  selectedCategories: number[];
+};
+
+export default function CategoryItemList({
+  selectedBrands,
+  selectedCategories,
+}: CategoryItemListProps) {
   const [list, setList] = useState<ItemType[]>([]);
 
   useEffect(() => {
-    axios.get(`https://fit-me.site/api/products`).then(({ data }) => {
-      setList(data);
-    });
-  }, []);
+    let params = {};
+
+    if (selectedBrands.length > 0) {
+      params = {
+        ...params,
+        brandIds: selectedBrands.join(','),
+      };
+    }
+
+    if (selectedCategories.length > 0) {
+      params = {
+        ...params,
+        categoryIds: selectedCategories.join(','),
+      };
+    }
+
+    axios
+      .get(`https://fit-me.site/api/products`, {
+        params: params,
+      })
+      .then(({ data }) => {
+        setList(data);
+      });
+  }, [selectedBrands, selectedCategories]);
 
   return (
     <div>
