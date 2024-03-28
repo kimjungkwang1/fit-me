@@ -1,6 +1,6 @@
 package site.chachacha.fitme.domain.auth.service;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static site.chachacha.fitme.enumstorage.messages.JwtMessages.ACCESS_TOKEN;
 import static site.chachacha.fitme.enumstorage.messages.JwtMessages.REFRESH_TOKEN;
 import static site.chachacha.fitme.enumstorage.messages.Messages.INVALID;
@@ -10,10 +10,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.Optional;
 import site.chachacha.fitme.advice.exception.BadRequestException;
 import site.chachacha.fitme.domain.auth.exception.InvalidAccessTokenException;
 import site.chachacha.fitme.domain.auth.exception.InvalidRefreshTokenException;
@@ -39,6 +37,7 @@ import site.chachacha.fitme.domain.member.repository.MemberRepository;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtService {
+
     private final OAuthService oauthService;
     private final MemberRepository memberRepository;
     private final RedisTemplate<String, String> redisTemplate;
@@ -86,7 +85,7 @@ public class JwtService {
 //        }
         // DeviceToken과 연관된 refreshToken이 DB에 없으면,
 //        else {
-            // 새로 발급한 refreshToken을 DB에 저장
+        // 새로 발급한 refreshToken을 DB에 저장
 //            RefreshToken newRefreshTokenEntity = RefreshToken.builder()
 //                .member(member)
 //                .refreshToken(newRefreshToken)
@@ -104,15 +103,17 @@ public class JwtService {
             .withSubject("accessToken")
             .withIssuedAt(new Date(System.currentTimeMillis()))
             .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                .withClaim("memberId", String.valueOf(memberId))
+            .withClaim("memberId", String.valueOf(memberId))
             .withClaim("issuedTime", System.currentTimeMillis())
             .sign(Algorithm.HMAC512(secret));
 
-        return new String[] {newAccessToken, newRefreshToken};
+        return new String[]{newAccessToken, newRefreshToken};
     }
 
-    @Transactional(noRollbackFor = {JWTVerificationException.class, NoSuchMemberException.class}) // JWTVerificationException 발생해도 롤백 X
-    public String[] reissueJwts(Long memberId, String refreshToken) throws NoSuchMemberException, IllegalArgumentException, NoSuchRefreshTokenException, JWTVerificationException {
+    @Transactional(noRollbackFor = {JWTVerificationException.class, NoSuchMemberException.class})
+    // JWTVerificationException 발생해도 롤백 X
+    public String[] reissueJwts(Long memberId, String refreshToken)
+        throws NoSuchMemberException, IllegalArgumentException, NoSuchRefreshTokenException, JWTVerificationException {
 //        , String deviceToken)
 //        // RefreshToken과 함께 DeviceTokenEntity를 찾아
 //        DeviceToken deviceTokenEntity = deviceTokenRepository.findByDeviceTokenWithRefreshToken(deviceToken)
@@ -154,7 +155,7 @@ public class JwtService {
         redisTemplate.delete(key);
 
         Member member = memberRepository.findNotDeletedById(memberId)
-                .orElseThrow(NoSuchMemberException::new);
+            .orElseThrow(NoSuchMemberException::new);
 
         // refreshToken이 유효하면
         // access token을 발급한다.
@@ -182,14 +183,15 @@ public class JwtService {
 
     public void saveRefreshTokenToRedis(String refreshToken, Long memberId) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(REFRESH_TOKEN_REDIS_KEY + refreshToken, String.valueOf(memberId), refreshTokenExpiration, SECONDS);
+        valueOperations.set(REFRESH_TOKEN_REDIS_KEY + refreshToken, String.valueOf(memberId),
+            refreshTokenExpiration, SECONDS);
     }
 
     public void deleteRefreshTokenFromRedis(String refreshToken) {
         redisTemplate.delete(REFRESH_TOKEN_REDIS_KEY + refreshToken);
     }
 
-        // (RefreshToken, MemberId) 저장 TTL 1주일
+    // (RefreshToken, MemberId) 저장 TTL 1주일
     // Auth:RefreshToken:{RefreshToken} -> MemberId
 
 //    // refreshToken을 삭제한다.
@@ -200,36 +202,50 @@ public class JwtService {
 //        refreshTokenRepository.deleteByRefreshToken(refreshToken);
 //    }
 
-    public String extractAccessToken(HttpServletRequest request) throws IllegalArgumentException {
-        String accessToken = Optional.ofNullable(request.getHeader(ACCESS_TOKEN_HEADER))
-            .orElseThrow(() -> new IllegalArgumentException(ACCESS_TOKEN.getMessage() + NOT_FOUND.getMessage()))
-            .replace(BEARER, "");
+    public String extractAccessToken(HttpServletRequest request) {
+        String accessToken = request.getHeader(ACCESS_TOKEN_HEADER);
 
         if (accessToken.isBlank()) {
-            throw new IllegalArgumentException(ACCESS_TOKEN.getMessage() + NOT_FOUND.getMessage());
+            return null;
         }
+
+        accessToken = accessToken.replace(BEARER, "");
 
         return accessToken;
     }
 
     /**
-     * 헤더에서 AccessToken 추출
-     * 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서
-     * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
+     * 헤더에서 AccessToken 추출 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서 헤더를 가져온 후 "Bearer"를
+     * 삭제(""로 replace)
      */
-    public Long validateAndExtractMemberIdFromAccessToken(String accessToken) throws InvalidAccessTokenException {
+    public boolean validateAccessToken(String accessToken) {
+        try {
+            JWT.require(Algorithm.HMAC512(secret))
+                .withIssuer("FitMe")
+                .withSubject("accessToken")
+                .build() // 반환된 빌더로 JWT verifier 생성
+                .verify(accessToken);// accessToken을 검증하고 유효하지 않다면 예외 발생
+
+        } catch (JWTVerificationException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Long extractMemberIdFromAccessToken(String accessToken)
+        throws InvalidAccessTokenException {
         try {
             // accessToken 값 검증
             DecodedJWT jwt = JWT.require(Algorithm.HMAC512(secret))
-                    .withIssuer("FitMe")
-                    .withSubject("accessToken")
-                    .build() // 반환된 빌더로 JWT verifier 생성
-                    .verify(accessToken);// accessToken을 검증하고 유효하지 않다면 예외 발생
+                .withIssuer("FitMe")
+                .withSubject("accessToken")
+                .build() // 반환된 빌더로 JWT verifier 생성
+                .verify(accessToken);// accessToken을 검증하고 유효하지 않다면 예외 발생
 
             return Long.parseLong(jwt.getClaim("memberId")
-                    .asString()); // claim(MemberId) 가져오기
-        }
-        catch (JWTVerificationException e) {
+                .asString()); // claim(MemberId) 가져오기
+        } catch (JWTVerificationException e) {
             throw new InvalidAccessTokenException(
                 ACCESS_TOKEN.getMessage() + INVALID.getMessage());
         }
@@ -237,7 +253,8 @@ public class JwtService {
 
     public String extractRefreshToken(HttpServletRequest request) throws BadRequestException {
         String refreshToken = Optional.ofNullable(request.getHeader(REFRESH_TOKEN_HEADER))
-            .orElseThrow(() -> new BadRequestException(REFRESH_TOKEN.getMessage() + NOT_FOUND.getMessage()))
+            .orElseThrow(
+                () -> new BadRequestException(REFRESH_TOKEN.getMessage() + NOT_FOUND.getMessage()))
             .replace(BEARER, "");
 
         // refreshToken 값 검증
@@ -249,11 +266,11 @@ public class JwtService {
     }
 
     /**
-     * 헤더에서 RefreshToken 추출
-     * 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서
-     * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
+     * 헤더에서 RefreshToken 추출 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서 헤더를 가져온 후 "Bearer"를
+     * 삭제(""로 replace)
      */
-    public Long validateAndExtractMemberIdFromRefreshToken(String refreshToken) throws InvalidRefreshTokenException {
+    public Long validateAndExtractMemberIdFromRefreshToken(String refreshToken)
+        throws InvalidRefreshTokenException {
         try {
             // refreshToken을 검증한다.
             Long memberIdInRefreshToken = Long.parseLong(JWT.require(Algorithm.HMAC512(secret))
@@ -265,9 +282,9 @@ public class JwtService {
                 .asString());
 
             return memberIdInRefreshToken;
-        }
-        catch (JWTVerificationException e) {
-            throw new InvalidRefreshTokenException(REFRESH_TOKEN.getMessage() + INVALID.getMessage());
+        } catch (JWTVerificationException e) {
+            throw new InvalidRefreshTokenException(
+                REFRESH_TOKEN.getMessage() + INVALID.getMessage());
         }
     }
 
