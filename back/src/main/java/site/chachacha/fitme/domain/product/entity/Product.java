@@ -103,22 +103,17 @@ public class Product extends BaseEntity {
         this.reviewRating = (this.reviewRating * this.reviewCount + rating) / (++this.reviewCount);
     }
 
+    public void deleteReview(int rating) {
+        this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
+    }
+
     public void addLike(ProductLike productLike) {
         this.productLikes.add(productLike);
         this.likeCount = this.likeCount + 1;
     }
 
-    public void deleteReview(int rating) {
-        this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
-    }
-
-    // == 비즈니스 로직 == //
-    public void addReview(Double rating) {
-        this.reviewRating = (this.reviewRating * this.reviewCount + rating) / (++this.reviewCount);
-    }
-
-    public void deleteReview(Double rating) {
-        this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
+    public void deleteLike() {
+        this.likeCount = this.likeCount - 1;
     }
 
     // == 연관관계 메소드 == //

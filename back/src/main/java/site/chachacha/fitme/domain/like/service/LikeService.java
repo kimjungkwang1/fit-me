@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.domain.like.dto.LikeResponse;
 import site.chachacha.fitme.domain.like.entity.ProductLike;
 import site.chachacha.fitme.domain.like.exception.DuplicateProductLikeException;
+import site.chachacha.fitme.domain.like.exception.ProductLikeNotFoundException;
 import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
 import site.chachacha.fitme.domain.member.entity.Member;
 import site.chachacha.fitme.domain.member.exception.NoSuchMemberException;
@@ -35,8 +36,19 @@ public class LikeService {
             .product(product)
             .member(member)
             .build();
-        ProductLike savedProductLike = productLikeRepository.save(productLike);
-        product.addLike(savedProductLike);
+        product.addLike(productLike);
+        productLikeRepository.save(productLike);
+        return new LikeResponse(product.getLikeCount());
+    }
+
+    @Transactional
+    public LikeResponse removeProductLike(Long productId, Long memberId) {
+        Member member = memberRepository.findNotDeletedById(memberId).orElseThrow(NoSuchMemberException::new);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        ProductLike productLike = productLikeRepository.findByProductAndMember(product, member).orElseThrow(ProductLikeNotFoundException::new);
+
+        productLikeRepository.delete(productLike);
+        product.deleteLike();
         return new LikeResponse(product.getLikeCount());
     }
 
@@ -45,4 +57,5 @@ public class LikeService {
             throw new DuplicateProductLikeException();
         }
     }
+
 }
