@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Item from '../Common/Item';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 interface TabProps {
   tabName: string;
