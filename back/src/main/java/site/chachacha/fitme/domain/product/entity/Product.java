@@ -18,6 +18,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.brand.entity.Brand;
 import site.chachacha.fitme.domain.category.entity.Category;
@@ -52,8 +53,10 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductReview> productReviews = new ArrayList<>();
 
+    @ColumnDefault("0")
     private int reviewCount = 0;
 
+    @ColumnDefault("0.0")
     private double reviewRating = 0.0;
 
     @OneToMany(mappedBy = "product")
