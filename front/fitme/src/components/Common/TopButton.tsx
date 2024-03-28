@@ -3,6 +3,7 @@ import { IoIosArrowUp } from 'react-icons/io';
 
 export default function TopButton() {
   const scrollToTop = () => {
+    console.log('클릭!');
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
