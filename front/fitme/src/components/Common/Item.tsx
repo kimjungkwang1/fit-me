@@ -34,7 +34,7 @@ export default function Item({
 }: ItemType) {
   return (
     <>
-      <div className='flex-col w-[32%] mx-[0.66%] mb-2'>
+      <div className='flex-col w-[31.5%] mx-[0.916%] mb-2'>
         <Link to={`/detail/${id}`}>
           <div>
             {mainImages[0] ? (
@@ -47,7 +47,7 @@ export default function Item({
               <div className='bg-gray-400 aspect-[3/4] object-cover rounded-lg' />
             )}
           </div>
-          <div className='mt-2 justify-start text-start'>
+          <div className='mt-1 justify-start text-start'>
             <p className='text-xs'>{brand.name}</p>
             <p className='text-xs truncate'>{name}</p>
             <p className='font-bold'>{price.toLocaleString()}원</p>
