@@ -1,5 +1,6 @@
 package site.chachacha.fitme.domain.product.entity;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -29,14 +31,17 @@ public class ProductOption {
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
+    @NotBlank
     private String color;
 
-    @OneToMany(mappedBy = "productOption")
+    @OneToMany(mappedBy = "productOption", cascade = PERSIST, orphanRemoval = true)
     private List<ProductSize> productSize = new ArrayList<>();
 
     @Builder
     public ProductOption(Product product, String color) {
         this.product = product;
+        this.product.addProductOption(this);
+
         this.color = color;
     }
 

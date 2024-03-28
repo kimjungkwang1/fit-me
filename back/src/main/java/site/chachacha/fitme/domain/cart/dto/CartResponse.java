@@ -36,7 +36,7 @@ public class CartResponse {
                     product.getMainImage().stream().map(MainImageResponse::from).toList()))
             .productOption(
                 new ProductOptionResponse(productOption.getId(), productOption.getColor(), cart.getProductSize().getSize(),
-                    cart.getQuantity()))
+                    cart.getQuantity(), cart.getProductSize().getStockQuantity()))
             .productTotalPrice(cart.getTotalPrice())
             .build();
     }
@@ -59,5 +59,6 @@ public class CartResponse {
         private String color;
         private String size;
         private int quantity;
+        private int stockQuantity;
     }
 }

@@ -20,17 +20,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.chachacha.fitme.domain.auth.entity.Token;
 import site.chachacha.fitme.common.entity.BaseEntity;
+import site.chachacha.fitme.domain.auth.entity.Token;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.member.dto.MemberUpdate;
+import site.chachacha.fitme.domain.order.Order;
+import site.chachacha.fitme.domain.order.OrderProduct;
+import site.chachacha.fitme.domain.review.entity.ProductReview;
 import site.chachacha.fitme.util.RandomNickname;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED, force = true)
 @Entity
 public class Member extends BaseEntity {
-    @Id @GeneratedValue(strategy = IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     // 카카오톡이 제공하는 사용자 구분을 위한 ID
@@ -67,6 +72,15 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DressRoom> dressRooms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductReview> productReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
     @Builder
     protected Member(Long providerId) {
         this.providerId = providerId;
@@ -82,8 +96,25 @@ public class Member extends BaseEntity {
         this.address = memberUpdate.getAddress();
     }
 
+    // == 비즈니스 로직 == //
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     // == 연관관계 메서드 =
     public void addDressRoom(DressRoom dressRoom) {
         dressRooms.add(dressRoom);
+    }
+
+    public void addProductReview(ProductReview productReview) {
+        productReviews.add(productReview);
+    }
+
+    public void addOrder(Order order) {
+        orders.add(order);
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
     }
 }
