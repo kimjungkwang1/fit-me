@@ -17,6 +17,7 @@ import MyFeedPage from './pages/MyFeedPage';
 import FeedWritePage from './pages/FeedWritePage';
 import HeaderBar from './components/headerBar';
 import FooterBar from './components/footerBar';
+import NotFoundPage from './pages/NotFoundPage';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
               <Route path='/feed/myfeed' element={<MyFeedPage />} />
               <Route path='/feed/write' element={<FeedWritePage />} />
+              <Route path='*' element={<NotFoundPage />} />
             </Routes>
           </div>
           <FooterBar />
