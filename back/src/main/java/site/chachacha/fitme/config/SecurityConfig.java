@@ -31,10 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // CORS
-        http
-            .csrf(AbstractHttpConfigurer::disable);
-
+        
         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
         http
             .authorizeHttpRequests(authorize -> authorize
