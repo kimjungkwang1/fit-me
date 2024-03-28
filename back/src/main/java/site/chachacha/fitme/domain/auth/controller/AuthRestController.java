@@ -134,13 +134,25 @@ public class AuthRestController {
 
         // x-forwarded-host와 origin이 모두 null이면
         if (xForwardedHost == null && origin == null) {
-            // 둘 다 로컬
-            return "http://localhost:8080";
+            // 프론트가 로컬이라는 뜻
+
+            // 백엔드가 local이면
+            if (activeProfile.equals("local")) {
+                // localhost:8080을 반환
+                return "http://localhost:8080";
+            }
+            // 백엔드가 dev면
+            else if (activeProfile.equals("dev")) {
+                // fit-me.site를 반환
+                return "https://fit-me.site";
+            }
         }
         // x-forwarded-host가 null이 아니면
         else {
             // x-forwarded-host를 반환
             return "https://" + xForwardedHost;
         }
+
+        return origin;
     }
 }

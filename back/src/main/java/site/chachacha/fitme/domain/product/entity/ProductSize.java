@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.chachacha.fitme.domain.order.exception.NotEnoughStockException;
 
 @Getter
 @Entity
@@ -33,8 +34,20 @@ public class ProductSize {
     @Builder
     private ProductSize(ProductOption productOption, String size, int stockQuantity) {
         this.productOption = productOption;
+        this.productOption.addProductSize(this);
+
         this.size = size;
         this.stockQuantity = stockQuantity;
         this.productOption.addProductSize(this);
+    }
+
+    // == 비즈니스 로직 == //
+    public void addOrderProduct(int count) throws IllegalStateException {
+        int restStock = this.stockQuantity - count;
+        if (restStock < 0) {
+            throw new NotEnoughStockException("재고가 부족합니다.");
+        }
+
+        this.stockQuantity = restStock;
     }
 }

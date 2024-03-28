@@ -12,6 +12,7 @@ import site.chachacha.fitme.domain.member.entity.Member;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class MemberResponse {
+
     @NotNull
     private Long id;
 
@@ -28,8 +29,10 @@ public class MemberResponse {
 
     private String address;
 
+    private Boolean isNewMember;
+
     @Builder
-    private MemberResponse(Member member) {
+    private MemberResponse(Member member, Boolean isNewMember) {
         this.id = member.getId();
         this.nickname = member.getNickname();
         this.gender = member.getGender();
@@ -37,12 +40,14 @@ public class MemberResponse {
         this.phoneNumber = member.getPhoneNumber();
         this.birthYear = member.getBirthYear();
         this.address = member.getAddress();
+        this.isNewMember = isNewMember;
     }
 
 
-    public static MemberResponse from(Member member) {
+    public static MemberResponse from(Member member, Boolean isNewMember) {
         return MemberResponse.builder()
-                .member(member)
-                .build();
+            .member(member)
+            .isNewMember(isNewMember)
+            .build();
     }
 }

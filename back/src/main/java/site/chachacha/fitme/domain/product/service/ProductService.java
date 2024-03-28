@@ -76,14 +76,16 @@ public class ProductService {
 
     // 상품 상세 조회
     public ProductDetailResponse getProduct(Long productId, Long memberId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
         boolean liked = productLikeRepository.existsByProductAndMemberId(product, memberId);
         return ProductDetailResponse.of(product, liked);
     }
 
     // 상품 옵션 목록 조회
     public List<ProductOptionResponse> getProductOptions(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
         List<ProductOption> productOptions = productOptionRepository.findAllByProduct(product);
         return productOptions.stream().map(ProductOptionResponse::from).toList();
     }
