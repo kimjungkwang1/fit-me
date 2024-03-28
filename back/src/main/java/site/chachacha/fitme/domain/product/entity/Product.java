@@ -103,6 +103,11 @@ public class Product extends BaseEntity {
         this.reviewRating = (this.reviewRating * this.reviewCount + rating) / (++this.reviewCount);
     }
 
+    public void addLike(ProductLike productLike) {
+        this.productLikes.add(productLike);
+        this.likeCount = this.likeCount + 1;
+    }
+
     public void deleteReview(int rating) {
         this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
     }
