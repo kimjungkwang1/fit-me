@@ -11,7 +11,7 @@ export default function FilterSelected({ id, name, handler }: FilterSelectedProp
     <>
       <div
         key={id}
-        className='flex flex-row items-center mr-[3px] px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+        className='flex flex-row items-center mr-[3px] px-3 py-1 text-xs text-center border border-solid border-gray-400 bg-gray-200 rounded-lg'
       >
         {name}&nbsp;
         <RxCross2 onClick={() => handler(id)} />

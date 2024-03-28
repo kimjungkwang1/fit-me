@@ -24,10 +24,11 @@ public class MemberIdResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest,
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest,
         WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = jwtService.extractAccessToken(request);
         if (accessToken == null || accessToken.isBlank()) {
             return null;
         }
