@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const year = new Date().getFullYear().toString();
 
@@ -7,6 +8,7 @@ type UserInputProps = {
 };
 
 const UserInput: React.FC<UserInputProps> = ({ onSubmit }) => {
+  const location = useLocation();
   const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState(false);
   const [profileUrl, setProfileUrl] = useState('');
@@ -131,7 +133,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit }) => {
           />
         </div>
         <button className='w-2/3 mt-10 px-5 py-2.5 rounded-lg bg-red-300' onClick={handleSubmit}>
-          회원가입 완료
+          {location.pathname === '/signup' ? '회원가입 완료' : '수정하기'}
         </button>
       </div>
     </>
