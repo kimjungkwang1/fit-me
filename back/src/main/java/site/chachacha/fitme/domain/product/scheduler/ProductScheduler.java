@@ -17,10 +17,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
+import site.chachacha.fitme.domain.order.repository.OrderProductRepository;
 import site.chachacha.fitme.domain.product.dto.ProductRankingResponse;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
-import site.chachacha.fitme.order.repository.OrderProductRepository;
 
 @Slf4j
 @RequiredArgsConstructor

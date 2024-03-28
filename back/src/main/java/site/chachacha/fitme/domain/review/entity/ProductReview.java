@@ -1,14 +1,16 @@
 package site.chachacha.fitme.domain.review.entity;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,35 +20,48 @@ import site.chachacha.fitme.domain.product.entity.Product;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class ProductReview extends BaseEntity {
-
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "product_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private int rating;
 
-    @JoinColumn(name = "member_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    @NotNull
+    private String content = "";
 
-    private Integer score;
-
-    private String content;
-
+    @NotBlank
     private String imageUrl;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Builder
-    public ProductReview(Product product, Member member, Integer score, String content, String imageUrl) {
-        this.product = product;
-        this.member = member;
-        this.score = score;
+    private ProductReview(int rating, String content, String imageUrl, Member member,
+        Product product) {
+        this.rating = rating;
         this.content = content;
         this.imageUrl = imageUrl;
-        this.product.getProductReviews().add(this);
+        this.member = member;
+        this.member.addProductReview(this);
+
+        this.product = product;
+        // count & rating 증가
+        this.product.addReview(this, rating);
+    }
+
+    // == 비즈니스 로직 == //
+    public void updateReview(String content) {
+        this.content = content;
+    }
+
+    public void updateImageUrl(Long id) {
+        this.imageUrl += id + "/" + "image.jpg";
     }
 }
