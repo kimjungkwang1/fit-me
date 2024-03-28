@@ -10,13 +10,13 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken ');
+    // const refreshToken = localStorage.getItem('refreshToken ');
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    if (refreshToken) {
-      config.headers['Authorization'] = `Bearer ${refreshToken}`;
-    }
+    // if (refreshToken) {
+    //   config.headers['AuthorizationRefresh'] = `Bearer ${refreshToken}`;
+    // }
     return config;
   },
   (error) => {
