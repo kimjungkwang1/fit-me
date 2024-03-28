@@ -144,6 +144,17 @@ export default function CategoryPage() {
     }
   };
 
+  // 가격
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(1000000);
+  const minPriceHandler = (min: number) => {
+    setMinPrice(min);
+  };
+  const maxPriceHandler = (max: number) => {
+    setMaxPrice(max);
+  };
+
+  // 정렬 기준
   const [sortBy, setSortBy] = useState<string>('');
   const sortByHandler = (sort: string) => {
     setSortBy(sort);
@@ -161,6 +172,10 @@ export default function CategoryPage() {
         ages={ages}
         selectedAges={selectedAges}
         selectedAgesHandler={selectedAgesHandler}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        minPriceHandler={minPriceHandler}
+        maxPriceHandler={maxPriceHandler}
         sortBy={sortBy}
         sortByHandler={sortByHandler}
       />

@@ -34,7 +34,7 @@ export default function Item({
 }: ItemType) {
   return (
     <>
-      <div className='flex-col w-[32%]'>
+      <div className='flex-col w-[32%] mx-[0.66%]'>
         <Link to={`/detail/${id}`}>
           <div>
             {mainImages[0] ? (
