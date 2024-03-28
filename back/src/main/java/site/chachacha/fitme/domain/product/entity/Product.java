@@ -18,6 +18,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.brand.entity.Brand;
 import site.chachacha.fitme.domain.category.entity.Category;
@@ -52,8 +53,10 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductReview> productReviews = new ArrayList<>();
 
+    @ColumnDefault("0")
     private int reviewCount = 0;
 
+    @ColumnDefault("0.0")
     private double reviewRating = 0.0;
 
     @OneToMany(mappedBy = "product")
@@ -75,40 +78,45 @@ public class Product extends BaseEntity {
 //    private int weeklyPopularityScore = 0;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ProductOption> productOptions;
+    private List<ProductOption> productOptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<MainImage> mainImage;
+    private List<MainImage> mainImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<DetailImage> detailImage;
+    private List<DetailImage> detailImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
     @Builder
     public Product(Brand brand, Category category, String name, Gender gender, String ageRange,
-        List<ProductTag> productTags, Integer price, List<ProductOption> productOptions,
-        List<MainImage> mainImages, List<DetailImage> detailImages) {
+        Integer price) {
         this.brand = brand;
         this.category = category;
         this.name = name;
         this.gender = gender;
         this.ageRange = ageRange;
         this.price = price;
-        this.productOptions = productOptions;
-        this.mainImage = mainImages;
-        this.detailImage = detailImages;
-        this.productTags = productTags;
     }
 
     // == 비즈니스 로직 == //
-    public void addReview(Double rating) {
+    public void addReview(ProductReview productReview, int rating) {
+        productReviews.add(productReview);
         this.reviewRating = (this.reviewRating * this.reviewCount + rating) / (++this.reviewCount);
     }
 
-    public void deleteReview(Double rating) {
+    public void deleteReview(int rating) {
         this.reviewRating = (this.reviewRating * this.reviewCount - rating) / (--this.reviewCount);
+    }
+
+    public void addLike(ProductLike productLike) {
+        this.productLikes.add(productLike);
+        this.likeCount = this.likeCount + 1;
+    }
+
+    public void deleteLike() {
+        this.likeCount = this.likeCount - 1;
     }
 
     // == 연관관계 메소드 == //
@@ -120,11 +128,11 @@ public class Product extends BaseEntity {
         this.detailImage.add(detailImage);
     }
 
-    public void addProductReview(ProductReview productReview) {
-        productReviews.add(productReview);
+    public void addOrderProduct(OrderProduct orderProduct) {
+        this.orderProducts.add(orderProduct);
     }
 
-    public void addOrderProduct(OrderProduct orderProduct) {
-        orderProducts.add(orderProduct);
+    public void addProductOption(ProductOption productOption) {
+        this.productOptions.add(productOption);
     }
 }

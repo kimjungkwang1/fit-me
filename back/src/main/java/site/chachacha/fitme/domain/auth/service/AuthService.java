@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.advice.exception.BadRequestException;
+import site.chachacha.fitme.domain.auth.dto.KakaoOAuthResponse;
 import site.chachacha.fitme.domain.auth.entity.Token;
 import site.chachacha.fitme.domain.auth.exception.InvalidRefreshTokenException;
 import site.chachacha.fitme.domain.auth.exception.NoSuchRefreshTokenException;
 import site.chachacha.fitme.domain.auth.repository.TokenRepository;
-import site.chachacha.fitme.domain.auth.dto.KakaoOAuthResponse;
 import site.chachacha.fitme.domain.member.dto.MemberResponse;
 import site.chachacha.fitme.domain.member.entity.Member;
 import site.chachacha.fitme.domain.member.exception.NoSuchMemberException;
@@ -24,6 +24,7 @@ import site.chachacha.fitme.domain.member.repository.MemberRepository;
 // Transactional 붙이지 마
 @RequiredArgsConstructor
 public class AuthService {
+
     private final JwtService jwtService;
     private final OAuthService oauthService;
 
@@ -31,11 +32,13 @@ public class AuthService {
     private final TokenRepository tokenRepository;
 
     @Transactional
-    public MemberResponse signIn(KakaoOAuthResponse kakaoOAuthResponse, HttpServletResponse response) throws NoSuchMemberException {
+    public MemberResponse signIn(KakaoOAuthResponse kakaoOAuthResponse,
+        HttpServletResponse response) throws NoSuchMemberException {
         // Member가 이미 있는지 확인한다.
         try {
             // providerId로 Member를 Token과 함께 찾는다.
-            Member member = memberRepository.findNotDeletedByProviderIdWithToken(kakaoOAuthResponse.getProviderId())
+            Member member = memberRepository.findNotDeletedByProviderIdWithToken(
+                    kakaoOAuthResponse.getProviderId())
                 .orElseThrow(NoSuchMemberException::new);
 
             String[] jwts = jwtService.issueJwts(member.getId());
@@ -44,7 +47,8 @@ public class AuthService {
             // Token이 이미 있으면
             if (member.getToken() != null) {
                 Token token = member.getToken();
-                token.updateResourceTokens(kakaoOAuthResponse.getResourceAccessToken(), kakaoOAuthResponse.getResourceRefreshToken());
+                token.updateResourceTokens(kakaoOAuthResponse.getResourceAccessToken(),
+                    kakaoOAuthResponse.getResourceRefreshToken());
 
                 tokenRepository.save(token);
             }
@@ -65,9 +69,7 @@ public class AuthService {
             jwtService.saveRefreshTokenToRedis(jwts[1], member.getId());
 
             // member를 리턴한다.
-            return MemberResponse.builder()
-                .member(member)
-                .build();
+            return MemberResponse.from(member, false);
         }
         // Member가 없다는건, 처음 로그인하는 회원이라는 뜻이다.
         catch (NoSuchMemberException e) {
@@ -82,10 +84,10 @@ public class AuthService {
             String[] jwts = jwtService.issueJwts(newMember.getId());
 
             Token token = Token.builder()
-                    .resourceAccessToken(kakaoOAuthResponse.getResourceAccessToken())
-                    .resourceRefreshToken(kakaoOAuthResponse.getResourceRefreshToken())
-                    .member(newMember)
-                    .build();
+                .resourceAccessToken(kakaoOAuthResponse.getResourceAccessToken())
+                .resourceRefreshToken(kakaoOAuthResponse.getResourceRefreshToken())
+                .member(newMember)
+                .build();
 
             // Token을 저장한다.
             tokenRepository.save(token);
@@ -96,14 +98,13 @@ public class AuthService {
             jwtService.saveRefreshTokenToRedis(jwts[1], newMember.getId());
 
             // member를 리턴한다.
-            return MemberResponse.builder()
-                .member(newMember)
-                .build();
+            return MemberResponse.from(newMember, true);
         }
     }
 
     // Transactional 필요 없음
-    public String[] reissueJwts(HttpServletRequest request) throws NoSuchMemberException, IllegalArgumentException, NoSuchRefreshTokenException, JWTVerificationException {
+    public String[] reissueJwts(HttpServletRequest request)
+        throws NoSuchMemberException, IllegalArgumentException, NoSuchRefreshTokenException, JWTVerificationException {
 //        , NoSuchDeviceTokenException
 //        // Header에서 deviceToken 추출
 //        String deviceToken = deviceTokenService.extractDeviceTokenFromHeader(request);
@@ -113,7 +114,8 @@ public class AuthService {
 
         // Header에서 refreshToken 추출
         String refreshToken = jwtService.extractRefreshToken(request);
-        Long memberIdFromRefreshToken = jwtService.validateAndExtractMemberIdFromRefreshToken(refreshToken);
+        Long memberIdFromRefreshToken = jwtService.validateAndExtractMemberIdFromRefreshToken(
+            refreshToken);
 
         // token들을 재발급한다.
         String[] jwts = jwtService.reissueJwts(memberIdFromRefreshToken, refreshToken);
@@ -126,14 +128,15 @@ public class AuthService {
     }
 
     @Transactional
-    public void signOut(HttpServletRequest request, HttpServletResponse response) throws BadRequestException, InvalidRefreshTokenException, NoSuchMemberException, IOException {
+    public void signOut(HttpServletRequest request, HttpServletResponse response)
+        throws BadRequestException, InvalidRefreshTokenException, NoSuchMemberException, IOException {
         // Header에서 Refresh Token 추출
         String refreshToken = jwtService.extractRefreshToken(request);
 
         Long memberId = jwtService.validateAndExtractMemberIdFromRefreshToken(refreshToken);
 
         Member member = memberRepository.findNotDeletedById(memberId)
-                .orElseThrow(NoSuchMemberException::new);
+            .orElseThrow(NoSuchMemberException::new);
 
         Token token = member.getToken();
 
@@ -142,8 +145,7 @@ public class AuthService {
             try {
                 // 로그아웃 요청 보내고
                 oauthService.requestLogOut(token);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 log.error(e.getMessage());
             }
 

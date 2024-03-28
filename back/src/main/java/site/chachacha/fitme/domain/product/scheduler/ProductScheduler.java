@@ -17,11 +17,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
+import site.chachacha.fitme.domain.order.repository.OrderProductRepository;
 import site.chachacha.fitme.domain.product.dto.ProductRankingResponse;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
-import site.chachacha.fitme.domain.review.entity.ProductReview;
-import site.chachacha.fitme.order.repository.OrderProductRepository;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -92,25 +91,9 @@ public class ProductScheduler {
             .sorted(Comparator.comparingInt(product -> idToRank.get(product.getId())))
             .map(product -> {
                 int rank = idToRank.get(product.getId());
-                List<ProductReview> reviews = product.getProductReviews();
-                double reviewRating = calculateReviewRating(reviews);
-                int reviewCount = reviews.size();
-                return ProductRankingResponse.of(rank, product, reviewRating, reviewCount);
+                return ProductRankingResponse.of(rank, product);
             })
             .collect(Collectors.toList());
-    }
-
-    private double calculateReviewRating(List<ProductReview> productReviews) {
-        if (productReviews.isEmpty()) {
-            return 0.0;
-        }
-
-        double averageScore = productReviews.stream()
-            .mapToInt(ProductReview::getScore)
-            .average()
-            .orElse(0.0);
-
-        return Math.round(averageScore * 10.0) / 10.0; // 평균 점수를 반올림하여 반환
     }
 }
 

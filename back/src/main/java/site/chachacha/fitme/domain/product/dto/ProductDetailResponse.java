@@ -15,7 +15,7 @@ public class ProductDetailResponse extends ProductResponse {
     private boolean liked;
     private List<TagResponse> tags;
 
-    public static ProductDetailResponse of(Product product, Boolean liked, Double reviewRating, Integer reviewCount) {
+    public static ProductDetailResponse of(Product product, Boolean liked) {
 
         List<TagResponse> tags = product.getProductTags()
             .stream()
@@ -29,8 +29,8 @@ public class ProductDetailResponse extends ProductResponse {
             .mainImages(product.getMainImage().stream().map(MainImageResponse::from).toList())
             .brand(BrandResponse.from(product.getBrand()))
             .likeCount(product.getLikeCount())
-            .reviewRating(reviewRating)
-            .reviewCount(reviewCount)
+            .reviewRating(product.getReviewRating())
+            .reviewCount(product.getReviewCount())
             .detailImages(product.getDetailImage().stream().map(DetailImageResponse::from).toList())
             .liked(liked)
             .tags(tags)

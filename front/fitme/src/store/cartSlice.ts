@@ -34,47 +34,7 @@ interface option {
 }
 //초기상태
 const initialState: CartState = {
-  items: [
-    {
-      id: 1,
-      productId: 1,
-      name: 'String',
-      price: 123,
-      color: 'String',
-      size: 'String',
-      url: 'https://image.msscdn.net/images/goods_img/20230818/3475395/3475395_16938118686037_500.jpg',
-      quantity: 1,
-      stockQuantity: 3,
-      isChecked: true,
-      category: 111,
-    },
-    {
-      id: 2,
-      productId: 2,
-      name: 'String',
-      price: 123,
-      color: 'String',
-      size: 'String',
-      url: 'https://image.msscdn.net/images/goods_img/20230818/3475395/3475395_16938118686037_500.jpg',
-      quantity: 1,
-      stockQuantity: 3,
-      isChecked: true,
-      category: 111,
-    },
-    {
-      id: 3,
-      productId: 3,
-      name: 'String',
-      price: 123,
-      color: 'String',
-      size: 'String',
-      url: 'https://image.msscdn.net/images/goods_img/20230818/3475395/3475395_16938118686037_500.jpg',
-      quantity: 1,
-      stockQuantity: 3,
-      isChecked: true,
-      category: 111,
-    },
-  ],
+  items: [],
   totalProductCount: 0,
   status: 'idle',
   totalPrice: 0,
@@ -113,6 +73,18 @@ export const addCartItem = createAsyncThunk(
 export const deleteCartItem = createAsyncThunk('cart/deleteCartItem', async (ids: number[]) => {
   const response = await api.delete<any>('/api/cart', { data: ids });
 });
+// 카트에서 수량 수정
+export const updateQuantity = createAsyncThunk(
+  'cart/deleteCartItem',
+  async ({ id, quantity }: { id: number; quantity: number }) => {
+    const response = await api.patch<any>('/api/cart/products/quantity', {
+      data: {
+        id,
+        quantity,
+      },
+    });
+  }
+);
 
 export const cartSlice = createSlice({
   name: 'cart',
@@ -157,6 +129,5 @@ export const cartSlice = createSlice({
       });
   },
 });
-
 export default cartSlice.reducer;
 export const { toggleItemChecked } = cartSlice.actions;

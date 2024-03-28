@@ -24,7 +24,6 @@ import site.chachacha.fitme.domain.product.exception.ProductNotFoundException;
 import site.chachacha.fitme.domain.product.repository.ProductCustomRepository;
 import site.chachacha.fitme.domain.product.repository.ProductOptionRepository;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
-import site.chachacha.fitme.domain.review.entity.ProductReview;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -67,8 +66,7 @@ public class ProductService {
     // 상품 목록 조회
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
         List<Product> products = productCustomRepository.findAllByProductConditions(
-            request.getLastId(), request.getLastPopularityScore(), request.getSize(), request.getKeyword(), request.getGender(),
-            request.getAgeRange(),
+            request.getLastId(), request.getLastPopularityScore(), request.getSize(), request.getKeyword(), request.getAgeRanges(),
             request.getBrandIds(), request.getCategoryIds(), request.getStartPrice(), request.getEndPrice(), request.getSortBy());
         return products
             .stream()
@@ -78,30 +76,17 @@ public class ProductService {
 
     // 상품 상세 조회
     public ProductDetailResponse getProduct(Long productId, Long memberId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
         boolean liked = productLikeRepository.existsByProductAndMemberId(product, memberId);
-        Integer reviewCount = product.getProductReviews().size();
-        Double reviewRating = calculateReviewRating(product.getProductReviews());
-        return ProductDetailResponse.of(product, liked, reviewRating, reviewCount);
+        return ProductDetailResponse.of(product, liked);
     }
 
-    // 상품 목록 조회
+    // 상품 옵션 목록 조회
     public List<ProductOptionResponse> getProductOptions(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
         List<ProductOption> productOptions = productOptionRepository.findAllByProduct(product);
         return productOptions.stream().map(ProductOptionResponse::from).toList();
-    }
-
-    private double calculateReviewRating(List<ProductReview> productReviews) {
-        if (productReviews.isEmpty()) {
-            return 0.0;
-        }
-
-        double averageScore = productReviews.stream()
-            .mapToInt(ProductReview::getScore)
-            .average()
-            .orElse(0.0);
-
-        return Math.round(averageScore * 10.0) / 10.0; // 평균 점수를 반올림하여 반환
     }
 }

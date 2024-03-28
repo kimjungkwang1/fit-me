@@ -16,6 +16,9 @@ export default function Cart() {
   const navigate = useNavigate();
   const items = useSelector((state: RootState) => state.cart.items);
   const address = useSelector((state: RootState) => state.cart.address);
+  const totalPrice = items.reduce((total, item) => {
+    return item.isChecked ? total + item.price * item.quantity : total;
+  }, 0);
   return (
     <>
       <div className='flex justify-center'>
@@ -28,7 +31,7 @@ export default function Cart() {
           ))}
           <CartAddress address={address}></CartAddress>
           <Button color='gray' className='my-2 w-[100%]'>
-            결제하기 |200,000
+            결제하기 |{totalPrice.toLocaleString()}
           </Button>
         </div>
       </div>

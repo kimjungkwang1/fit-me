@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Item from '../Common/Item';
 import axios from 'axios';
 
+interface TabProps {
+  tabName: string;
+}
+
 type ImageType = {
   id: number;
   url: string;
@@ -23,13 +27,19 @@ type ItemType = {
   reviewCount: number;
 };
 
-const ItemList: React.FC = () => {
+const ItemList: React.FC<TabProps> = ({ tabName }) => {
   const [list, setList] = useState<ItemType[]>();
 
   useEffect(() => {
-    axios.get(`https://fit-me.site/api/products`).then(({ data }) => {
-      setList(data);
-    });
+    if (tabName === 'bought') {
+      axios.get(`https://fit-me.site/api/products`).then(({ data }) => {
+        setList(data);
+      });
+    } else if (tabName === 'fav') {
+      axios.get(`https://fit-me.site/api/products`).then(({ data }) => {
+        setList(data);
+      });
+    }
   }, []);
 
   return (

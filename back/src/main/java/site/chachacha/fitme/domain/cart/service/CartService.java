@@ -10,7 +10,9 @@ import site.chachacha.fitme.domain.cart.dto.CartDeleteRequest;
 import site.chachacha.fitme.domain.cart.dto.CartListResponse;
 import site.chachacha.fitme.domain.cart.dto.CartOptionRequest;
 import site.chachacha.fitme.domain.cart.dto.CartResponse;
+import site.chachacha.fitme.domain.cart.dto.CartUpdateRequest;
 import site.chachacha.fitme.domain.cart.entity.Cart;
+import site.chachacha.fitme.domain.cart.exception.CartNotFoundException;
 import site.chachacha.fitme.domain.cart.exception.DuplicateCartException;
 import site.chachacha.fitme.domain.cart.exception.InvalidProductRelationException;
 import site.chachacha.fitme.domain.cart.exception.UnauthorizedCartAccessException;
@@ -54,8 +56,16 @@ public class CartService {
         List<Cart> carts = cartRepository.findByMember(member);
         List<CartResponse> cartResponses = carts.stream().map(CartResponse::from).toList();
         int totalProductCount = cartResponses.size();
-        int totalCartPrice = cartResponses.stream().mapToInt(CartResponse::getProductTotalPrice).sum();
-        return new CartListResponse(cartResponses, totalProductCount, totalCartPrice);
+        return new CartListResponse(cartResponses, totalProductCount);
+    }
+
+    // 장바구니 상품 수량 업데이트
+    @Transactional
+    public void modifyCartProductQuantity(Long memberId, CartUpdateRequest request) {
+        Member member = memberRepository.findNotDeletedById(memberId).orElseThrow(NoSuchMemberException::new);
+        Cart cart = cartRepository.findById(request.getCartId()).orElseThrow(() -> new CartNotFoundException(request.getCartId()));
+        validateCartOwnership(member, cart);
+        cart.updateQuantity(request.getQuantity());
     }
 
     // 장바구니 상품 삭제
@@ -63,10 +73,10 @@ public class CartService {
     public void removeCartProducts(CartDeleteRequest request, Long memberId) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);
-
         // 요청된 모든 장바구니 ID가 주어진 회원에 속하는지 한 번에 확인
         List<Cart> carts = cartRepository.findAllByIdAndMemberId(request.getCartIds(), memberId);
-        validateCartOwnership(carts.size(), request.getCartIds().size());
+
+        validateCartListAndIdSize(carts.size(), request.getCartIds().size());
         cartRepository.deleteAll(carts);
     }
 
@@ -103,7 +113,13 @@ public class CartService {
         }
     }
 
-    private void validateCartOwnership(int cartsSize, int cartIdsSize) {
+    private void validateCartOwnership(Member member, Cart cart) {
+        if (!cart.getMember().equals(member)) {
+            throw new UnauthorizedCartAccessException();
+        }
+    }
+
+    private void validateCartListAndIdSize(int cartsSize, int cartIdsSize) {
         if (cartsSize != cartIdsSize) {
             throw new UnauthorizedCartAccessException();
         }

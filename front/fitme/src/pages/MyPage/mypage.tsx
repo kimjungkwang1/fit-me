@@ -42,25 +42,10 @@ const Mypage: React.FC = () => {
 
   const getContent = (tabName: string) => {
     switch (tabName) {
-      case 'bougth':
-        return <ItemList />;
+      case 'bought':
+        return <ItemList tabName={tabName} />;
       case 'fav':
-        return (
-          <div className='flex flex-col'>
-            <div className='overflow-hidden hover:overflow-auto max-h-12 bg-blue-100'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate
-              eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit
-              tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit,
-              et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit
-              amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam.
-              Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate
-              justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet.
-              Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque
-              arcu mauris, malesuada quis ornare accumsan, blandit sed diam.
-            </div>
-            <div className='flex-grow bg-red-500'>1</div>
-          </div>
-        );
+        return <ItemList tabName={tabName} />;
       case 'order':
         return <Order />;
       case 'modify':

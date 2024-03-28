@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { PrivateRoute } from './services/PrivateRoute';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
@@ -17,8 +19,13 @@ import HeaderBar from './components/headerBar';
 import FooterBar from './components/footerBar';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import NotFoundPage from './pages/NotFoundPage';
 
 const App: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Fit-Me';
+  }, []);
+
   return (
     <>
       <Provider store={store}>
