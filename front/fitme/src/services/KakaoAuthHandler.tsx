@@ -23,12 +23,17 @@ const KakaoAuthHandler: React.FC = () => {
             if (res.status === 200) {
               const refreshToken = res.headers.authorizationrefresh?.replace('Bearer', '').trim();
               const accessToken = res.headers.authorization?.replace('Bearer', '').trim();
+              const isNewMember = res.data.isNewMember;
 
               localStorage.setItem('refreshToken', refreshToken);
               localStorage.setItem('accessToken', accessToken);
 
               console.log('로그인 성공');
-              navigate('/signup');
+              if (isNewMember) {
+                navigate('/signup', { state: { userData: res.data } });
+              } else {
+                navigate('/mypage');
+              }
             } else {
               alert('로그인 오류');
               navigate('/home');
