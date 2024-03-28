@@ -26,11 +26,15 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    private static final List<String> NO_CHECK_URL = List.of("/api/auth", "/api/products", "/api/brands", "/auth/login",
+    private static final List<String> NO_CHECK_URL = List.of("/api/auth", "/api/products",
+        "/api/brands", "/auth/login",
         "/error", "/css", "/js", "/img", "/favicon.ico");
 
+    private static final List<String> CHECK_URL = List.of("/like");
+
     /**
-     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및 authenticate 수행
+     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및
+     * authenticate 수행
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -42,17 +46,14 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
         }
 
         try {
-            // access token에서 email 검증
+            // 여기에는 애초에 검증 해야하는 요청만 들어오자나
+            // access token 검증
             String accessToken = jwtService.extractAccessToken(request);
             //System.out.println("accessToken : " + accessToken);
-            Long memberId = jwtService.validateAndExtractMemberIdFromAccessToken(
-                accessToken);
 
-            // request에 memberId 담기
-            request.setAttribute("memberId", memberId);
-
-            // Header에 accessToken 담기
-            jwtService.setAccessTokenOnHeader(response, accessToken);
+            if (!jwtService.validateAccessToken(accessToken)) {
+                throw new InvalidAccessTokenException("유효하지 않은 토큰입니다.");
+            }
 
             filterChain.doFilter(request, response); //다음 필터 호출
             return; // return으로 이후 현재 필터 진행 막기
@@ -69,6 +70,10 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
     }
 
     private boolean isNoCheckUrl(String url) {
+        if (CHECK_URL.stream().anyMatch(url::endsWith)) {
+            return false;
+        }
+
         return NO_CHECK_URL.stream().anyMatch(url::startsWith);
     }
 
