@@ -23,15 +23,19 @@ public class MemberIdResolver implements HandlerMethodArgumentResolver {
             MemberId.class);
     }
 
+    //
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest,
         WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String accessToken = jwtService.extractAccessToken(request);
-        if (accessToken == null || accessToken.isBlank()) {
+        boolean result = jwtService.validateAccessToken(accessToken);
+
+        if (!result) {
             return null;
         }
-        return jwtService.validateAndExtractMemberIdFromAccessToken(accessToken);
+
+        return jwtService.extractMemberIdFromAccessToken(accessToken);
     }
 }
