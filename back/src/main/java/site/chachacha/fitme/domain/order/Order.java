@@ -43,9 +43,12 @@ public class Order extends BaseEntity {
     private OrderStatus status = OrderStatus.ORDER;
 
     @Builder
-    public Order(Member member, List<OrderProduct> orderProducts, OrderStatus status) {
+    public Order(Member member, List<OrderProduct> orderProducts) {
         this.member = member;
+        this.member.addOrder(this);
+
         this.orderProducts = orderProducts;
-        this.status = status;
+        this.orderProducts
+            .forEach(orderProduct -> orderProduct.setOrder(this));
     }
 }
