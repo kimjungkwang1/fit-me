@@ -28,13 +28,27 @@ interface address {
   address: string;
 }
 interface option {
-  proudctOptionId: number;
+  productOptionId: number;
   productSizeId: number;
   quantity: number;
 }
 //초기상태
 const initialState: CartState = {
-  items: [],
+  items: [
+    {
+      id: 1,
+      productId: 1,
+      name: 'string',
+      price: 8,
+      color: 'string',
+      size: 'string',
+      url: 'string',
+      quantity: 8,
+      stockQuantity: 8,
+      isChecked: true,
+      category: 9,
+    },
+  ],
   totalProductCount: 0,
   status: 'idle',
   totalPrice: 0,
@@ -75,16 +89,27 @@ export const deleteCartItem = createAsyncThunk('cart/deleteCartItem', async (ids
 });
 // 카트에서 수량 수정
 export const updateQuantity = createAsyncThunk(
-  'cart/deleteCartItem',
-  async ({ id, quantity }: { id: number; quantity: number }) => {
-    const response = await api.patch<any>('/api/cart/products/quantity', {
-      data: {
-        id,
-        quantity,
-      },
-    });
+  'cart/updateQuantity',
+  async ({ id, quantity }: { id: number; quantity: number }, { rejectWithValue }) => {
+    try {
+      const response = await api.patch<any>('/api/cart/products/quantity', {
+        data: {
+          id,
+          quantity,
+        },
+      });
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+    return { id, quantity };
   }
 );
+
+//주소 가져오기
+export const getAddress = createAsyncThunk('cart/getAddress', async () => {
+  const response = await api.get<any>('/api/members');
+  return response;
+});
 
 export const cartSlice = createSlice({
   name: 'cart',
@@ -125,6 +150,33 @@ export const cartSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(deleteCartItem.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(updateQuantity.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateQuantity.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { id, quantity } = action.payload;
+        const itemIndex = state.items.findIndex((item) => item.id === id);
+        if (itemIndex !== -1) {
+          state.items[itemIndex].quantity = quantity;
+        }
+      })
+      .addCase(updateQuantity.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getAddress.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getAddress.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { nickname, phoneNumber, address } = action.payload.data;
+        state.address.name = nickname;
+        state.address.phoneNumber = phoneNumber;
+        state.address.address = address;
+      })
+      .addCase(getAddress.rejected, (state) => {
         state.status = 'failed';
       });
   },
