@@ -2,7 +2,6 @@ import React from 'react';
 import SearchHistory from '../components/Search/SearchHistory';
 import SearchResult from '../components/Search/SearchResult';
 import FilterBar from '../components/Common/FilterBar';
-import SortBar from '../components/Common/SortBar';
 
 export default function SearchPage() {
   return (
@@ -12,7 +11,6 @@ export default function SearchPage() {
 
       {/* 검색 결과 */}
       {/* <FilterBar /> */}
-      <SortBar />
       <SearchResult />
     </div>
   );

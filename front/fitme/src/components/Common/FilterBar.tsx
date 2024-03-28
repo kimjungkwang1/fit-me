@@ -1,4 +1,4 @@
-import { Button, Dropdown, Modal } from 'flowbite-react';
+import { Dropdown, Modal } from 'flowbite-react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import FilterButton from './FilterButton';
 import FilterSelected from './FilterSelected';
@@ -23,6 +23,11 @@ type FilterBarProps = {
   selectedAges: number[];
   selectedAgesHandler: (id: number) => void;
 
+  minPrice: number;
+  maxPrice: number;
+  minPriceHandler: (min: number) => void;
+  maxPriceHandler: (max: number) => void;
+
   sortBy: string;
   sortByHandler: (sort: string) => void;
 };
@@ -37,6 +42,10 @@ export default function FilterBar({
   ages,
   selectedAges,
   selectedAgesHandler,
+  minPrice,
+  maxPrice,
+  minPriceHandler,
+  maxPriceHandler,
   sortBy,
   sortByHandler,
 }: FilterBarProps) {
@@ -62,7 +71,7 @@ export default function FilterBar({
 
   return (
     <>
-      <div className='flex flex-row gap-1 mx-[3%] mt-2 mb-1 justify-between items-baseline'>
+      <div className='flex flex-row gap-1 mx-[3%] my-2 justify-between items-baseline'>
         <div>
           <div
             className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
@@ -88,17 +97,19 @@ export default function FilterBar({
             className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
             onClick={() => setOpenModal(true)}
           >
-            가격
-          </div>
-          <div
-            className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
-            onClick={() => setOpenModal(true)}
-          >
             {selectedAges.length > 0
               ? selectedAges.length === 1
                 ? ages.find((age) => age.id === selectedAges[0])?.name
                 : `${selectedAges.length}개 연령대 필터`
               : `연령대`}
+          </div>
+          <div
+            className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
+            onClick={() => setOpenModal(true)}
+          >
+            {minPrice === 0 && maxPrice === 1000000
+              ? `가격`
+              : `${minPrice.toLocaleString()}원~${maxPrice.toLocaleString()}원`}
           </div>
         </div>
         <Dropdown
@@ -113,15 +124,15 @@ export default function FilterBar({
         </Dropdown>
 
         {/* 옵션 선택 모달 */}
-        <Modal show={openModal} popup>
+        <Modal dismissible onClose={() => setOpenModal(false)} show={openModal}>
           <Modal.Body>
             {/* 선택된 옵션 리스트 */}
             <div>
               {selectedBrands.length !== 0 ||
               selectedCategories.length !== 0 ||
               selectedAges.length !== 0 ? (
-                <>
-                  <span className='flex font-semibold mt-2 mb-1'>선택된 옵션</span>
+                <div>
+                  <span className='flex font-semibold mt-2 mb-2'>선택된 옵션</span>
                   <div className='flex flex-row flex-wrap gap-2 mb-2'>
                     {selectedBrands.map((selectedBrand, index) => (
                       <FilterSelected
@@ -148,14 +159,14 @@ export default function FilterBar({
                       />
                     ))}
                   </div>
-                </>
+                </div>
               ) : (
                 <div />
               )}
 
               {/* 브랜드 선택 */}
-              <span className='flex font-semibold mt-2 mb-1'>브랜드</span>
-              <div className='bg-gray-200 rounded-lg my-2 px-2 py-1 text-sm flex flex-row items-center'>
+              <span className='flex font-semibold mt-5 mb-2'>브랜드</span>
+              <div className='bg-gray-200 rounded-lg mt-1 mb-2 px-2 py-1 text-sm flex flex-row items-center'>
                 <BiSearch className='text-gray-500 text-lg mx-1' />
                 <input
                   type='text'
@@ -180,7 +191,7 @@ export default function FilterBar({
 
             {/* 카테고리 선택 */}
             <div>
-              <span className='flex font-semibold mt-2 mb-1'>카테고리</span>
+              <span className='flex font-semibold mt-5 mb-2'>카테고리</span>
               <div className='flex flex-row flex-wrap gap-2'>
                 {categories &&
                   categories.map((category, index) => (
@@ -195,15 +206,9 @@ export default function FilterBar({
               </div>
             </div>
 
-            {/* 가격 double range slider */}
-            <div>
-              <span className='flex font-semibold mt-2 mb-1'>가격</span>
-              <div></div>
-            </div>
-
             {/* 연령대 선택 */}
             <div>
-              <span className='flex font-semibold mt-2 mb-1'>연령대</span>
+              <span className='flex font-semibold mt-5 mb-2'>연령대</span>
               <div className='flex flex-row flex-wrap gap-2'>
                 {ages &&
                   ages.map((age, index) => (
@@ -218,10 +223,21 @@ export default function FilterBar({
               </div>
             </div>
 
+            {/* 가격 double range slider */}
+            <div>
+              <span className='flex font-semibold mt-5 mb-2'>가격</span>
+              <div />
+            </div>
+
             {/* 닫는 버튼 */}
-            <Button size='sm' onClick={() => setOpenModal(false)}>
-              적용
-            </Button>
+            <div>
+              <div
+                className='bg-gray-200 rounded-xl w-full h-8 mt-5 text-center'
+                onClick={() => setOpenModal(false)}
+              >
+                <span className='font-bold align-middle'>닫기</span>
+              </div>
+            </div>
           </Modal.Body>
         </Modal>
       </div>

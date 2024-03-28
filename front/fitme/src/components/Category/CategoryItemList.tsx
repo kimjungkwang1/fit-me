@@ -80,7 +80,7 @@ export default function CategoryItemList({
 
   return (
     <div>
-      <div className='flex flex-wrap flex-row mx-[2%] place-content-around gap-y-3'>
+      <div className='flex flex-wrap flex-row mx-[2%] place-content-start gap-y-3'>
         {list &&
           list.map((item, index) => (
             <Item
