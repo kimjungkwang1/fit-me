@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import site.chachacha.fitme.common.annotation.MemberId;
 import site.chachacha.fitme.domain.cart.dto.CartCreateRequest;
 import site.chachacha.fitme.domain.cart.dto.CartDeleteRequest;
 import site.chachacha.fitme.domain.cart.dto.CartListResponse;
+import site.chachacha.fitme.domain.cart.dto.CartUpdateRequest;
 import site.chachacha.fitme.domain.cart.service.CartService;
 
 @RequestMapping("/api/cart/products")
@@ -37,6 +39,14 @@ public class CartController {
         CartListResponse response = cartService.getCartProducts(memberId);
         return ResponseEntity.ok(response);
     }
+
+    // 장바구니 상품 수량 수정
+    @PatchMapping("/quantity")
+    public ResponseEntity<Void> modifyCartProductQuantity(@MemberId Long memberId, @RequestBody @Validated CartUpdateRequest request) {
+        cartService.modifyCartProductQuantity(memberId, request);
+        return ResponseEntity.noContent().build();
+    }
+
 
     // 장바구니 상품 삭제
     @DeleteMapping
