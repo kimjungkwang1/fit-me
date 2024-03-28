@@ -1,42 +1,73 @@
 import * as React from 'react';
 import { IoIosCheckmarkCircle, IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import { useDispatch } from 'react-redux';
+import { GrPrevious, GrNext } from 'react-icons/gr';
+import { toggleItemChecked, deleteCartItem, updateQuantity } from '../../store/cartSlice';
+import { AppDispatch } from '../../store/store';
 
 export interface ICardItemProps {
   item: ICartItem;
 }
 
 export interface ICartItem {
+  id: number;
+  productId: number;
   name: string;
   price: number;
   color: string;
   size: string;
-  count: number;
+  url: string;
+  quantity: number;
+  stockQuantity: number;
   isChecked: boolean;
+  category: number;
 }
-function priceToString(price: number) {
+const priceToString = (price: number) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+};
 
 export default function CardItem(props: ICardItemProps) {
-  const { name, price, color, size, count, isChecked } = props.item;
+  const { id, productId, name, price, color, size, quantity, isChecked, url } = props.item;
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const togleIsChecked = (id: number) => {
+    dispatch(toggleItemChecked(id));
+  };
+  const dleteItem = (ids: number[]) => {
+    dispatch(deleteCartItem(ids));
+  };
+  const updateCount = ({ id, quantity }: { id: number; quantity: number }) => {
+    dispatch(updateQuantity({ id, quantity }));
+  };
+
   return (
     <>
       <div className='flex mb-10'>
-        <div>
+        <div onClick={() => togleIsChecked(id)}>
           {isChecked ? (
             <IoIosCheckmarkCircle size='24px'></IoIosCheckmarkCircle>
           ) : (
             <IoIosCheckmarkCircleOutline size='24px'></IoIosCheckmarkCircleOutline>
           )}
         </div>
-        <div className='bg-blue-200 w-[20%] pt-[26.66%]'></div>
+        <img className='w-[25%] h-auto object-contain' src={url} alt='' />
         <div className='flex-grow text-left'>
           <p className='p-2 font-bold'>Name: {name}</p>
           <p className='pl-2'>Color: {color}</p>
           <p className='pl-2'>Size: {size}</p>
-          <p className='text-right p-2'>Price: {priceToString(price * count)}원</p>
+          <div className='flex items-center'>
+            <GrPrevious
+              onClick={() => updateCount({ id: id, quantity: quantity - 1 })}
+            ></GrPrevious>
+            <p>{quantity}</p>
+            <GrNext onClick={() => updateCount({ id: id, quantity: quantity + 1 })}></GrNext>
+          </div>
+          <p className='text-right p-2'>Price: {priceToString(price * quantity)}원</p>
         </div>
-        <div className='w-[5%] h-[5%]'>X</div>
+        <div className='w-[5%] h-[5%]' onClick={() => dleteItem([id])}>
+          X
+        </div>
       </div>
     </>
   );
