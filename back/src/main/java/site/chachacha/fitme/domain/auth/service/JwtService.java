@@ -205,7 +205,7 @@ public class JwtService {
     public String extractAccessToken(HttpServletRequest request) {
         String accessToken = request.getHeader(ACCESS_TOKEN_HEADER);
 
-        if (accessToken.isBlank()) {
+        if (accessToken == null || accessToken.isBlank()) {
             return null;
         }
 
