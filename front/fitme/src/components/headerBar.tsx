@@ -203,12 +203,14 @@ const HeaderBar: React.FC = () => {
   }
 
   return (
-    <header>
+    <header className='h-[55px]'>
       {currentTab !== 'login' && (
-        <div className='h-20 bg-white flex justify-between border-b-2 border-gray-300'>
-          <div className='w-36 flex justify-evenly items-center justify-center'>{left}</div>
-          <div className='grow flex items-center justify-center text-xl font-bold'>{content}</div>
-          <div className='w-36 flex justify-evenly items-center justify-center'>{right}</div>
+        <div className='h-[55px] bg-white flex border-b-2 border-gray-300'>
+          <div className='w-28 pl-4 mt-1 flex items-center'>{left}</div>
+          <div className='mt-1 grow flex items-center justify-center text-xl font-bold'>
+            {content}
+          </div>
+          <div className='w-28 pr-4 mt-1 flex items-center justify-end'>{right}</div>
         </div>
       )}
     </header>
