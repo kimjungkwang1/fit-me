@@ -143,7 +143,7 @@ public class AuthRestController {
             }
             // 백엔드가 dev면
             else if (activeProfile.equals("dev")) {
-                // dev.frontend.com을 반환
+                // fit-me.site를 반환
                 return "https://fit-me.site";
             }
         }
