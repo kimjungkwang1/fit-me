@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../services/api ';
+import { api } from '../services/api';
 //장바구니 아이템
 interface CartItem {
   id: number;

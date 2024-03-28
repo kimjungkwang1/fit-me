@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../services/api ';
+import { api } from '../services/api';
 import { getCart } from './cartSlice';
 import { RootState } from './store';
 
