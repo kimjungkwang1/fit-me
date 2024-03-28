@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.chachacha.fitme.common.entity.BaseEntity;
@@ -22,7 +23,8 @@ public class Brand extends BaseEntity {
 
     private String name;
 
-    public Brand(String name) {
+    @Builder
+    private Brand(String name) {
         this.name = name;
     }
 }
