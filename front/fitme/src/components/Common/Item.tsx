@@ -34,7 +34,7 @@ export default function Item({
 }: ItemType) {
   return (
     <>
-      <div className='flex-col w-[32%] mx-[0.66%]'>
+      <div className='flex-col w-[32%] mx-[0.66%] mb-2'>
         <Link to={`/detail/${id}`}>
           <div>
             {mainImages[0] ? (
@@ -44,13 +44,13 @@ export default function Item({
                 className='aspect-[3/4] object-cover rounded-lg'
               />
             ) : (
-              <div className='bg-bluegray aspect-[3/4] object-cover rounded-lg' />
+              <div className='bg-gray-400 aspect-[3/4] object-cover rounded-lg' />
             )}
           </div>
-          <div className='justify-start text-start'>
+          <div className='mt-2 justify-start text-start'>
             <p className='text-xs'>{brand.name}</p>
             <p className='text-xs truncate'>{name}</p>
-            <p className='text-sm font-semibold'>{price.toLocaleString()}원</p>
+            <p className='font-bold'>{price.toLocaleString()}원</p>
             <div className='flex justify-between'>
               <p className='text-xs'>{likeCount}</p>
               <p className='text-xs'>
