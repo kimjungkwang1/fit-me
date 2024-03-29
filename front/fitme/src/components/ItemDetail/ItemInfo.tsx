@@ -1,7 +1,10 @@
-import { useState } from 'react';
 import { TbThumbUpFilled } from 'react-icons/tb';
 import Tags from '../Common/Tags';
 import { Carousel } from 'flowbite-react';
+import { isAuthenticated } from '../../services/auth';
+import { api } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 type ImageType = {
   id: number;
@@ -19,6 +22,7 @@ type TagType = {
 };
 
 type ItemInfoProps = {
+  id: number;
   mainImages: ImageType[];
   likeCount: number;
   liked: boolean;
@@ -29,6 +33,7 @@ type ItemInfoProps = {
 };
 
 export default function ItemInfo({
+  id,
   mainImages,
   likeCount,
   liked,
@@ -37,10 +42,29 @@ export default function ItemInfo({
   price,
   tags,
 }: ItemInfoProps) {
+  const navigate = useNavigate();
+
   // 좋아요 토글 기능
-  const [like, setLike] = useState(false);
   const likeHandler = () => {
-    setLike(!like);
+    // 로그인이 안돼있으면 로그인 페이지로 보내주면서 함수 실행하지 않음
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    } else {
+      if (liked) {
+        // 이미 좋아요 눌러져있는 상태일 때 - 좋아요 취소
+        // api.delete(`/products/${id}/like`);
+        axios.delete(`https://fit-me.site/api/products/${id}/like`, {
+          headers: { Authorization: 'Bearer' + localStorage.getItem('accessToken') },
+        });
+      } else {
+        // 좋아요가 안 눌러져 있을 때 - 좋아요 등록
+        // api.post(`/products/${id}/like`);
+        axios.post(`https://fit-me.site/api/products/${id}/like`, {
+          headers: { Authorization: 'Bearer' + localStorage.getItem('accessToken') },
+        });
+      }
+    }
   };
 
   return (
@@ -60,7 +84,7 @@ export default function ItemInfo({
           </Carousel>
 
           {/* like button */}
-          {like ? (
+          {liked ? (
             // true
             <TbThumbUpFilled
               onClick={likeHandler}

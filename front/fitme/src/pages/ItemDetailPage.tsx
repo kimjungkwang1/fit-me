@@ -61,6 +61,7 @@ export default function ItemDetailPage() {
       {item && (
         <div className='mb-[53.6px]'>
           <ItemInfo
+            id={item.id}
             mainImages={item.mainImages}
             likeCount={item.likeCount}
             liked={item.liked}
@@ -71,7 +72,7 @@ export default function ItemDetailPage() {
           />
           <ItemDetailImg detailImages={item.detailImages} />
           <RecommendedItems />
-          <ItemReview />
+          <ItemReview id={item.id} />
           <ItemOption price={item.price} />
         </div>
       )}
