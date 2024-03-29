@@ -24,7 +24,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
   const [profileUrl, setProfileUrl] = useState(apiData.profileUrl);
   const [phoneNumber, setPhoneNumber] = useState(apiData.phoneNumber);
   const [year, setYear] = useState(
-    apiData.birthYear.toString() || new Date().getFullYear().toString()
+    apiData.birthYear ? apiData.birthYear.toString() : new Date().getFullYear().toString()
   );
   const [address, setAddress] = useState(apiData.address);
   const [roadAddress, setRoadAddress] = useState('');
