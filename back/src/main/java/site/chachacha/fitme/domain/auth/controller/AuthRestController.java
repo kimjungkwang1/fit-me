@@ -132,6 +132,9 @@ public class AuthRestController {
         String origin = request.getHeader(HttpHeaders.ORIGIN);
         log.info("origin: " + origin);
 
+        String host = request.getHeader(HttpHeaders.HOST);
+        log.info("host: " + host);
+
         // x-forwarded-host와 origin이 모두 null이면
         if (xForwardedHost == null && origin == null) {
             // 프론트가 로컬이라는 뜻
