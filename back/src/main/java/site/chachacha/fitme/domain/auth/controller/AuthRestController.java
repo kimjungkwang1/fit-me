@@ -139,7 +139,7 @@ public class AuthRestController {
             return "http://localhost:" + frontendPort;
         }
         // origin이
-        else if (origin == "http://localhost:3000") {
+        else if (origin.equals("http://localhost:3000")) {
             return "http://localhost:" + frontendPort;
         }
 
