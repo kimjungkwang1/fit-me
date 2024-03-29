@@ -190,6 +190,7 @@ public class ProductReviewTest {
         // OrderRequest 생성
         List<OrderRequest> orderRequests = new ArrayList<>();
         orderRequests.add(OrderRequest.builder()
+            .productId(1L)
             .productOptionId(1L)
             .productSizeId(1L)
             .count(1)
@@ -377,4 +378,8 @@ public class ProductReviewTest {
 //    @Test
 //    @Order(132)
 //    @DisplayName("상품 리뷰 생성 실패 - 이미지 확장자 지원하지 않음")
+
+    // ToDo: 리뷰 조회 테스트
+    // ToDo: 리뷰 수정 테스트
+    // ToDo: 리뷰 삭제 테스트
 }
