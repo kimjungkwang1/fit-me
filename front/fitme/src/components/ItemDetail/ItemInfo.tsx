@@ -5,6 +5,7 @@ import { isAuthenticated } from '../../services/auth';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
 
 type ImageType = {
   id: number;
@@ -25,7 +26,7 @@ type ItemInfoProps = {
   id: number;
   mainImages: ImageType[];
   likeCount: number;
-  liked: boolean;
+  initialLiked: boolean;
   brand: BrandType;
   name: string;
   price: number;
@@ -36,7 +37,7 @@ export default function ItemInfo({
   id,
   mainImages,
   likeCount,
-  liked,
+  initialLiked,
   brand,
   name,
   price,
@@ -45,6 +46,7 @@ export default function ItemInfo({
   const navigate = useNavigate();
 
   // 좋아요 토글 기능
+  const [liked, setLiked] = useState<boolean>(initialLiked);
   const likeHandler = () => {
     // 로그인이 안돼있으면 로그인 페이지로 보내주면서 함수 실행하지 않음
     if (!isAuthenticated()) {
@@ -53,16 +55,12 @@ export default function ItemInfo({
     } else {
       if (liked) {
         // 이미 좋아요 눌러져있는 상태일 때 - 좋아요 취소
-        // api.delete(`/products/${id}/like`);
-        axios.delete(`https://fit-me.site/api/products/${id}/like`, {
-          headers: { Authorization: 'Bearer' + localStorage.getItem('accessToken') },
-        });
+        api.delete(`/api/products/${id}/like`);
+        setLiked(false);
       } else {
         // 좋아요가 안 눌러져 있을 때 - 좋아요 등록
-        // api.post(`/products/${id}/like`);
-        axios.post(`https://fit-me.site/api/products/${id}/like`, {
-          headers: { Authorization: 'Bearer' + localStorage.getItem('accessToken') },
-        });
+        api.post(`/api/products/${id}/like`);
+        setLiked(true);
       }
     }
   };

@@ -12,15 +12,17 @@ type Review = {
 
 type ItemReviewProps = {
   id: number;
+  reviewCount: number;
+  reviewRating: number;
 };
 
-export default function ItemReview({ id }: ItemReviewProps) {
+export default function ItemReview({ id, reviewCount, reviewRating }: ItemReviewProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   useEffect(() => {
-    api.get(`/products/${id}/reviews`).then(({ data }) => {
+    api.get(`/api/products/${id}/reviews`).then(({ data }) => {
       setReviews(data);
     });
-  });
+  }, []);
 
   return (
     <div className='m-[3%]'>
@@ -28,8 +30,8 @@ export default function ItemReview({ id }: ItemReviewProps) {
       <div className='flex justify-between'>
         <span className='text-sm font-semibold'>구매 후기</span>
         <div className='flex gap-2'>
-          <span className='text-xs text-gray-700'>★ 4.0</span>
-          <span className='text-xs text-gray-700'>전체 후기({reviews.length})</span>
+          <span className='text-xs text-gray-700'>★{reviewRating}</span>
+          <span className='text-xs text-gray-700'>전체 후기({reviewCount})</span>
         </div>
       </div>
 
