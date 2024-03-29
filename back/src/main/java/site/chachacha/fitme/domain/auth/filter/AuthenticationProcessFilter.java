@@ -43,6 +43,8 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
         log.info("[REQUEST] Method : {}, RequestURI: {}", request.getMethod(), request.getRequestURI());
         if (CorsUtils.isPreFlightRequest(request)) {
+            log.info("[REQUEST PREFLIGHT] Method : {}, RequestURI: {}", request.getMethod(), request.getRequestURI());
+            filterChain.doFilter(request, response);
             return;
         }
         // 메인 페이지거나, 확인하지 않는 URL이면 바로 다음 필터로 넘어가기
