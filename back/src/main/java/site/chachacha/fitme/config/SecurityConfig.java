@@ -7,7 +7,6 @@ import static site.chachacha.fitme.enumstorage.messages.role.MemberRole.MEMBER;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsUtils;
 import site.chachacha.fitme.domain.auth.filter.AuthenticationProcessFilter;
 import site.chachacha.fitme.domain.auth.handler.JwtLogoutHandler;
 
@@ -40,6 +40,7 @@ public class SecurityConfig {
         // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능
         http
             .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers("/", "/css/**", "/img/**", "/js/**", "/favicon.ico", "/error/**")
                 .permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
@@ -50,7 +51,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/dressroom/**").permitAll()
                 .requestMatchers("/api/brands/**").permitAll()
                 .requestMatchers("/api/order/**").permitAll()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 메소드에 대해 모든 도메인에서의 접근을 허용
                 .anyRequest().authenticated()
 
             );
