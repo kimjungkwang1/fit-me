@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const year = new Date().getFullYear().toString();
-
 type ApiDataType = {
   id: number;
   nickname: string;
@@ -19,13 +17,14 @@ type UserInputProps = {
 };
 
 const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
+  const thisYear = new Date().getFullYear().toString();
   const location = useLocation();
   const id = apiData.id;
   const [nickname, setNickname] = useState(apiData.nickname);
   const [gender, setGender] = useState(apiData.gender);
-  const [profileUrl, setProfileUrl] = useState(apiData.profileUrl);
+  const profileUrl = apiData.profileUrl;
   const [phoneNumber, setPhoneNumber] = useState(apiData.phoneNumber);
-  const [birthYear, setBirthYear] = useState(apiData.birthYear || new Date().getFullYear());
+  const [year, setYear] = useState(apiData.birthYear ? apiData.birthYear.toString() : thisYear);
   const [address, setAddress] = useState(apiData.address);
   const [roadAddress, setRoadAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
@@ -38,20 +37,6 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
     }
   }, [apiData.address]);
 
-  const handleRAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updateRoadAddress = event.target.value;
-    setRoadAddress(updateRoadAddress);
-    // roadAddress 변경 시, 새로운 address 값을 설정합니다.
-    setAddress(updateRoadAddress + ',' + detailAddress);
-  };
-
-  const handleDAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updateDetailAddress = event.target.value;
-    setDetailAddress(updateDetailAddress);
-    // detailAddress 변경 시, 새로운 address 값을 설정합니다.
-    setAddress(roadAddress + ',' + updateDetailAddress);
-  };
-
   const handleSubmit = () => {
     const updatedApiData: ApiDataType = {
       id: id ?? 0,
@@ -59,7 +44,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
       gender,
       profileUrl,
       phoneNumber,
-      birthYear,
+      birthYear: Number(year),
       address,
     };
 
@@ -77,7 +62,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             placeholder='닉네임'
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -86,7 +71,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             <button
               type='button'
               onClick={() => setGender(false)}
-              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-black rounded-s-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
+              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-darkgray bg-transparent border border-black rounded-s-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-darkgray focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
             >
               <svg
                 fill='#888888'
@@ -107,7 +92,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             <button
               type='button'
               onClick={() => setGender(true)}
-              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-black rounded-e-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
+              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-darkgray bg-transparent border border-black rounded-e-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-darkgray focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
             >
               <svg
                 height='20px'
@@ -136,10 +121,20 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <label className='block mt-3 text-lg text-black'>출생연도</label>
           <input
             type='text'
-            value={birthYear}
-            onChange={(event) => setBirthYear(parseInt(event.target.value, 10))}
+            value={year}
+            onChange={(event) => {
+              const value = event.target.value;
+              // 입력값이 숫자인지 판별
+              const isNumeric = /^[0-9]+$/.test(value);
+              // 숫자라면 값을 설정, 숫자가 아니라면 null로 설정
+              if (isNumeric) {
+                setYear(value);
+              } else {
+                setYear('');
+              }
+            }}
             placeholder={year}
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -147,9 +142,21 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <input
             type='text'
             value={phoneNumber}
-            onChange={(event) => setPhoneNumber(event.target.value)}
-            placeholder='010-0000-0000'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            onChange={(event) => {
+              const value = event.target.value;
+              // 입력값이 숫자로만 구성되어 있는지 확인하는 정규식
+              const isNumeric = /^[0-9]*$/.test(value);
+
+              // 숫자로만 구성되었고, 길이가 11자 이하인 경우에만 값을 설정
+              if (isNumeric && value.length <= 11) {
+                setPhoneNumber(value);
+              } else {
+                // 조건을 만족하지 않는 경우, 마지막 입력값을 지움
+                setPhoneNumber(value.slice(0, -1));
+              }
+            }}
+            placeholder='01012345678'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -157,16 +164,26 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <input
             type='text'
             value={roadAddress}
-            onChange={handleRAddress}
+            onChange={(event) => {
+              const updateRoadAddress = event.target.value;
+              setRoadAddress(updateRoadAddress);
+              // roadAddress 변경 시, 새로운 address 값을 설정합니다.
+              setAddress(updateRoadAddress + ',' + detailAddress);
+            }}
             placeholder='도로명 주소'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
           <input
             type='text'
             value={detailAddress}
-            onChange={handleDAddress}
+            onChange={(event) => {
+              const updateDetailAddress = event.target.value;
+              setDetailAddress(updateDetailAddress);
+              // detailAddress 변경 시, 새로운 address 값을 설정합니다.
+              setAddress(roadAddress + ',' + updateDetailAddress);
+            }}
             placeholder='상세주소'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <button className='w-2/3 mt-10 px-5 py-2.5 rounded-lg bg-red-300' onClick={handleSubmit}>

@@ -38,16 +38,9 @@ const HeaderBar: React.FC = () => {
     navigate(-1);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    navigate('/');
-  };
-
   let left, right, content;
   if (currentTab === 'mypage' || currentTab === 'home') {
-    let additionalElement;
-    const basicElement = (
+    left = (
       <button key='alertElement'>
         <Tooltip content='알림'>
           <svg
@@ -67,37 +60,6 @@ const HeaderBar: React.FC = () => {
         </Tooltip>
       </button>
     );
-    if (currentTab === 'mypage' && isAuthenticated()) {
-      additionalElement = (
-        <button key='logoutElement' onClick={handleLogout}>
-          <Tooltip content='로그아웃'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 1024 1024'
-              strokeWidth={1.5}
-              stroke='currentColor'
-              className='w-8 h-8'
-            >
-              <path
-                d='M768 106V184c97.2 76 160 194.8 160 328 0 229.6-186.4 416-416 416S96 741.6 96 512c0-133.2 62.8-251.6 160-328V106C121.6 190.8 32 341.2 32 512c0 265.2 214.8 480 480 480s480-214.8 480-480c0-170.8-89.6-321.2-224-406z'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-              <path
-                d='M512 32c-17.6 0-32 14.4-32 32v448c0 17.6 14.4 32 32 32s32-14.4 32-32V64c0-17.6-14.4-32-32-32z'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </Tooltip>
-        </button>
-      );
-    } else {
-    }
-    left = [
-      <React.Fragment key='basicElement'>{basicElement}</React.Fragment>,
-      <React.Fragment key='additionalElement'>{additionalElement}</React.Fragment>,
-    ];
   } else if (currentTab === 'dressroom' || currentTab === 'feed' || currentTab === 'category') {
   } else {
     left = (
@@ -195,7 +157,11 @@ const HeaderBar: React.FC = () => {
   if (currentTab === 'signup') {
     content = '회원 정보 입력';
   } else if (currentTab === 'mypage') {
-    content = '마이페이지';
+    if (isAuthenticated()) {
+      content = '마이페이지';
+    } else {
+      content = '로그인하세요!';
+    }
   } else if (currentTab === 'feed' || currentTab === 'feedDetail') {
     content = '피드';
   } else {
@@ -203,17 +169,19 @@ const HeaderBar: React.FC = () => {
   }
 
   return (
-    <header className='h-[55px]'>
+    <>
       {currentTab !== 'login' && (
-        <div className='h-[55px] bg-white flex border-b-2 border-gray-300'>
-          <div className='w-28 pl-4 mt-1 flex items-center'>{left}</div>
-          <div className='mt-1 grow flex items-center justify-center text-xl font-bold'>
-            {content}
+        <header className='h-[55px]'>
+          <div className='h-[55px] bg-white flex border-b-2 border-gray-300'>
+            <div className='w-28 pl-4 mt-1 flex items-center'>{left}</div>
+            <div className='mt-1 grow flex items-center justify-center text-xl font-bold'>
+              {content}
+            </div>
+            <div className='w-28 pr-4 mt-1 flex items-center justify-end'>{right}</div>
           </div>
-          <div className='w-28 pr-4 mt-1 flex items-center justify-end'>{right}</div>
-        </div>
+        </header>
       )}
-    </header>
+    </>
   );
 };
 
