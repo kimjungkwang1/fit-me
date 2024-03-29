@@ -135,7 +135,8 @@ public class AuthRestController {
         // x-forwarded-host와 origin이 모두 null이면
         if (xForwardedHost == null && origin == null) {
             // 프론트가 로컬이라는 뜻
-            return "http://localhost:8080";
+
+            return "http://localhost:" + frontendPort;
         }
         // x-forwarded-host가 null이 아니면
         else {
