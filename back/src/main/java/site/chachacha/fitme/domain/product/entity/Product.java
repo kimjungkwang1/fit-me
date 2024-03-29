@@ -23,7 +23,7 @@ import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.brand.entity.Brand;
 import site.chachacha.fitme.domain.category.entity.Category;
 import site.chachacha.fitme.domain.like.entity.ProductLike;
-import site.chachacha.fitme.domain.order.OrderProduct;
+import site.chachacha.fitme.domain.order.entity.OrderProduct;
 import site.chachacha.fitme.domain.review.entity.ProductReview;
 import site.chachacha.fitme.domain.tag.entity.ProductTag;
 

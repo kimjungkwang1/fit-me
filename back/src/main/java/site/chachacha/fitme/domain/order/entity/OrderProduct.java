@@ -1,4 +1,4 @@
-package site.chachacha.fitme.domain.order;
+package site.chachacha.fitme.domain.order.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -16,7 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.chachacha.fitme.common.entity.BaseEntity;
+import site.chachacha.fitme.domain.brand.entity.Brand;
 import site.chachacha.fitme.domain.member.entity.Member;
+import site.chachacha.fitme.domain.order.exception.NotEnoughStockException;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.entity.ProductOption;
 import site.chachacha.fitme.domain.product.entity.ProductSize;
@@ -25,6 +27,7 @@ import site.chachacha.fitme.domain.product.entity.ProductSize;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderProduct extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -32,6 +35,10 @@ public class OrderProduct extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
@@ -45,6 +52,15 @@ public class OrderProduct extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_option_id")
     private ProductOption productOption;
+
+    @NotBlank
+    private String brandName;
+
+    @NotNull
+    private Long productCategoryId;
+
+    @NotBlank
+    private String productName;
 
     @NotBlank
     private String color;
@@ -63,13 +79,17 @@ public class OrderProduct extends BaseEntity {
     private int count;
 
     @Builder
-    public OrderProduct(Member member, Product product, ProductOption productOption,
-        ProductSize productSize,
-        int count) {
+    private OrderProduct(Member member, Brand brand, Product product, ProductOption productOption,
+        ProductSize productSize, int count) throws NotEnoughStockException {
         this.member = member;
         this.member.addOrderProduct(this);
 
+        this.brand = brand;
+        this.brandName = brand.getName();
+
         this.product = product;
+        this.productCategoryId = product.getCategory().getId();
+        this.productName = product.getName();
         this.product.addOrderProduct(this);
 
         this.productOption = productOption;
