@@ -51,6 +51,7 @@ const App: React.FC = () => {
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
                 <Route path='/feed/myfeed' element={<MyFeedPage />} />
                 <Route path='/feed/write' element={<FeedWritePage />} />
+                <Route path='*' element={<NotFoundPage />} />
               </Routes>
             </div>
             <FooterBar />
