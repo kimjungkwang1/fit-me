@@ -3,17 +3,40 @@ import Order from './order';
 import Modify from './modify';
 import ItemList from '../../components/MyPage/ItemList';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { api } from '../../services/api';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+type ApiDataType = {
+  id: number;
+  nickname: string;
+  gender: boolean;
+  profileUrl: string;
+  phoneNumber: string;
+  birthYear: number;
+  address: string;
+};
+
 const Mypage: React.FC = () => {
+  const [apiData, setApiData] = useState<ApiDataType>();
   // 현재 선택된 탭을 관리하기 위한 상태
   const [selectedTab, setSelectedTab] = useState<string>('bought');
   let query = useQuery();
   let navigate = useNavigate();
   let location = useLocation();
+
+  useEffect(() => {
+    api
+      .get('/api/members')
+      .then((res) => {
+        setApiData(res.data);
+      })
+      .catch((error) => {
+        console.error('서버로부터 에러 응답:', error);
+      });
+  }, []);
 
   useEffect(() => {
     let tab = query.get('tab');
@@ -31,8 +54,14 @@ const Mypage: React.FC = () => {
   // 버튼의 스타일을 결정하는 함수
   const getButtonStyle = (tabName: string) => {
     return `text-gray-600 w-1/4 py-4 px-6 block ${
-      selectedTab === tabName ? 'bg-black text-white' : 'bg-white hover:underline'
+      selectedTab === tabName ? 'bg-darkgray text-white' : 'bg-white hover:underline'
     } focus:outline-none`;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    navigate('/');
   };
 
   const changeTab = (tabName: string) => {
@@ -49,13 +78,22 @@ const Mypage: React.FC = () => {
       case 'order':
         return <Order />;
       case 'modify':
-        return <Modify />;
+        return <>{apiData && <Modify userInfo={apiData} />}</>;
     }
   };
 
   return (
     <>
       <div className='bg-white'>
+        <div className='h-14 bg-beige flex justify-between py-2 px-5'>
+          <div className='flex items-center'>
+            <div className='font-bold text-lg'>{apiData?.nickname}</div>
+            <div>님 안녕하세요!</div>
+          </div>
+          <button onClick={handleLogout} className='bg-darkgray text-white px-3 rounded-md'>
+            로그아웃
+          </button>
+        </div>
         <nav className='flex'>
           <button className={getButtonStyle('bought')} onClick={() => changeTab('bought')}>
             구매 목록

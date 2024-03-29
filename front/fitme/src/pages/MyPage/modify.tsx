@@ -12,20 +12,23 @@ type ApiDataType = {
   address: string;
 };
 
-const Modify: React.FC = () => {
+type InfoProps = {
+  userInfo: ApiDataType;
+};
+
+const Modify: React.FC<InfoProps> = ({ userInfo }) => {
   const [apiData, setApiData] = useState<ApiDataType>();
 
   useEffect(() => {
     api
       .get('/api/members')
       .then((res) => {
-        console.log(res.data);
         setApiData(res.data);
       })
       .catch((error) => {
         console.error('서버로부터 에러 응답:', error);
       });
-  });
+  }, []);
 
   const handleSubmit = (apiData: ApiDataType) => {
     console.log(apiData);
