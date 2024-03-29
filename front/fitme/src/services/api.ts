@@ -5,13 +5,13 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
     // const refreshToken = localStorage.getItem('refreshToken ');
-    config.headers['Content-Type'] = 'application/json';
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -24,12 +24,12 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-api.interceptors.request.use(
-  (config) => {
-    console.log('Request Headers:', config.headers);
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// api.interceptors.request.use(
+//   (config) => {
+//     console.log('Request Headers:', config.headers);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
