@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../services/api ';
+import { api } from '../services/api';
 import { getCart } from './cartSlice';
 import { RootState } from './store';
 
@@ -40,8 +40,8 @@ const initialState: DressroomState = {
   orders: [],
   models: [],
   fittings: [],
-  nowTop: { id: 0, url: '' },
-  nowBottom: { id: 0, url: '' },
+  nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
+  nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
   nowModel: { id: 0, url: '' },
   result: '',
   status: 'idle',
@@ -131,6 +131,9 @@ const dressroomSlice = createSlice({
       state.nowTop = action.payload;
     },
     setNowBottom: (state, action: PayloadAction<fitting>) => {
+      state.nowBottom = action.payload;
+    },
+    setModel: (state, action: PayloadAction<fitting>) => {
       state.nowBottom = action.payload;
     },
   },

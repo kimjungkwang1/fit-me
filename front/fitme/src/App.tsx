@@ -46,7 +46,7 @@ const App: React.FC = () => {
                 {/* /payment/complete 페이지 아직 없음 */}
                 <Route path='/payment/complete' element={<LoginPage />} />
                 <Route path='/dressroom' element={<DressroomPage />} />
-                <Route path='/mypage' element={<MyPage />} />
+                <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
                 <Route path='/feed/myfeed' element={<MyFeedPage />} />

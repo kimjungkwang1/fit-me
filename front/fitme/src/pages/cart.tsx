@@ -1,17 +1,12 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import CartItem from '../components/cart/cartItem';
 import CartAddress from '../components/cart/cartAddress';
 import { Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-
-const address = {
-  name: '배송받는사람이름',
-  phoneNumber: '01012345678',
-  address: '주소 뭐시기',
-};
-
+import { RootState, AppDispatch } from '../store/store';
+import { getCart, getAddress } from '../store/cartSlice';
+import { useDispatch } from 'react-redux';
 export default function Cart() {
   const navigate = useNavigate();
   const items = useSelector((state: RootState) => state.cart.items);
@@ -19,6 +14,12 @@ export default function Cart() {
   const totalPrice = items.reduce((total, item) => {
     return item.isChecked ? total + item.price * item.quantity : total;
   }, 0);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(getCart());
+    dispatch(getAddress());
+  }, []);
   return (
     <>
       <div className='flex justify-center'>

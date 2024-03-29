@@ -3,31 +3,68 @@ import { useLocation } from 'react-router-dom';
 
 const year = new Date().getFullYear().toString();
 
-type UserInputProps = {
-  onSubmit: (formData: FormData) => void;
+type ApiDataType = {
+  id: number;
+  nickname: string;
+  gender: boolean;
+  profileUrl: string;
+  phoneNumber: string;
+  birthYear: number;
+  address: string;
 };
 
-const UserInput: React.FC<UserInputProps> = ({ onSubmit }) => {
+type UserInputProps = {
+  onSubmit: (apiData: ApiDataType) => void;
+  apiData: ApiDataType;
+};
+
+const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
   const location = useLocation();
-  const [nickname, setNickname] = useState('');
-  const [gender, setGender] = useState(false);
-  const [profileUrl, setProfileUrl] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [birthYear, setBirthYear] = useState('');
-  const [address, setAddress] = useState('');
+  const id = apiData.id;
+  const [nickname, setNickname] = useState(apiData.nickname);
+  const [gender, setGender] = useState(apiData.gender);
+  const [profileUrl, setProfileUrl] = useState(apiData.profileUrl);
+  const [phoneNumber, setPhoneNumber] = useState(apiData.phoneNumber);
+  const [birthYear, setBirthYear] = useState(apiData.birthYear || new Date().getFullYear());
+  const [address, setAddress] = useState(apiData.address);
+  const [roadAddress, setRoadAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
 
-  const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('nickname', nickname);
-    formData.append('gender', gender.toString());
-    formData.append('profileUrl', profileUrl);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('birthYear', birthYear.toString());
-    formData.append('address', address);
-    formData.append('detailAddress', detailAddress);
+  useEffect(() => {
+    if (apiData.address) {
+      const parts = apiData.address.split(',');
+      setRoadAddress(parts[0].trim());
+      setDetailAddress(parts[1]?.trim() || '');
+    }
+  }, [apiData.address]);
 
-    onSubmit(formData);
+  const handleRAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updateRoadAddress = event.target.value;
+    setRoadAddress(updateRoadAddress);
+    // roadAddress 변경 시, 새로운 address 값을 설정합니다.
+    setAddress(updateRoadAddress + ',' + detailAddress);
+  };
+
+  const handleDAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updateDetailAddress = event.target.value;
+    setDetailAddress(updateDetailAddress);
+    // detailAddress 변경 시, 새로운 address 값을 설정합니다.
+    setAddress(roadAddress + ',' + updateDetailAddress);
+  };
+
+  const handleSubmit = () => {
+    const updatedApiData: ApiDataType = {
+      id: id ?? 0,
+      nickname,
+      gender,
+      profileUrl,
+      phoneNumber,
+      birthYear,
+      address,
+    };
+
+    // 생성된 객체를 onSubmit 함수에 넘겨줍니다.
+    onSubmit(updatedApiData);
   };
 
   return (
@@ -100,8 +137,8 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit }) => {
           <input
             type='text'
             value={birthYear}
-            onChange={(event) => setBirthYear(event.target.value)}
-            placeholder={year.toString()}
+            onChange={(event) => setBirthYear(parseInt(event.target.value, 10))}
+            placeholder={year}
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
@@ -119,15 +156,15 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit }) => {
           <label className='block mt-3 text-lg text-black'>주소</label>
           <input
             type='text'
-            value={address}
-            onChange={(event) => setAddress(event.target.value)}
+            value={roadAddress}
+            onChange={handleRAddress}
             placeholder='도로명 주소'
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
           <input
             type='text'
             value={detailAddress}
-            onChange={(event) => setDetailAddress(event.target.value)}
+            onChange={handleDAddress}
             placeholder='상세주소'
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />

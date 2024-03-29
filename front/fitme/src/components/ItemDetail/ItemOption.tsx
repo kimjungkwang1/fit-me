@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ItemOptionSelected from './ItemOptionSelected';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { addCartItem } from '../../store/cartSlice';
 
 type SizeType = {
   id: number;
@@ -133,10 +136,23 @@ export default function ItemOption({ price }: ItemOptionProps) {
     newList.splice(idx, 1);
     setSelectedList(newList);
   };
-
+  const dispatch = useDispatch<AppDispatch>();
   // 선택된 옵션 장바구니에 모두 추가
   const addToCart = () => {
     modalHandler();
+    if (!selectedList) {
+      return;
+    }
+    if (!item_id) {
+      return;
+    }
+    const options = selectedList.map((item) => ({
+      productOptionId: item.idColor,
+      productSizeId: item.idSize,
+      quantity: item.quantity,
+    }));
+
+    dispatch(addCartItem({ id: +item_id, options }));
   };
   // const addToCart = () => {
   //   axios.post(
