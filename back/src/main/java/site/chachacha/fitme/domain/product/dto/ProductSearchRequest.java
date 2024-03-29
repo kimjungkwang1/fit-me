@@ -13,6 +13,8 @@ public class ProductSearchRequest {
 
     private Integer lastPopularityScore;
 
+    private Integer lastPrice;
+
     private Integer size = 30;
 
     private String keyword;
