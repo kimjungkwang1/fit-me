@@ -33,7 +33,7 @@ export default function ItemReview({ id }: ItemReviewProps) {
         </div>
       </div>
 
-      {reviews.length !== 0 && (
+      {reviews.length !== 0 ? (
         <div className='flex flex-col my-1'>
           <div className='flex justify-between'>
             <span className='text-xs font-semibold'>{reviews[0].memberNickname}</span>
@@ -42,6 +42,8 @@ export default function ItemReview({ id }: ItemReviewProps) {
           <span className='text-xs text-yellow-300'>{'★'.repeat(reviews[0].rating)}</span>
           <span className='text-xs'>{reviews[0].content}</span>
         </div>
+      ) : (
+        <div className='h-24 p-8 text-center'>등록된 리뷰가 없습니다.</div>
       )}
       {/* 하이라이트 리뷰 한 개 */}
     </div>
