@@ -27,11 +27,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedMethods(RequestMethod.GET.name(), RequestMethod.POST.name(), RequestMethod.PUT.name(), RequestMethod.PATCH.name(),
+            .allowedMethods(RequestMethod.GET.name(), RequestMethod.POST.name(),
+                RequestMethod.PUT.name(), RequestMethod.PATCH.name(),
                 RequestMethod.DELETE.name(), RequestMethod.OPTIONS.name())
-            .allowedOrigins("https://fit-me.site", "http://fit-me.site", "http://localhost:3000")
+            .allowedOrigins("https://fit-me.site", "http://fit-me.site", "http://localhost",
+                "http://localhost/", "http://localhost:3000", "http://localhost:3000/")
             .allowedHeaders("*")
             .allowCredentials(true)
-            .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION, "AuthorizationRefresh");
+            .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION,
+                "AuthorizationRefresh");
     }
 }
