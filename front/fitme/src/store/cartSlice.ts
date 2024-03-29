@@ -61,7 +61,7 @@ const initialState: CartState = {
 
 // 카트 정보 가져오기
 export const getCart = createAsyncThunk('cart/getCart', async () => {
-  const response = await api.get<any>('/api/cart');
+  const response = await api.get<any>('/api/cart/products');
   return response.data.map((item: any) => ({
     id: item.id,
     productId: item.product.id,
@@ -80,12 +80,12 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
 export const addCartItem = createAsyncThunk(
   'cart/addCartItem',
   async ({ id, options }: { id: number; options: option[] }) => {
-    const response = await api.post<any>('/api/cart/' + id, options);
+    const response = await api.post<any>('/api/cart/products/' + id, options);
   }
 );
 // 카트에서 아이템 삭제
 export const deleteCartItem = createAsyncThunk('cart/deleteCartItem', async (ids: number[]) => {
-  const response = await api.delete<any>('/api/cart', { data: ids });
+  const response = await api.delete<any>('/api/cart/products', { data: ids });
 });
 // 카트에서 수량 수정
 export const updateQuantity = createAsyncThunk(
