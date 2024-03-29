@@ -62,7 +62,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             placeholder='닉네임'
             value={nickname}
             onChange={(event) => setNickname(event.target.value)}
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -71,7 +71,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             <button
               type='button'
               onClick={() => setGender(false)}
-              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-black rounded-s-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
+              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-darkgray bg-transparent border border-black rounded-s-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-darkgray focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
             >
               <svg
                 fill='#888888'
@@ -92,7 +92,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             <button
               type='button'
               onClick={() => setGender(true)}
-              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-black rounded-e-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
+              className='inline-flex px-5 py-2.5 items-center w-1/2 bg-white px-4 py-2 text-sm font-medium text-darkgray bg-transparent border border-black rounded-e-lg hover:bg-gray-600 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-darkgray focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700'
             >
               <svg
                 height='20px'
@@ -134,7 +134,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
               }
             }}
             placeholder={year}
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -156,7 +156,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
               }
             }}
             placeholder='01012345678'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <div className='w-2/3'>
@@ -171,7 +171,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
               setAddress(updateRoadAddress + ',' + detailAddress);
             }}
             placeholder='도로명 주소'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
           <input
             type='text'
@@ -183,7 +183,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
               setAddress(roadAddress + ',' + updateDetailAddress);
             }}
             placeholder='상세주소'
-            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
+            className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
         <button className='w-2/3 mt-10 px-5 py-2.5 rounded-lg bg-red-300' onClick={handleSubmit}>
