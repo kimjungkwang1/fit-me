@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import site.chachacha.fitme.domain.auth.exception.InvalidAccessTokenException;
@@ -33,16 +34,20 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
     private static final List<String> CHECK_URL = List.of("/like");
 
     /**
-     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및
-     * authenticate 수행
+     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및 authenticate 수행
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
+        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+            return;
+        }
         // 메인 페이지거나, 확인하지 않는 URL이면 바로 다음 필터로 넘어가기
-        if (request.getRequestURI().equals("/") || isNoCheckUrl(request.getRequestURI())) {
-            filterChain.doFilter(request, response); //
-            return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
+        {
+            if (request.getRequestURI().equals("/") || isNoCheckUrl(request.getRequestURI())) {
+                filterChain.doFilter(request, response); //
+                return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
+            }
         }
 
         try {
