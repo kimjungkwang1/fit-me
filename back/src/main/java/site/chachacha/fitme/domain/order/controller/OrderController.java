@@ -1,7 +1,5 @@
 package site.chachacha.fitme.domain.order.controller;
 
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
-
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,7 @@ import site.chachacha.fitme.domain.order.service.OrderService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/order", consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/order")
 public class OrderController {
 
     private final OrderService orderService;

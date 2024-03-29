@@ -83,7 +83,7 @@ public class AuthRestController {
         return ResponseEntity.ok(memberResponse);
     }
 
-    @PostMapping(value = "/reissue/v1", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/reissue/v1")
     public ResponseEntity<?> reissueJwtsV1(HttpServletRequest request, HttpServletResponse response)
         throws IllegalArgumentException, JWTVerificationException, IOException {
 //        , NoSuchDeviceTokenException

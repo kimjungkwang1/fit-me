@@ -3,7 +3,6 @@ package site.chachacha.fitme.domain.dressroom.controller;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import site.chachacha.fitme.domain.dressroom.service.DressRoomService;
 import site.chachacha.fitme.domain.dressroom.service.ModelService;
 
 @RestController
-@RequestMapping(value = "/api/dressroom", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/dressroom")
 @RequiredArgsConstructor
 public class DressRoomController {
 
