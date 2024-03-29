@@ -7,6 +7,12 @@ export const store = configureStore({
     dressroom: dressroomReducer,
     cart: cartReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredPaths: ['payload.headers'],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
