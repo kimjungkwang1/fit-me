@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import site.chachacha.fitme.domain.order.OrderProduct;
+import site.chachacha.fitme.domain.order.entity.OrderProduct;
 import site.chachacha.fitme.domain.product.repository.support.ProductScore;
 
 @Repository
@@ -23,4 +23,6 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Long
     Optional<OrderProduct> findAllByMemberIdAndProductId(Long memberId, Long productId);
 
     Boolean existsByMemberIdAndProductId(Long memberId, Long productId);
+
+    List<OrderProduct> findAllByOrderIdWithProductSize(Long orderId);
 }

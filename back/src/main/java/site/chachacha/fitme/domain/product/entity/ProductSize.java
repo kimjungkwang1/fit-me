@@ -42,12 +42,16 @@ public class ProductSize {
     }
 
     // == 비즈니스 로직 == //
-    public void addOrderProduct(int count) throws IllegalStateException {
+    public void addOrderProduct(int count) throws NotEnoughStockException {
         int restStock = this.stockQuantity - count;
         if (restStock < 0) {
             throw new NotEnoughStockException("재고가 부족합니다.");
         }
 
         this.stockQuantity = restStock;
+    }
+
+    public void cancelOrderProduct(int count) {
+        this.stockQuantity += count;
     }
 }
