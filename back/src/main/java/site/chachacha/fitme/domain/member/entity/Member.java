@@ -22,10 +22,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.chachacha.fitme.common.entity.BaseEntity;
 import site.chachacha.fitme.domain.auth.entity.Token;
+import site.chachacha.fitme.domain.cart.entity.Cart;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.member.dto.MemberUpdate;
-import site.chachacha.fitme.domain.order.Order;
-import site.chachacha.fitme.domain.order.OrderProduct;
+import site.chachacha.fitme.domain.order.entity.Order;
+import site.chachacha.fitme.domain.order.entity.OrderProduct;
 import site.chachacha.fitme.domain.review.entity.ProductReview;
 import site.chachacha.fitme.util.RandomNickname;
 
@@ -81,6 +82,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> carts = new ArrayList<>();
+
     @Builder
     protected Member(Long providerId) {
         this.providerId = providerId;
@@ -99,6 +103,10 @@ public class Member extends BaseEntity {
     // == 비즈니스 로직 == //
     public boolean isDeleted() {
         return isDeleted;
+    }
+
+    public void removeProductFromCart(Cart cart) {
+        carts.remove(cart);
     }
 
     // == 연관관계 메서드 =
