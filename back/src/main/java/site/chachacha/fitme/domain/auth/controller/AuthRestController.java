@@ -138,10 +138,11 @@ public class AuthRestController {
 
             return "http://localhost:" + frontendPort;
         }
-        // x-forwarded-host가 null이 아니면
-        else {
-            // x-forwarded-host를 반환
-            return "https://" + xForwardedHost;
+        // origin이
+        else if (origin == "http://localhost:3000") {
+            return "http://localhost:" + frontendPort;
         }
+
+        return "https://fit-me.site";
     }
 }

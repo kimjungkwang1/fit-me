@@ -78,6 +78,7 @@ public class OAuthService {
                 code,
                 kakaoClientSecret
             );
+            log.info("encoded: " + encoded);
             byte[] input = encoded.getBytes("utf-8");
             os.write(input, 0, input.length);
         }
