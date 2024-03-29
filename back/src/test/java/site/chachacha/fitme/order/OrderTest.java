@@ -707,6 +707,4 @@ public class OrderTest {
 
         assertThat(productSize.getStockQuantity()).isEqualTo(5);
     }
-
-    // 주문 조회
 }
