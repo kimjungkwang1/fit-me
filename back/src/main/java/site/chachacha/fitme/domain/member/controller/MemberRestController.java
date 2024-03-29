@@ -1,7 +1,5 @@
 package site.chachacha.fitme.domain.member.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +16,10 @@ import site.chachacha.fitme.domain.member.exception.NoSuchMemberException;
 import site.chachacha.fitme.domain.member.service.MemberService;
 
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/members", consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/members")
 @RestController
 public class MemberRestController {
+
     private final MemberService memberService;
 
     // 회원 정보 조회
@@ -33,7 +32,9 @@ public class MemberRestController {
 
     // 회원 정보 수정
     @PostMapping
-    public ResponseEntity<?> updateMemberInfo(@MemberId Long memberId, @Validated @RequestBody MemberUpdate memberUpdate) throws NoSuchMemberException, ConstraintViolationException {
+    public ResponseEntity<?> updateMemberInfo(@MemberId Long memberId,
+        @Validated @RequestBody MemberUpdate memberUpdate)
+        throws NoSuchMemberException, ConstraintViolationException {
         memberService.updateMemberInfo(memberId, memberUpdate);
 
         return ResponseEntity.noContent().build();
