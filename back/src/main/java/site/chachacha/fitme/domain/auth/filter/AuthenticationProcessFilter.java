@@ -11,8 +11,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import site.chachacha.fitme.domain.auth.exception.InvalidAccessTokenException;
 import site.chachacha.fitme.domain.auth.service.JwtService;
@@ -21,6 +22,7 @@ import site.chachacha.fitme.domain.auth.service.JwtService;
 /**
  * /auth/login 이외의 요청이 들어올 때, access token이 유효한지 검증하고 인증 처리/인증 실패/토큰 재발급 등을 수행
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthenticationProcessFilter extends OncePerRequestFilter {
@@ -39,7 +41,8 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+        log.info("[REQUEST] Method : {}, RequestURI: {}", request.getMethod(), request.getRequestURI());
+        if (CorsUtils.isPreFlightRequest(request)) {
             return;
         }
         // 메인 페이지거나, 확인하지 않는 URL이면 바로 다음 필터로 넘어가기
