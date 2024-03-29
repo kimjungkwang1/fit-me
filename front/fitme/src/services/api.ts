@@ -1,17 +1,19 @@
 import axios from 'axios';
 
+const corsProxyUrl = window.location.origin;
 export const api = axios.create({
   baseURL: 'https://fit-me.site',
   headers: {
     'Content-Type': 'application/json',
+    'cors-proxy-url': corsProxyUrl,
   },
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
     // const refreshToken = localStorage.getItem('refreshToken ');
-    config.headers['Content-Type'] = 'application/json';
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }

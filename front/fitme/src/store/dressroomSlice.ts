@@ -6,6 +6,7 @@ import { RootState } from './store';
 // 드레스룸 아이템 인터페이스
 interface dressRoomItem {
   id: number;
+  productId: number;
   name: string;
   url: string;
   category: number;
@@ -30,20 +31,31 @@ interface DressroomState {
   nowTop: fitting;
   nowBottom: fitting;
   nowModel: dressRoomModel;
-  result: String;
+  result: fitting;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
 
 //초기상태
 const initialState: DressroomState = {
   cartItems: [],
-  orders: [],
+  orders: [
+    {
+      id: 15298,
+      productId: 15298,
+      name: 'string',
+      url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg',
+      category: 3000,
+    },
+  ],
   models: [],
-  fittings: [],
+  fittings: [
+    { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_2.jpg' },
+    { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_2.jpg' },
+  ],
   nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
   nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
   nowModel: { id: 0, url: '' },
-  result: '',
+  result: { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_1.jpg' },
   status: 'idle',
 };
 
@@ -54,6 +66,7 @@ export const getCartForDressroom = createAsyncThunk(
     const result = await dispatch(getCart()).unwrap();
     const cartItems = result.map((item: any) => ({
       id: item.id,
+      productId: item.productId,
       name: item.name,
       url: item.url,
       category: item.category,
@@ -68,6 +81,7 @@ export const getOrders = createAsyncThunk('dressroom/getOrders', async () => {
   const response = await api.get<any>('/api/orders');
   return response.data.map((item: any) => ({
     id: item.id,
+    productId: item.productId,
     name: item.product.name,
     url: item.product.mainImages[0].url,
     category: item.product.mainImages.categoryId,
@@ -89,7 +103,7 @@ export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { 
   const fittings = state.dressroom.fittings;
   const lastFittingId = fittings.length > 0 ? fittings[fittings.length - 1].id : undefined;
 
-  const endpoint = lastFittingId ? `/api/fittings?dressRoomId=${lastFittingId}` : '/api/fittings';
+  const endpoint = lastFittingId ? `/api/list?dressRoomId=${lastFittingId}` : '/api/dressroom/list';
 
   const response = await api.get<any>(endpoint);
   return response.data.map((item: any) => ({
@@ -99,7 +113,7 @@ export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { 
 });
 
 //피팅 생성
-export const makeFittings = createAsyncThunk('dresroom/getFittings', async (_, { getState }) => {
+export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, { getState }) => {
   const state = getState() as RootState;
   const dressroom = state.dressroom;
   const ids = {
@@ -108,15 +122,23 @@ export const makeFittings = createAsyncThunk('dresroom/getFittings', async (_, {
     productBottomId: dressroom.nowBottom.id,
   };
   const response = await api.post<any>('/api/dressroom', ids);
-  return response;
+  return { id: response.data.id, url: response.data.url };
 });
 
 //피팅 삭제
-
-export const deleteFittings = createAsyncThunk('dresroom/getFittings', async (id) => {
+export const deleteFittings = createAsyncThunk('dresroom/deleteFittings', async (id: number) => {
   const response = await api.post<any>('/api/dressroom', {
     data: {
       dressRoomId: id,
+    },
+  });
+  return response;
+});
+//피팅 삭제
+export const changeProfile = createAsyncThunk('dresroom/changeProfile', async (url: string) => {
+  const response = await api.post<any>('/api/dressroom', {
+    data: {
+      // nickname: id,
     },
   });
   return response;
@@ -137,6 +159,69 @@ const dressroomSlice = createSlice({
       state.nowBottom = action.payload;
     },
   },
+  extraReducers: (bulider) => {
+    bulider
+      .addCase(getCartForDressroom.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getCartForDressroom.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartForDressroom.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getOrders.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.orders = action.payload;
+      })
+      .addCase(getOrders.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getModels.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getModels.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.models = action.payload;
+      })
+      .addCase(getModels.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(makeFittings.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(makeFittings.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.result = action.payload;
+      })
+      .addCase(makeFittings.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(deleteFittings.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteFittings.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+      })
+      .addCase(deleteFittings.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getFittings.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getFittings.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.fittings = action.payload;
+      })
+      .addCase(getFittings.rejected, (state) => {
+        state.status = 'failed';
+      });
+  },
 });
 
 export default dressroomSlice.reducer;
+export const { setNowTop, setNowBottom, setModel } = dressroomSlice.actions;
