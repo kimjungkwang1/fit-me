@@ -31,10 +31,11 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
   const [detailAddress, setDetailAddress] = useState('');
 
   useEffect(() => {
-    // apiData.address가 업데이트될 때마다 roadAddress와 detailAddress를 업데이트합니다.
-    const parts = apiData.address.split(',');
-    setRoadAddress(parts[0].trim());
-    setDetailAddress(parts[1].trim());
+    if (apiData.address) {
+      const parts = apiData.address.split(',');
+      setRoadAddress(parts[0].trim());
+      setDetailAddress(parts[1]?.trim() || '');
+    }
   }, [apiData.address]);
 
   const handleRAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
