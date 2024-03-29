@@ -1,6 +1,5 @@
 package site.chachacha.fitme.domain.review.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ import site.chachacha.fitme.domain.review.exception.ImageUploadException;
 import site.chachacha.fitme.domain.review.service.ProductReviewService;
 
 @RestController
-@RequestMapping(value = "/api/products", consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/products")
 @RequiredArgsConstructor
 public class ProductReviewController {
 

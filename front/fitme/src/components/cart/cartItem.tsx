@@ -27,7 +27,8 @@ const priceToString = (price: number) => {
 };
 
 export default function CardItem(props: ICardItemProps) {
-  const { id, productId, name, price, color, size, quantity, isChecked, url } = props.item;
+  const { id, productId, name, price, color, size, quantity, isChecked, url, stockQuantity } =
+    props.item;
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -57,11 +58,19 @@ export default function CardItem(props: ICardItemProps) {
           <p className='pl-2'>Color: {color}</p>
           <p className='pl-2'>Size: {size}</p>
           <div className='flex items-center'>
-            <GrPrevious
-              onClick={() => updateCount({ id: id, quantity: quantity - 1 })}
-            ></GrPrevious>
+            {quantity === 0 ? (
+              <GrPrevious color='gray'></GrPrevious>
+            ) : (
+              <GrPrevious
+                onClick={() => updateCount({ id: id, quantity: quantity - 1 })}
+              ></GrPrevious>
+            )}
             <p>{quantity}</p>
-            <GrNext onClick={() => updateCount({ id: id, quantity: quantity + 1 })}></GrNext>
+            {quantity === stockQuantity ? (
+              <GrNext color='gray'></GrNext>
+            ) : (
+              <GrNext onClick={() => updateCount({ id: id, quantity: quantity + 1 })}></GrNext>
+            )}
           </div>
           <p className='text-right p-2'>Price: {priceToString(price * quantity)}원</p>
         </div>
