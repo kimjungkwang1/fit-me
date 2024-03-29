@@ -62,7 +62,7 @@ const initialState: CartState = {
 // 카트 정보 가져오기
 export const getCart = createAsyncThunk('cart/getCart', async () => {
   const response = await api.get<any>('/api/cart/products');
-  return response.data.map((item: any) => ({
+  return response.data.carts.map((item: any) => ({
     id: item.id,
     productId: item.product.id,
     name: item.product.name,
@@ -70,8 +70,8 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
     color: item.productOption.color,
     size: item.productOption.size,
     url: item.product.mainImages[0].url,
-    quantity: item.product.productOption.quantity,
-    stockQuantity: item.product.productOption.stockQuantity,
+    quantity: item.productOption.quantity,
+    stockQuantity: item.productOption.stockQuantity,
     isChecked: true,
     category: item.product.categoryId,
   }));
@@ -80,25 +80,24 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
 export const addCartItem = createAsyncThunk(
   'cart/addCartItem',
   async ({ id, options }: { id: number; options: option[] }) => {
-    const response = await api.post<any>('/api/cart/products/' + id, options);
+    const response = await api.post<any>('/api/cart/products/' + id, { options: options });
   }
 );
 // 카트에서 아이템 삭제
 export const deleteCartItem = createAsyncThunk('cart/deleteCartItem', async (ids: number[]) => {
-  const response = await api.delete<any>('/api/cart/products', { data: ids });
+  const response = await api.delete<any>('/api/cart/products', { data: { cartIds: ids } });
 });
 // 카트에서 수량 수정
 export const updateQuantity = createAsyncThunk(
   'cart/updateQuantity',
   async ({ id, quantity }: { id: number; quantity: number }, { rejectWithValue }) => {
     try {
-      const response = await api.patch<any>('/api/cart/products/quantity', {
-        data: {
-          id,
-          quantity,
-        },
+      const response = await api.put<any>('/api/cart/products/quantity', {
+        cartId: id,
+        quantity: quantity,
       });
     } catch (error: any) {
+      console.log(error);
       return rejectWithValue(error.response.data);
     }
     return { id, quantity };
@@ -108,7 +107,7 @@ export const updateQuantity = createAsyncThunk(
 //주소 가져오기
 export const getAddress = createAsyncThunk('cart/getAddress', async () => {
   const response = await api.get<any>('/api/members');
-  return response;
+  return response.data;
 });
 
 export const cartSlice = createSlice({
@@ -171,7 +170,7 @@ export const cartSlice = createSlice({
       })
       .addCase(getAddress.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const { nickname, phoneNumber, address } = action.payload.data;
+        const { nickname, phoneNumber, address } = action.payload;
         state.address.name = nickname;
         state.address.phoneNumber = phoneNumber;
         state.address.address = address;

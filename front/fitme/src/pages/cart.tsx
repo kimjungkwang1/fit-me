@@ -12,7 +12,7 @@ export default function Cart() {
   const items = useSelector((state: RootState) => state.cart.items);
   const address = useSelector((state: RootState) => state.cart.address);
   const totalPrice = items.reduce((total, item) => {
-    return item.isChecked ? total + item.price * item.quantity : total;
+    return item.isChecked ? total + item.price : total;
   }, 0);
   const dispatch = useDispatch<AppDispatch>();
 
