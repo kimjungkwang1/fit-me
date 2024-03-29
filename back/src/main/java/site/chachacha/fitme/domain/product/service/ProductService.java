@@ -77,9 +77,11 @@ public class ProductService {
 
     // 상품 상세 조회
     public ProductDetailResponse getProduct(Long productId, Long memberId) {
+        log.info("[GET PRODUCT] meberId: {}", memberId);
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
         boolean liked = productLikeRepository.existsByProductAndMemberId(product, memberId);
+        log.info("[GET PRODUCT] liked: {}", liked);
         return ProductDetailResponse.of(product, liked);
     }
 
