@@ -17,15 +17,14 @@ type UserInputProps = {
 };
 
 const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
+  const thisYear = new Date().getFullYear().toString();
   const location = useLocation();
   const id = apiData.id;
   const [nickname, setNickname] = useState(apiData.nickname);
   const [gender, setGender] = useState(apiData.gender);
-  const [profileUrl, setProfileUrl] = useState(apiData.profileUrl);
+  const profileUrl = apiData.profileUrl;
   const [phoneNumber, setPhoneNumber] = useState(apiData.phoneNumber);
-  const [year, setYear] = useState(
-    apiData.birthYear ? apiData.birthYear.toString() : new Date().getFullYear().toString()
-  );
+  const [year, setYear] = useState(apiData.birthYear ? apiData.birthYear.toString() : thisYear);
   const [address, setAddress] = useState(apiData.address);
   const [roadAddress, setRoadAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
@@ -37,32 +36,6 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
       setDetailAddress(parts[1]?.trim() || '');
     }
   }, [apiData.address]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    // 입력값이 숫자인지 판별
-    const numericValue = parseInt(value, 10);
-    // 숫자라면 값을 설정, 숫자가 아니라면 null로 설정
-    if (!isNaN(numericValue)) {
-      setYear(value);
-    } else {
-      setYear('');
-    }
-  };
-
-  const handleRAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updateRoadAddress = event.target.value;
-    setRoadAddress(updateRoadAddress);
-    // roadAddress 변경 시, 새로운 address 값을 설정합니다.
-    setAddress(updateRoadAddress + ',' + detailAddress);
-  };
-
-  const handleDAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updateDetailAddress = event.target.value;
-    setDetailAddress(updateDetailAddress);
-    // detailAddress 변경 시, 새로운 address 값을 설정합니다.
-    setAddress(roadAddress + ',' + updateDetailAddress);
-  };
 
   const handleSubmit = () => {
     const updatedApiData: ApiDataType = {
@@ -149,7 +122,17 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <input
             type='text'
             value={year}
-            onChange={handleChange}
+            onChange={(event) => {
+              const value = event.target.value;
+              // 입력값이 숫자인지 판별
+              const isNumeric = /^[0-9]+$/.test(value);
+              // 숫자라면 값을 설정, 숫자가 아니라면 null로 설정
+              if (isNumeric) {
+                setYear(value);
+              } else {
+                setYear('');
+              }
+            }}
             placeholder={year}
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
@@ -159,8 +142,20 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <input
             type='text'
             value={phoneNumber}
-            onChange={(event) => setPhoneNumber(event.target.value)}
-            placeholder='010-0000-0000'
+            onChange={(event) => {
+              const value = event.target.value;
+              // 입력값이 숫자로만 구성되어 있는지 확인하는 정규식
+              const isNumeric = /^[0-9]*$/.test(value);
+
+              // 숫자로만 구성되었고, 길이가 11자 이하인 경우에만 값을 설정
+              if (isNumeric && value.length <= 11) {
+                setPhoneNumber(value);
+              } else {
+                // 조건을 만족하지 않는 경우, 마지막 입력값을 지움
+                setPhoneNumber(value.slice(0, -1));
+              }
+            }}
+            placeholder='01012345678'
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
@@ -169,14 +164,24 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
           <input
             type='text'
             value={roadAddress}
-            onChange={handleRAddress}
+            onChange={(event) => {
+              const updateRoadAddress = event.target.value;
+              setRoadAddress(updateRoadAddress);
+              // roadAddress 변경 시, 새로운 address 값을 설정합니다.
+              setAddress(updateRoadAddress + ',' + detailAddress);
+            }}
             placeholder='도로명 주소'
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
           <input
             type='text'
             value={detailAddress}
-            onChange={handleDAddress}
+            onChange={(event) => {
+              const updateDetailAddress = event.target.value;
+              setDetailAddress(updateDetailAddress);
+              // detailAddress 변경 시, 새로운 address 값을 설정합니다.
+              setAddress(roadAddress + ',' + updateDetailAddress);
+            }}
             placeholder='상세주소'
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-gray-900 dark:text-gray-300 dark:focus:border-red-300'
           />
