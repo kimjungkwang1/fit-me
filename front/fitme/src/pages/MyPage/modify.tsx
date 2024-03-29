@@ -12,14 +12,17 @@ type ApiDataType = {
   address: string;
 };
 
-const Modify: React.FC = () => {
+type InfoProps = {
+  userInfo: ApiDataType;
+};
+
+const Modify: React.FC<InfoProps> = ({ userInfo }) => {
   const [apiData, setApiData] = useState<ApiDataType>();
 
   useEffect(() => {
     api
       .get('/api/members')
       .then((res) => {
-        console.log(res.data);
         setApiData(res.data);
       })
       .catch((error) => {
