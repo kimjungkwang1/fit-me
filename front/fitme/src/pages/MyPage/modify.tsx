@@ -25,7 +25,7 @@ const Modify: React.FC = () => {
       .catch((error) => {
         console.error('서버로부터 에러 응답:', error);
       });
-  });
+  }, []);
 
   const handleSubmit = (apiData: ApiDataType) => {
     console.log(apiData);
