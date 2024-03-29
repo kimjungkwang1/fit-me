@@ -20,15 +20,22 @@ type UserInputProps = {
 
 const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
   const location = useLocation();
-  const id = apiData?.id;
-  const [nickname, setNickname] = useState(apiData?.nickname || '');
-  const [gender, setGender] = useState(apiData?.gender || false);
-  const [profileUrl, setProfileUrl] = useState(apiData?.profileUrl || '');
-  const [phoneNumber, setPhoneNumber] = useState(apiData?.phoneNumber || '');
-  const [birthYear, setBirthYear] = useState(apiData?.birthYear || new Date().getFullYear());
-  const [address, setAddress] = useState(apiData?.address || '');
-  const [roadAddress, setRoadAddress] = useState(address?.split(',', 2)[0].trim());
-  const [detailAddress, setDetailAddress] = useState(address?.split(',', 2)[1].trim());
+  const id = apiData.id;
+  const [nickname, setNickname] = useState(apiData.nickname);
+  const [gender, setGender] = useState(apiData.gender);
+  const [profileUrl, setProfileUrl] = useState(apiData.profileUrl);
+  const [phoneNumber, setPhoneNumber] = useState(apiData.phoneNumber);
+  const [birthYear, setBirthYear] = useState(apiData.birthYear || new Date().getFullYear());
+  const [address, setAddress] = useState(apiData.address);
+  const [roadAddress, setRoadAddress] = useState('');
+  const [detailAddress, setDetailAddress] = useState('');
+
+  useEffect(() => {
+    // apiData.address가 업데이트될 때마다 roadAddress와 detailAddress를 업데이트합니다.
+    const parts = apiData.address.split(',');
+    setRoadAddress(parts[0].trim());
+    setDetailAddress(parts[1].trim());
+  }, [apiData.address]);
 
   const handleRAddress = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updateRoadAddress = event.target.value;
