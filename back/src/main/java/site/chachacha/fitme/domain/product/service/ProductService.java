@@ -66,8 +66,9 @@ public class ProductService {
     // 상품 목록 조회
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
         List<Product> products = productCustomRepository.findAllByProductConditions(
-            request.getLastId(), request.getLastPopularityScore(), request.getSize(), request.getKeyword(), request.getAgeRanges(),
-            request.getBrandIds(), request.getCategoryIds(), request.getStartPrice(), request.getEndPrice(), request.getSortBy());
+            request.getLastId(), request.getLastPopularityScore(), request.getLastPrice(), request.getSize(), request.getKeyword(),
+            request.getAgeRanges(), request.getBrandIds(), request.getCategoryIds(), request.getStartPrice(), request.getEndPrice(),
+            request.getSortBy());
         return products
             .stream()
             .map(ProductResponse::from)

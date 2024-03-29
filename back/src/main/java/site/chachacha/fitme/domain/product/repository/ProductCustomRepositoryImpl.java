@@ -20,17 +20,20 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     //Querydsl을 사용하여 JPA 쿼리를 생성하고 실행하기 위한 클래스
     private final JPAQueryFactory queryFactory;
     private static final String SORT_BY_LATEST = "latest";
+    private static final String SORT_BY_PRICE_ASC = "priceAsc";
+    private static final String SORT_BY_PRICE_DESC = "priceDesc";
 
     @Override
-    public List<Product> findAllByProductConditions(Long lastId, Integer lastPopularityScore, Integer size, String keyword, List<String> ageRanges,
-        List<Long> brandIds, List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
+    public List<Product> findAllByProductConditions(Long lastId, Integer lastPopularityScore, Integer lastPrice, Integer size, String keyword,
+        List<String> ageRanges, List<Long> brandIds, List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
+
         return queryFactory
             .selectFrom(product)
             .distinct()
             .leftJoin(product.brand, brand).fetchJoin()
             .leftJoin(product.productTags, productTag)
             .where(
-                SORT_BY_LATEST.equals(sortBy) ? ltLastId(lastId) : popularCursorCondition(lastPopularityScore, lastId),
+                generateWhereCondition(sortBy, lastId, lastPopularityScore, lastPrice),
                 keywordCondition(keyword),
                 inAgeRanges(ageRanges),
                 inBrandIds(brandIds),
@@ -43,12 +46,32 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             .fetch();
     }
 
+    private BooleanExpression generateWhereCondition(String sortBy, Long lastId, Integer lastPopularityScore, Integer lastPrice) {
+        if (SORT_BY_LATEST.equals(sortBy)) {
+            return ltLastId(lastId);
+        }
+        if (SORT_BY_PRICE_ASC.equals(sortBy) || SORT_BY_PRICE_DESC.equals(sortBy)) {
+            return priceCursorCondition(lastPrice, lastId, sortBy);
+        }
+        return popularCursorCondition(lastPopularityScore, lastId);
+    }
+
     // 정렬 조건 반환
     private OrderSpecifier<?>[] getOrderSpecifier(String sortBy) {
 
         // 최신순 정렬
         if (SORT_BY_LATEST.equals(sortBy)) {
             return new OrderSpecifier<?>[]{product.id.desc()};
+        }
+
+        // 가격 낮은 순 정렬
+        if (SORT_BY_PRICE_ASC.equals(sortBy)) {
+            return new OrderSpecifier<?>[]{product.price.asc()};
+        }
+
+        // 가격 높은 순 정렬
+        if (SORT_BY_PRICE_DESC.equals(sortBy)) {
+            return new OrderSpecifier<?>[]{product.price.desc()};
         }
 
         // 인기순 정렬
@@ -74,6 +97,20 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             .and(product.id.lt(lastId));
         return prevMonthlyPopularityScore.or(sameMonthlyPopularityScoreButPrevId);
     }
+
+    private BooleanExpression priceCursorCondition(Integer lastPrice, Long lastId, String sortBy) {
+        if (lastPrice == null || lastId == null) {
+            return null;
+        }
+
+        BooleanExpression prevPriceCondition = SORT_BY_PRICE_DESC.equals(sortBy) ? product.price.lt(lastPrice) : product.price.gt(lastPrice);
+
+        BooleanExpression samePriceButPrevIdCondition = product.price.eq(lastPrice)
+            .and(SORT_BY_PRICE_DESC.equals(sortBy) ? product.id.lt(lastId) : product.id.gt(lastId));
+
+        return prevPriceCondition.or(samePriceButPrevIdCondition);
+    }
+
 
     private BooleanExpression keywordCondition(String keyword) {
         if (StringUtils.isBlank(keyword)) {
