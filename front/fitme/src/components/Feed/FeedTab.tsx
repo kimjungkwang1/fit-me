@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Tabs } from 'flowbite-react';
 import FeedListMagazine from './FeedListMagazine';
 import FeedListUser from './FeedListUser';
 export default function FeedTab() {
@@ -25,7 +24,7 @@ export default function FeedTab() {
           유저피드
         </div>
       </div>
-      {tab === '매거진' ? <FeedListMagazine></FeedListMagazine> : <FeedListUser></FeedListUser>}
+      {tab === '매거진' ? <FeedListMagazine /> : <FeedListUser />}
     </>
   );
 }
