@@ -1,5 +1,7 @@
 package site.chachacha.fitme.domain.review.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class ProductReviewService {
     private final ProductReviewRepository productReviewRepository;
     private final MemberRepository memberRepository;
     private final OrderProductRepository orderProductRepository;
+    private final String imgUrl = "/images/reviews/";
 
     public List<ProductReviewResponseWithMemberNickname> getReviews(Long productId) {
         return productReviewRepository.findAllByProductId(productId).stream()
@@ -48,7 +51,7 @@ public class ProductReviewService {
     @Transactional
     public Long createReview(Long memberId, Long productId, ProductReviewRequest request,
         MultipartFile multipartFile)
-        throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException {
+            throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException, IOException {
         // 회원이 있는지 검증
         Member member = memberRepository.findNotDeletedById(memberId)
             .orElseThrow(() -> new GoneException("존재하지 않는 회원입니다."));
@@ -96,10 +99,21 @@ public class ProductReviewService {
             .product(product)
             .build();
 
-        // ToDo: 사진 업로드
-
         // 저장
         ProductReview newProductReview = productReviewRepository.save(productReview);
+
+        // 사진 업로드
+        // ./images/reviews에서 {member_id} 폴더를 만들고, review_id로 파일명을 변경하여 저장
+        // 폴더 만들기
+        File file = new File(".." + imgUrl + member.getId());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        // 파일 저장
+        multipartFile.transferTo(new File(".." + imgUrl + member.getId() + "/" + newProductReview.getId() + "." + extension));
+
+        // 저장
         newProductReview.updateImageUrl(newProductReview.getId());
         productReviewRepository.save(newProductReview);
         productRepository.save(product);
