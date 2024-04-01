@@ -8,7 +8,7 @@ const FooterBar: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/category') {
+    if (location.pathname.startsWith('/category')) {
       setSelectedTab('category');
     } else if (location.pathname.startsWith('/feed')) {
       setSelectedTab('feed');
