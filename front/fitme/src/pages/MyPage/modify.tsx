@@ -20,9 +20,6 @@ type InfoProps = {
 const Modify: React.FC<InfoProps> = ({ userInfo }) => {
   const [apiData, setApiData] = useState<ApiDataType>(userInfo);
   const navigate = useNavigate();
-  // const handleSubmit = (apiData: ApiDataType) => {
-  //   console.log(apiData);
-  // };
 
   const handleSubmit = async (apiData: ApiDataType) => {
     try {
