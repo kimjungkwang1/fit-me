@@ -11,6 +11,7 @@ import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 
 @RequiredArgsConstructor
 public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
+
     private final JPAQueryFactory queryFactory;
 
     public List<DressRoom> findNoOffsetByMemberId(Long memberId, Long dressRoomId) {
@@ -18,6 +19,7 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
             .selectFrom(dressRoom)
             .where(dressRoom.member.id.eq(memberId)
                 .and(ltDressRoomId(dressRoomId)))
+            .limit(10)
             .fetch();
     }
 
