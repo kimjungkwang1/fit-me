@@ -22,20 +22,16 @@ export default function Cart() {
   }, []);
   return (
     <>
-      <div className='flex justify-center'>
-        <div className='aspect-iphone h-screen'>
-          <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
-            드레스룸 가기
-          </Button>
-          {items.map((item) => (
-            <CartItem key={item.id} item={item} />
-          ))}
-          <CartAddress address={address}></CartAddress>
-          <Button color='gray' className='my-2 w-[100%]'>
-            결제하기 |{totalPrice.toLocaleString()}
-          </Button>
-        </div>
-      </div>
+      <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
+        드레스룸 가기
+      </Button>
+      {items.map((item) => (
+        <CartItem key={item.id} item={item} />
+      ))}
+      <CartAddress address={address}></CartAddress>
+      <Button color='gray' className='my-2 w-[100%]'>
+        결제하기 |{totalPrice.toLocaleString()}
+      </Button>
     </>
   );
 }
