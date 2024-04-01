@@ -25,6 +25,8 @@ import site.chachacha.fitme.domain.review.exception.DuplicatedReviewException;
 import site.chachacha.fitme.domain.review.exception.ImageUploadException;
 import site.chachacha.fitme.domain.review.service.ProductReviewService;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping(value = "/api/products")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class ProductReviewController {
         @PathVariable(name = "productId") Long productId,
         @Validated @RequestPart(name = "productReviewRequest") ProductReviewRequest productReviewRequest,
         @RequestPart(value = "image") MultipartFile multipartFile)
-        throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException {
+            throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException, IOException {
         // 리뷰 등록
         productReviewService.createReview(memberId, productId, productReviewRequest, multipartFile);
 
