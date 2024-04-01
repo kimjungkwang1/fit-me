@@ -135,17 +135,6 @@ public class AuthRestController {
         String host = request.getHeader(HttpHeaders.HOST);
         log.info("host: " + host);
 
-        // x-forwarded-host와 origin이 모두 null이면
-        if (xForwardedHost == null && origin == null) {
-            // 프론트가 로컬이라는 뜻
-
-            return "http://localhost:" + frontendPort;
-        }
-        // origin이
-        else if (origin.equals("http://localhost:3000")) {
-            return "http://localhost:" + frontendPort;
-        }
-
         return "https://fit-me.site";
     }
 }

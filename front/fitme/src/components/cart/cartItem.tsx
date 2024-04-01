@@ -2,9 +2,8 @@ import * as React from 'react';
 import { IoIosCheckmarkCircle, IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { GrPrevious, GrNext } from 'react-icons/gr';
-import { toggleItemChecked, deleteCartItem, updateQuantity } from '../../store/cartSlice';
+import { toggleItemChecked, deleteCartItem, updateQuantity, getCart } from '../../store/cartSlice';
 import { AppDispatch } from '../../store/store';
-
 export interface ICardItemProps {
   item: ICartItem;
 }
@@ -35,8 +34,9 @@ export default function CardItem(props: ICardItemProps) {
   const togleIsChecked = (id: number) => {
     dispatch(toggleItemChecked(id));
   };
-  const dleteItem = (ids: number[]) => {
-    dispatch(deleteCartItem(ids));
+  const dleteItem = async (ids: number[]) => {
+    await dispatch(deleteCartItem(ids));
+    dispatch(getCart());
   };
   const updateCount = ({ id, quantity }: { id: number; quantity: number }) => {
     dispatch(updateQuantity({ id, quantity }));
@@ -54,11 +54,12 @@ export default function CardItem(props: ICardItemProps) {
         </div>
         <img className='w-[25%] h-auto object-contain' src={url} alt='' />
         <div className='flex-grow text-left'>
-          <p className='p-2 font-bold'>Name: {name}</p>
-          <p className='pl-2'>Color: {color}</p>
-          <p className='pl-2'>Size: {size}</p>
+          <p className='p-2 font-bold'>{name}</p>
+          <p className='pl-2'>
+            {color}/{size}
+          </p>
           <div className='flex items-center'>
-            {quantity === 0 ? (
+            {quantity === 1 ? (
               <GrPrevious color='gray'></GrPrevious>
             ) : (
               <GrPrevious
@@ -72,7 +73,7 @@ export default function CardItem(props: ICardItemProps) {
               <GrNext onClick={() => updateCount({ id: id, quantity: quantity + 1 })}></GrNext>
             )}
           </div>
-          <p className='text-right p-2'>Price: {priceToString(price * quantity)}원</p>
+          <p className='text-right p-2'>Price: {priceToString(price)}원</p>
         </div>
         <div className='w-[5%] h-[5%]' onClick={() => dleteItem([id])}>
           X
