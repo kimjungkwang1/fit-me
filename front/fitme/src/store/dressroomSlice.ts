@@ -50,13 +50,10 @@ const initialState: DressroomState = {
     },
   ],
   models: [],
-  fittings: [
-    { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_2.jpg' },
-    { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_2.jpg' },
-  ],
+  fittings: [],
   nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
   nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
-  nowModel: { id: 0, url: '' },
+  nowModel: { id: 1, url: '' },
   result: { id: 0, url: 'https://fit-me.site/images/model/men.jpg' },
   status: 'idle',
 };
