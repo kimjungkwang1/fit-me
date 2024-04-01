@@ -116,11 +116,21 @@ export default function FilterBar({
           label=''
           placement='bottom'
           renderTrigger={() => (
-            <span className='text-sm'>{sortBy === '' ? '인기순' : '최신순'}</span>
+            <span className='text-sm'>
+              {sortBy === ''
+                ? '인기순'
+                : sortBy === 'latest'
+                ? '최신순'
+                : sortBy === 'priceAsc'
+                ? '가격 낮은 순'
+                : '가격 높은 순'}
+            </span>
           )}
         >
           <Dropdown.Item onClick={() => sortByHandler('')}>인기순</Dropdown.Item>
           <Dropdown.Item onClick={() => sortByHandler('latest')}>최신순</Dropdown.Item>
+          <Dropdown.Item onClick={() => sortByHandler('priceAsc')}>가격 낮은 순</Dropdown.Item>
+          <Dropdown.Item onClick={() => sortByHandler('priceDesc')}>가격 높은 순</Dropdown.Item>
         </Dropdown>
 
         {/* 옵션 선택 모달 */}
