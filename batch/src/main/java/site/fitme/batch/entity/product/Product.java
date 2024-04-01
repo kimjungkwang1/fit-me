@@ -1,4 +1,4 @@
-package site.chachacha.fitme.domain.product.entity;
+package site.fitme.batch.entity.product;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -19,13 +19,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import site.chachacha.fitme.common.entity.BaseEntity;
-import site.chachacha.fitme.domain.brand.entity.Brand;
-import site.chachacha.fitme.domain.category.entity.Category;
-import site.chachacha.fitme.domain.like.entity.ProductLike;
-import site.chachacha.fitme.domain.order.OrderProduct;
-import site.chachacha.fitme.domain.review.entity.ProductReview;
-import site.chachacha.fitme.domain.tag.entity.ProductTag;
+import site.fitme.batch.entity.brand.Brand;
+import site.fitme.batch.entity.category.Category;
+import site.fitme.batch.entity.like.ProductLike;
+import site.fitme.batch.entity.review.ProductReview;
+import site.fitme.batch.entity.common.BaseEntity;
+import site.fitme.batch.entity.order.OrderProduct;
+import site.fitme.batch.entity.tag.ProductTag;
 
 @Getter
 @Entity
