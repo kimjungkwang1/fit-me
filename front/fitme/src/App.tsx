@@ -20,6 +20,8 @@ import FooterBar from './components/footerBar';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import NotFoundPage from './pages/NotFoundPage';
+import complete from './pages/CompletePage';
+import CompletePage from './pages/CompletePage';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -44,7 +46,7 @@ const App: React.FC = () => {
                 <Route path='/search' element={<SearchPage />} />
                 <Route path='/cart' element={<CartPage />} />
                 {/* /payment/complete 페이지 아직 없음 */}
-                <Route path='/payment/complete' element={<LoginPage />} />
+                <Route path='/payment/complete' element={<CompletePage />} />
                 <Route path='/dressroom' element={<DressroomPage />} />
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/feed' element={<FeedPage />} />

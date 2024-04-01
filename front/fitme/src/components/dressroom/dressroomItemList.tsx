@@ -23,10 +23,14 @@ export default function DressroomItemLst() {
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.dressroom.cartItems);
   const orderItems = useSelector((state: RootState) => state.dressroom.orders);
+
+  //구매목록, 장바구니 데이터 가져오기
   useEffect(() => {
     dispatch(getOrders());
     dispatch(getCartForDressroom());
   }, []);
+
+  //필터
   const select1 = (s: selectedButtonType) => {
     setSelected1(s);
   };
@@ -35,6 +39,8 @@ export default function DressroomItemLst() {
   };
   //상의 혹은 하의 변경후 피팅 생성
   const [shouldMakeFittings, setShouldMakeFittings] = useState<boolean>(false);
+
+  // 상의 하의 아이템 피팅중인 아이템에 넣기
   const handleFitting = async (id: number, url: string, category: number) => {
     if (Math.floor(category / 1000) === 1) {
       dispatch(setNowTop({ id: id, url: url }));
@@ -45,16 +51,18 @@ export default function DressroomItemLst() {
       setShouldMakeFittings(true);
     }
   };
+
+  // 피팅 생성
   useEffect(() => {
     const makeFittingIfNeeded = async () => {
       if (shouldMakeFittings) {
         await dispatch(makeFittings());
-        setShouldMakeFittings(false); // 동작 완료 후 상태 초기화
+        setShouldMakeFittings(false);
       }
     };
-
     makeFittingIfNeeded();
   }, [shouldMakeFittings, dispatch]);
+
   return (
     <>
       <div className='flex'>
