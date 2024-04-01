@@ -265,16 +265,26 @@ export default function SearchPage() {
     }
   }, [inView]);
 
+  const resetSearch = () => {
+    setList([]);
+    setLastId(0);
+    setLastPopularityScore(0);
+  };
+
   // 검색 조건 변경
   useEffect(() => {
-    if (keyword !== '') {
-      console.log('조건변경!');
-      // 검색 결과 목록 초기화, 무한스크롤 인자 초기화
-      setList([]);
-      setLastId(0);
-      setLastPopularityScore(0);
-      infiniteScroll();
-    }
+    const fetchData = async () => {
+      if (keyword !== '') {
+        // 검색 결과 목록 초기화, 무한스크롤 인자 초기화
+        resetSearch();
+        // 초기화 후 api 호출
+        if (list.length === 0) {
+          await infiniteScroll();
+        }
+      }
+    };
+
+    fetchData();
   }, [keyword, selectedBrands, selectedCategories, selectedAges, sortBy]);
 
   return (
