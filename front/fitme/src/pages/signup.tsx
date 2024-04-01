@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { api } from '../services/api';
 import UserInput from '../components/user/userInput';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type ApiDataType = {
   id: number;
@@ -13,32 +13,33 @@ type ApiDataType = {
   address: string;
 };
 
-const year = new Date().getFullYear();
-
 const Signup: React.FC = () => {
-  const [apiData, setApiData] = useState<ApiDataType>();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [apiData, setApiData] = useState<ApiDataType | null>(null);
 
   useEffect(() => {
-    api
-      .get('https://fit-me.site/api/members')
-      .then((res) => {
-        setApiData(res.data);
-      })
-      .catch((error) => {
-        console.error('서버로부터 에러 응답:', error);
-      });
-  });
+    const state = location.state as { userData: ApiDataType } | undefined;
+    if (state?.userData) {
+      setApiData(state.userData);
+    } else {
+      // userData가 없는 경우 홈으로 리다이렉트
+      navigate('/');
+    }
+  }, [location, navigate]);
 
   const handleSubmit = async (apiData: ApiDataType) => {
     try {
-      const response = await axios.post('https://fit-me.site/api/members////', apiData);
-      console.log('서버 응답:', response.data);
+      api.post('/api/members', apiData).then(() => {
+        alert('회원 가입 완료');
+        navigate('/');
+      });
     } catch (error) {
       console.error('서버로부터 에러 응답:', error);
     }
   };
 
-  return <>{apiData && <UserInput onSubmit={handleSubmit} apiData={apiData} />} </>;
+  return <>{apiData && <UserInput onSubmit={handleSubmit} apiData={apiData} />}</>;
 };
 
 export default Signup;
