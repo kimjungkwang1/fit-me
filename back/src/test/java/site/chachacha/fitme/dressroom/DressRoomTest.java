@@ -200,7 +200,7 @@ public class DressRoomTest {
     void createDressRoomFail5() {
         // Given
         assertThatThrownBy(() -> {
-            dressRoomService.createDressRoom(1L, 1L, 6L, 15L);
+            dressRoomService.createDressRoom(1L, 1L, 2L, 15L);
         })
             .isInstanceOf(GoneException.class)
             .hasMessage("존재하지 않는 하의입니다.");

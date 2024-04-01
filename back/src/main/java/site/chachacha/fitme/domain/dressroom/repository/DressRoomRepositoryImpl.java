@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
+import site.chachacha.fitme.domain.dressroom.entity.QDressRoom;
 
 @RequiredArgsConstructor
 public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
@@ -41,10 +42,36 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
         return Optional.ofNullable(queryFactory
             .selectFrom(dressRoom)
             .where(dressRoom.model.id.eq(modelId)
-                .and(dressRoom.productTop.id.eq(productTopId))
-                .and(dressRoom.productBottom.id.eq(productBottomId)))
+                .and(productTopId == null ? dressRoom.productTop.isNull()
+                    : dressRoom.productTop.id.eq(productTopId))
+                .and(productBottomId == null ? dressRoom.productBottom.isNull()
+                    : dressRoom.productBottom.id.eq(productBottomId)))
             .fetchOne()
         );
+    }
+
+    @Override
+    public Boolean findByProductTopAndNull(Long productTopId) {
+        Optional<Long> result = Optional.ofNullable(queryFactory
+            .select(dressRoom.id)
+            .from(dressRoom)
+            .where(QDressRoom.dressRoom.productTop.id.eq(productTopId)
+                .and(QDressRoom.dressRoom.productBottom.isNull()))
+            .fetchOne());
+
+        return result.isPresent();
+    }
+
+    @Override
+    public Boolean findByProductBottomAndNull(Long productBottomId) {
+        Optional<Long> result = Optional.ofNullable(queryFactory
+            .select(dressRoom.id)
+            .from(dressRoom)
+            .where(QDressRoom.dressRoom.productBottom.id.eq(productBottomId)
+                .and(QDressRoom.dressRoom.productTop.isNull()))
+            .fetchOne());
+
+        return result.isPresent();
     }
 
     private BooleanExpression ltDressRoomId(Long dressRoomId) {
