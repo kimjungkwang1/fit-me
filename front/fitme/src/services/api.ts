@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const corsProxyUrl = window.location.origin;
 export const api = axios.create({
   baseURL: 'https://fit-me.site',
   headers: {
     'Content-Type': 'application/json',
-    'cors-proxy-url': corsProxyUrl,
   },
   withCredentials: true,
 });
