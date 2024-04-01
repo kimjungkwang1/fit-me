@@ -6,11 +6,13 @@ export default function FeedListMagazine() {
     <>
       <div className='grid grid-cols-3 flex-wrap justify-between mx-[2vw]'>
         {imageNumbers.map((num) => (
-          <img
-            className='p-1'
-            src={`https://fit-me.site/images/feed/magazine/magazine${num}.png`}
-            alt=''
-          />
+          <div className='m-1 h-64 w-42 flex justify-center items-center'>
+            <img
+              className='max-w-full max-h-full object-contain'
+              src={`https://fit-me.site/images/feed/magazine/magazine${num}.png`}
+              alt=''
+            />
+          </div>
         ))}
       </div>
     </>
