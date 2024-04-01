@@ -2,8 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../services/api';
 import { getCart } from './cartSlice';
 import { RootState } from './store';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+// import Swal from 'sweetalert2';
 
 // 드레스룸 아이템 인터페이스
 interface dressRoomItem {
@@ -113,16 +112,16 @@ export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { 
 
 //피팅 생성
 export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, { getState }) => {
-  const MySwal = withReactContent(Swal);
+  // const MySwal = withReactContent(Swal);
   let swalLoading;
-  MySwal.fire({
-    title: 'ai가 이미지 생성중입니다.',
-    html: '잠시만 기다려주세요',
-    allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
+  // MySwal.fire({
+  //   title: 'ai가 이미지 생성중입니다.',
+  //   html: '잠시만 기다려주세요',
+  //   allowOutsideClick: false,
+  //   didOpen: () => {
+  //     Swal.showLoading();
+  //   },
+  // });
   try {
     const state = getState() as RootState;
     const dressroom = state.dressroom;
@@ -133,10 +132,10 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
     };
     const response = await api.post<any>('/api/dressroom', ids);
 
-    MySwal.close();
+    // MySwal.close();
     return { id: response.data.id, url: response.data.url };
   } catch (error) {
-    MySwal.close();
+    // MySwal.close();
     return { id: 0, url: '' };
   }
 });
