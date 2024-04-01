@@ -14,20 +14,35 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    @Override
     public List<DressRoom> findNoOffsetByMemberId(Long memberId, Long dressRoomId) {
         return queryFactory
             .selectFrom(dressRoom)
             .where(dressRoom.member.id.eq(memberId)
                 .and(ltDressRoomId(dressRoomId)))
+            .orderBy(dressRoom.id.desc())
             .limit(10)
             .fetch();
     }
 
+    @Override
     public Optional<DressRoom> findByIdAndMemberId(Long memberId, Long dressRoomId) {
         return Optional.ofNullable(queryFactory
             .selectFrom(dressRoom)
             .where(dressRoom.member.id.eq(memberId)
                 .and(dressRoom.id.eq(dressRoomId)))
+            .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<DressRoom> findByModelAndProductTopAndProductBottom(Long modelId,
+        Long productTopId, Long productBottomId) {
+        return Optional.ofNullable(queryFactory
+            .selectFrom(dressRoom)
+            .where(dressRoom.model.id.eq(modelId)
+                .and(dressRoom.productTop.id.eq(productTopId))
+                .and(dressRoom.productBottom.id.eq(productBottomId)))
             .fetchOne()
         );
     }
