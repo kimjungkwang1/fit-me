@@ -10,7 +10,6 @@ const KakaoAuthHandler: React.FC = () => {
   useEffect(() => {
     if (count === 0) {
       count++;
-      console.log(count);
       const searchParams = new URLSearchParams(location.search);
       const code = searchParams.get('code');
 
@@ -18,8 +17,6 @@ const KakaoAuthHandler: React.FC = () => {
         axios
           .get('https://fit-me.site/api/auth/login/oauth2/code/kakao?code=' + code)
           .then((res) => {
-            console.log(res.status);
-
             if (res.status === 200) {
               const refreshToken = res.headers.authorizationrefresh?.replace('Bearer', '').trim();
               const accessToken = res.headers.authorization?.replace('Bearer', '').trim();
@@ -28,7 +25,8 @@ const KakaoAuthHandler: React.FC = () => {
               localStorage.setItem('refreshToken', refreshToken);
               localStorage.setItem('accessToken', accessToken);
 
-              console.log('로그인 성공');
+              console.log(res.data);
+
               if (isNewMember) {
                 navigate('/signup', { state: { userData: res.data } });
               } else {

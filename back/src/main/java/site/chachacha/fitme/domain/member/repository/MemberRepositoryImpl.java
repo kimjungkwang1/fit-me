@@ -21,12 +21,49 @@ public class MemberRepositoryImpl implements MemberRepositoryQueryDsl {
             query
                 .select(member)
                 .from(member)
+                .where(
+                    member.id.eq(id)
+                        .and(
+                            member.isDeleted.isFalse()
+                        )
+                )
+                .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Member> findNotDeletedByIdWithToken(Long id) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return Optional.ofNullable(
+            query
+                .select(member)
+                .from(member)
                 .leftJoin(member.token).fetchJoin()
                 .where(
                     member.id.eq(id)
-                    .and(
-                        member.isDeleted.isFalse()
-                    )
+                        .and(
+                            member.isDeleted.isFalse()
+                        )
+                )
+                .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Member> findNotDeletedByIdWithCart(Long id) {
+        JPAQueryFactory query = new JPAQueryFactory(em);
+
+        return Optional.ofNullable(
+            query
+                .select(member)
+                .from(member)
+                .leftJoin(member.carts).fetchJoin()
+                .where(
+                    member.id.eq(id)
+                        .and(
+                            member.isDeleted.isFalse()
+                        )
                 )
                 .fetchOne()
         );
@@ -43,9 +80,9 @@ public class MemberRepositoryImpl implements MemberRepositoryQueryDsl {
                 .leftJoin(member.token).fetchJoin()
                 .where(
                     member.providerId.eq(providerId)
-                    .and(
-                        member.isDeleted.isFalse()
-                    )
+                        .and(
+                            member.isDeleted.isFalse()
+                        )
                 )
                 .fetchOne()
         );
