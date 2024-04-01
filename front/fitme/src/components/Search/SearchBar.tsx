@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 
 type SearchBarProps = {
+  keyword: string;
   searchKeyword: (k: string) => void;
 };
 
-export default function SearchBar({ searchKeyword }: SearchBarProps) {
+export default function SearchBar({ keyword, searchKeyword }: SearchBarProps) {
   const [typingKeyword, setTypingKeyword] = useState<string>('');
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTypingKeyword(e.target.value);
@@ -14,6 +15,20 @@ export default function SearchBar({ searchKeyword }: SearchBarProps) {
     if (e.key === 'Enter') {
       // 엔터 키를 눌렀을 때만 searchKeyword 호출
       searchKeyword(typingKeyword);
+      // 최근 검색어 저장할 배열이 없으면 선언
+      if (!localStorage.getItem('recent')) {
+        localStorage.setItem('recent', JSON.stringify([]));
+      }
+      // 최근 검색어 저장
+      let recent = localStorage.getItem('recent');
+      let recentJSON = JSON.parse(recent!);
+      if (recentJSON.length >= 10) {
+        recentJSON.splice(0, 1);
+      }
+      // KST 시간 받기
+      const locale = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Seoul' });
+      recentJSON!.push({ name: typingKeyword, date: locale });
+      localStorage.setItem('recent', JSON.stringify(recentJSON));
     }
   };
 
