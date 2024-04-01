@@ -128,6 +128,6 @@ public class DressRoomService {
         DressRoom dressRoom = dressRoomRepository.findByIdAndMemberId(memberId, dressRoomId)
             .orElseThrow(() -> new GoneException("존재하지 않는 드레스룸입니다."));
 
-        dressRoomRepository.delete(dressRoom);
+        dressRoomRepository.save(dressRoom);
     }
 }
