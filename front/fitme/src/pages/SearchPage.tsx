@@ -289,7 +289,7 @@ export default function SearchPage() {
 
   return (
     <>
-      <SearchBar searchKeyword={searchKeyword} />
+      <SearchBar keyword={keyword} searchKeyword={searchKeyword} />
       <FilterBar
         brands={brands}
         selectedBrands={selectedBrands}
@@ -308,7 +308,7 @@ export default function SearchPage() {
         sortByHandler={sortByHandler}
       />
       {keyword === '' ? (
-        <SearchHistory />
+        <SearchHistory searchKeyword={searchKeyword} />
       ) : (
         <>
           <SearchResult list={list} />
