@@ -1,5 +1,5 @@
 import React from 'react';
-import FeedList from '../components/Feed/FeedList';
+import FeedList from '../components/Feed/FeedListMagazine';
 import User from '../components/Feed/User';
 import Plus from '../components/Feed/Plus';
 

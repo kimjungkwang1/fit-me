@@ -3,7 +3,14 @@ import { Modal, Button } from 'flowbite-react';
 import { useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
-import { setModel, makeFittings, getModels } from '../../store/dressroomSlice';
+import {
+  setModel,
+  makeFittings,
+  getModels,
+  setResult,
+  setNowBottom,
+  setNowTop,
+} from '../../store/dressroomSlice';
 
 // import { CiCirclePlus } from 'react-icons/ci';
 
@@ -16,6 +23,8 @@ export default function DressroomButton() {
   const dispatch = useDispatch<AppDispatch>();
 
   const models = useSelector((state: RootState) => state.dressroom.models);
+  const nowTop = useSelector((state: RootState) => state.dressroom.nowTop);
+  const nowBottom = useSelector((state: RootState) => state.dressroom.nowBottom);
   useEffect(() => {
     const makeFittingIfNeeded = async () => {
       if (shouldMakeFittings) {
@@ -59,7 +68,9 @@ export default function DressroomButton() {
                   onClick={() => {
                     dispatch(setModel({ id: item.id, url: item.url }));
                     setOpenChangeModal(false);
-                    setShouldMakeFittings(true);
+                    dispatch(setResult({ id: item.id, url: item.url }));
+                    dispatch(setNowBottom({ id: 0, url: '' }));
+                    dispatch(setNowTop({ id: 0, url: '' }));
                   }}
                 ></img>
               ))}

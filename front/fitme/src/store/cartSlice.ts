@@ -159,7 +159,9 @@ export const cartSlice = createSlice({
         const { id, quantity } = action.payload;
         const itemIndex = state.items.findIndex((item) => item.id === id);
         if (itemIndex !== -1) {
+          let price = state.items[itemIndex].price / state.items[itemIndex].quantity;
           state.items[itemIndex].quantity = quantity;
+          state.items[itemIndex].price = quantity * price;
         }
       })
       .addCase(updateQuantity.rejected, (state) => {

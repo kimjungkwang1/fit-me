@@ -2,6 +2,8 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../services/api';
 import { getCart } from './cartSlice';
 import { RootState } from './store';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 // 드레스룸 아이템 인터페이스
 interface dressRoomItem {
@@ -55,7 +57,7 @@ const initialState: DressroomState = {
   nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
   nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
   nowModel: { id: 0, url: '' },
-  result: { id: 0, url: 'https://fit-me.site/images/products/1/main/mainimage_1_1.jpg' },
+  result: { id: 0, url: 'https://fit-me.site/images/model/men.jpg' },
   status: 'idle',
 };
 
@@ -114,15 +116,32 @@ export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { 
 
 //피팅 생성
 export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, { getState }) => {
-  const state = getState() as RootState;
-  const dressroom = state.dressroom;
-  const ids = {
-    modelId: dressroom.nowModel.id,
-    productTopId: dressroom.nowTop.id,
-    productBottomId: dressroom.nowBottom.id,
-  };
-  const response = await api.post<any>('/api/dressroom', ids);
-  return { id: response.data.id, url: response.data.url };
+  const MySwal = withReactContent(Swal);
+  let swalLoading;
+  MySwal.fire({
+    title: 'ai가 이미지 생성중입니다.',
+    html: '잠시만 기다려주세요',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  try {
+    const state = getState() as RootState;
+    const dressroom = state.dressroom;
+    const ids = {
+      modelId: dressroom.nowModel.id,
+      productTopId: dressroom.nowTop.id,
+      productBottomId: dressroom.nowBottom.id,
+    };
+    const response = await api.post<any>('/api/dressroom', ids);
+
+    MySwal.close();
+    return { id: response.data.id, url: response.data.url };
+  } catch (error) {
+    MySwal.close();
+    return { id: 0, url: '' };
+  }
 });
 
 //피팅 삭제
@@ -156,7 +175,10 @@ const dressroomSlice = createSlice({
       state.nowBottom = action.payload;
     },
     setModel: (state, action: PayloadAction<fitting>) => {
-      state.nowBottom = action.payload;
+      state.nowModel = action.payload;
+    },
+    setResult: (state, action: PayloadAction<fitting>) => {
+      state.result = action.payload;
     },
   },
   extraReducers: (bulider) => {
@@ -196,7 +218,7 @@ const dressroomSlice = createSlice({
       })
       .addCase(makeFittings.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.result = action.payload;
+        // state.result = action.payload;
       })
       .addCase(makeFittings.rejected, (state) => {
         state.status = 'failed';
@@ -224,4 +246,4 @@ const dressroomSlice = createSlice({
 });
 
 export default dressroomSlice.reducer;
-export const { setNowTop, setNowBottom, setModel } = dressroomSlice.actions;
+export const { setNowTop, setNowBottom, setModel, setResult } = dressroomSlice.actions;
