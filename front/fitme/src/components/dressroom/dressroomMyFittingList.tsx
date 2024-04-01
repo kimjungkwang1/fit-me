@@ -16,9 +16,9 @@ export default function DressroomMyFittingList() {
   }, []);
   return (
     <>
-      <Button className='w-[50%] m-2 ml-auto' color='gray' onClick={() => setChangemode(true)}>
+      {/* <Button className='w-[50%] m-2 ml-auto' color='gray' onClick={() => setChangemode(true)}>
         프로필로 사용
-      </Button>
+      </Button> */}
       <div className='grid grid-cols-2 p-4'>
         {myfittings.map((item) => (
           <div className='relative my-2 p-2' key={item.id}>
