@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 public class OrderRequest {
 
     @NotNull
+    private Long productId;
+
+    @NotNull
     private Long productOptionId;
 
     @NotNull
@@ -21,7 +24,8 @@ public class OrderRequest {
     private int count;
 
     @Builder
-    private OrderRequest(Long productOptionId, Long productSizeId, int count) {
+    private OrderRequest(Long productId, Long productOptionId, Long productSizeId, int count) {
+        this.productId = productId;
         this.productOptionId = productOptionId;
         this.productSizeId = productSizeId;
         this.count = count;

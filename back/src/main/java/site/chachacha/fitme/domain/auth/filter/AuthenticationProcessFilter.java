@@ -36,19 +36,27 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
     private static final List<String> CHECK_URL = List.of("/like");
 
     /**
-     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및 authenticate 수행
+     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및
+     * authenticate 수행
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        log.info("[REQUEST] Method : {}, RequestURI: {}", request.getMethod(), request.getRequestURI());
+        log.info("[REQUEST] Method : {}, RequestURI: {}", request.getMethod(),
+            request.getRequestURI());
         if (CorsUtils.isPreFlightRequest(request)) {
-            log.info("[REQUEST PREFLIGHT] Method : {}, RequestURI: {}", request.getMethod(), request.getRequestURI());
+            log.info("[REQUEST PREFLIGHT] Method : {}, RequestURI: {}", request.getMethod(),
+                request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
         // 메인 페이지거나, 확인하지 않는 URL이면 바로 다음 필터로 넘어가기
         {
+            if (request.getRequestURI().endsWith("reviews") && request.getMethod().equals("GET")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (request.getRequestURI().equals("/") || isNoCheckUrl(request.getRequestURI())) {
                 filterChain.doFilter(request, response); //
                 return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)

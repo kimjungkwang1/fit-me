@@ -135,7 +135,7 @@ public class AuthService {
 
         Long memberId = jwtService.validateAndExtractMemberIdFromRefreshToken(refreshToken);
 
-        Member member = memberRepository.findNotDeletedById(memberId)
+        Member member = memberRepository.findNotDeletedByIdWithToken(memberId)
             .orElseThrow(NoSuchMemberException::new);
 
         Token token = member.getToken();

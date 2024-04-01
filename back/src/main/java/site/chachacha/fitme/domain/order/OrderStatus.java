@@ -1,5 +1,7 @@
 package site.chachacha.fitme.domain.order;
 
 public enum OrderStatus {
-    ORDER, CANCEL
+    ORDERED,
+    ORDER_COMPLETE,
+    CANCEL
 }

@@ -4,8 +4,8 @@ import ItemDetailImg from '../components/ItemDetail/ItemDetailImg';
 import ItemReview from '../components/ItemDetail/ItemReview';
 import ItemOption from '../components/ItemDetail/ItemOption';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { api } from '../services/api';
 
 type ImageType = {
   id: number;
@@ -40,7 +40,7 @@ export default function ItemDetailPage() {
   const [item, setItem] = useState<ItemType>();
   const { item_id } = useParams();
   useEffect(() => {
-    axios.get(`https://fit-me.site/api/products/${item_id}`).then(({ data }) => {
+    api.get(`https://fit-me.site/api/products/${item_id}`).then(({ data }) => {
       setItem(data);
     });
 
@@ -61,9 +61,10 @@ export default function ItemDetailPage() {
       {item && (
         <div className='mb-[53.6px]'>
           <ItemInfo
+            id={item.id}
             mainImages={item.mainImages}
             likeCount={item.likeCount}
-            liked={item.liked}
+            initialLiked={item.liked}
             brand={item.brand}
             name={item.name}
             price={item.price}
@@ -71,7 +72,11 @@ export default function ItemDetailPage() {
           />
           <ItemDetailImg detailImages={item.detailImages} />
           <RecommendedItems />
-          <ItemReview />
+          <ItemReview
+            id={item.id}
+            reviewCount={item.reviewCount}
+            reviewRating={item.reviewRating}
+          />
           <ItemOption price={item.price} />
         </div>
       )}

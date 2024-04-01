@@ -24,12 +24,12 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-api.interceptors.request.use(
-  (config) => {
-    console.log('Request Headers:', config.headers);
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// api.interceptors.request.use(
+//   (config) => {
+//     console.log('Request Headers:', config.headers);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
