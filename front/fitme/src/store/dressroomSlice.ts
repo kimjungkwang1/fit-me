@@ -54,7 +54,7 @@ const initialState: DressroomState = {
   nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
   nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
   nowModel: { id: 1, url: '' },
-  result: { id: 0, url: 'https://fit-me.site/images/model/men.jpg' },
+  result: { id: 0, url: 'https://fit-me.site/images/model/3.jpg' },
   status: 'idle',
 };
 
@@ -139,10 +139,13 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
       productTopId: dressroom.nowTop.id,
       productBottomId: dressroom.nowBottom.id,
     };
-    const response = await api.post<any>('/api/dressroom', ids);
+    const response = await api.post<any>(
+      '/api/dressroom?modelId=' + dressroom.nowModel.id + '&productTopId=' + dressroom.nowTop.id
+    );
 
     MySwal.close();
-    return { id: response.data.id, url: response.data.url };
+    console.log(response.data.imageUrl);
+    return { id: response.data.id, url: response.data.imageUrl };
   } catch (error) {
     MySwal.close();
     return { id: 0, url: '' };
@@ -226,7 +229,7 @@ const dressroomSlice = createSlice({
       })
       .addCase(makeFittings.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        // state.result = action.payload;
+        state.result = action.payload;
       })
       .addCase(makeFittings.rejected, (state) => {
         state.status = 'failed';

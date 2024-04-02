@@ -75,15 +75,6 @@ public class DressRoomService {
                 .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
         }
 
-        DressRoom dressRoom = DressRoom.builder()
-            .model(model)
-            .productTop(top)
-            .productBottom(bottom)
-            .member(member)
-            .build();
-
-        DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
-
         // 캐싱
         // DressRoom Entity 중에 같은 Model, ProductTop, ProductBottom이 있는지 확인
         Optional<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
@@ -99,7 +90,6 @@ public class DressRoomService {
                 .build();
 
             DressRoomAIRequest request = DressRoomAIRequest.builder()
-                .dressRoomId(savedDressRoom.getId())
                 .modelId(modelId)
                 .productTopId(productTopId)
                 .topAlready(topAlready)
@@ -118,6 +108,15 @@ public class DressRoomService {
                 .bodyToMono(String.class)
                 .block();
         }
+
+        DressRoom dressRoom = DressRoom.builder()
+            .model(model)
+            .productTop(top)
+            .productBottom(bottom)
+            .member(member)
+            .build();
+
+        DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
         return DressRoomResponse.of(savedDressRoom);
     }

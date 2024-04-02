@@ -1,10 +1,13 @@
 pipeline {
     agent any
     environment {
+        NEW_NAME = 'BackendDev'
+        OLD_NAME = 'BackendDev'
         UNUSED_PORT = ''
         A_IP = '172.17.10.0'
         B_IP = '172.17.10.1'
         FIXED_IP = ''
+        isA = true
         DOCKER_IMAGE = 'yuyeoul/fitme-back:latest'
         NGINX_CONTAINER_NAME = 'nginxs'
     }
@@ -16,13 +19,46 @@ pipeline {
                     if (!sh(script: 'lsof -i:8080', returnStatus: true)) {
                         env.UNUSED_PORT = '8080'
                         env.FIXED_IP = env.A_IP
+                        env.NEW_NAME = env.NEW_NAME + ':A'
+                        env.OLD_NAME = env.OLD_NAME + ':B'
                     }
                     else if (!sh(script: 'lsof -i:8081', returnStatus: true)) {
                         env.UNUSED_PORT = '8081'
                         env.FIXED_IP = env.B_IP
+                        env.NEW_NAME = env.NEW_NAME + ':B'
+                        env.OLD_NAME = env.OLD_NAME + ':A'
+                        env.isA = false
                     }
                     else {
                         error("Both ports 8080 and 8081 are in use.")
+                    }
+                }
+            }
+        }
+        stage('Run New Image') {
+            steps {
+                script {
+                    sh "docker run -d -v /home/fitme/images/reviews:/fitme/backend/images/reviews -p ${env.FIXED_IP}:${env.UNUSED_PORT}:8080 --name ${env.NEW_NAME} yuyeoul/fitme-back:latest > container_id.txt"
+
+                    // Get the ID of the container
+                    containerId = readFile('container_id.txt').trim()
+
+                    // 어플리케이션이 시작될 때까지 기다립니다.
+                    // 최대 30초 동안 기다립니다.
+                    def healthy = false
+                    for (int i = 0; i < 60; i++) {
+                        def logs = sh(script: "docker logs ${containerId}", returnStdout: true)
+                        def result = (logs != null && logs.contains('Started FitmeApplication in '))
+                        if (result) {
+                            healthy = true
+                            break
+                        }
+
+                        sleep 0.5
+                    }
+
+                    if (!healthy) {
+                        error("Failed to start the application.")
                     }
                 }
             }
@@ -38,7 +74,7 @@ pipeline {
 
                     try {
                         // 컨테이너에서 로그 파일을 가져와서 생성한 폴더에 복사합니다.
-                        sh "docker cp BackendDev:/fitme/backend/logs/spring.log /home/ubuntu/back/${date}"
+                        sh "docker cp ${env.OLD_NAME}:/fitme/backend/logs/spring.log /home/ubuntu/back/${date}"
                     }
                     catch (err) {
                         echo err.getMessage()
@@ -46,11 +82,24 @@ pipeline {
                 }
             }
         }
-        stage('Stop Existing BackendDev') {
+        // Nginx 컨테이너의 설정 파일을 업데이트하고 reload합니다.
+        stage('Update Nginx') {
+            steps {
+                script {
+                    // Jenkins 컨테이너 내 설정 파일을 Nginx 컨테이너 내 설정로 복사하고 reload합니다.
+                    // ToDo: isA로 분기처리해서 A, B에 맞게 설정 파일을 복사하도록 수정해야 합니다.
+
+                    sh "docker cp jenkins:/var/jenkins_home
+                    sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
+                }
+            }
+        }
+
+        stage('Stop Existing Container') {
             steps {
                 script {
                     try {
-                        sh "docker stop BackendDev"
+                        sh "docker stop ${env.OLD_NAME}"
                     }
                     catch (err) {
                         echo err.getMessage()
@@ -58,11 +107,11 @@ pipeline {
                 }
             }
         }
-        stage('Remove Existing BackendDev') {
+        stage('Remove Existing Container') {
             steps {
                 script {
                     try {
-                        sh "docker rm BackendDev"
+                        sh "docker rm ${env.OLD_NAME}"
                     }
                     catch (err) {
                         echo err.getMessage()
@@ -70,65 +119,46 @@ pipeline {
                 }
             }
         }
-        stage('Remove Existing Image') {
-            steps {
-                script {
-
-                    try {
-                        sh "docker rmi \$(docker images 'yuyeoul/fitme-back' -a -q)"
-                    }
-                    catch (err) {
-                        echo err.getMessage()
-                    }
-                }
-            }
-        }
-        stage('Run New Image') {
-            steps {
-                script {
-                    sh "docker run -d -v /home/fitme/images/reviews:/fitme/backend/images/reviews -p ${env.FIXED_IP}:${env.UNUSED_PORT}:8080 --name BackendDev yuyeoul/fitme-back:latest > container_id.txt"
-
-                    // Get the ID of the container
-                    containerId = readFile('container_id.txt').trim()
-
-                    // Wait for the application to start
-                    waitUntil {
-                        def logs = sh(script: "docker logs ${containerId}", returnStdout: true)
-                        return (logs != null && logs.contains('Started FitmeApplication in '))
-                    }
-
-                    currentBuild.result = 'SUCCESS'
-                    sh 'exit 0'
-                }
-            }
-        }
-        stage('Health Check and Update Nginx') {
-            steps {
-                script {
-                    // 30초간 1초 간격으로 health check를 수행합니다.
-                    def healthy = false
-                    for (int i = 0; i < 30; i++) {
-                        if (sh(script: "curl -f http://${env.FIXED_IP}:${env.UNUSED_PORT}/health", returnStatus: true) == 0) {
-                            healthy = true
-                            break
-                        }
-                        sleep 1
-                    }
-
-                    // health check에 성공하면 Nginx 컨테이너를 업데이트하고 구버전 컨테이너를 삭제합니다.
-                    if (healthy) {
-                        // Nginx 컨테이너 내 설정 파일을 교체하고 reload합니다.
-                        sh "docker cp your-nginx-config-file ${env.NGINX_CONTAINER_NAME}:/etc/nginx/sites-available/fit-me.site"
-                        sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
-
-                        // 구버전 Docker 컨테이너를 삭제합니다.
-                        sh "docker stop app_container_old && docker rm app_container_old"
-                    } else {
-                        error("Health check failed.")
-                    }
-                }
-            }
-        }
+//        stage('Remove Existing Image') {
+//            steps {
+//                script {
+//
+//                    try {
+//                        sh "docker rmi \$(docker images 'yuyeoul/fitme-back' -a -q)"
+//                    }
+//                    catch (err) {
+//                        echo err.getMessage()
+//                    }
+//                }
+//            }
+//        }
+//        stage('Health Check and Update Nginx') {
+//            steps {
+//                script {
+//                    // 30초간 1초 간격으로 health check를 수행합니다.
+//                    def healthy = false
+//                    for (int i = 0; i < 30; i++) {
+//                        if (sh(script: "curl -f http://${env.FIXED_IP}:${env.UNUSED_PORT}/health", returnStatus: true) == 0) {
+//                            healthy = true
+//                            break
+//                        }
+//                        sleep 1
+//                    }
+//
+//                    // health check에 성공하면 Nginx 컨테이너를 업데이트하고 구버전 컨테이너를 삭제합니다.
+//                    if (healthy) {
+//                        // Nginx 컨테이너 내 설정 파일을 교체하고 reload합니다.
+//                        sh "docker cp your-nginx-config-file ${env.NGINX_CONTAINER_NAME}:/etc/nginx/sites-available/fit-me.site"
+//                        sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
+//
+//                        // 구버전 Docker 컨테이너를 삭제합니다.
+//                        sh "docker stop app_container_old && docker rm app_container_old"
+//                    } else {
+//                        error("Health check failed.")
+//                    }
+//                }
+//            }
+//        }
     }
     post {
         success {
