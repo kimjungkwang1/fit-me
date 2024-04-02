@@ -34,7 +34,7 @@ const App: React.FC = () => {
     <>
       <Provider store={store}>
         <div className='flex justify-center'>
-          <div className='max-w-[600px] h-screen select-none flex flex-col '>
+          <div className='max-w-[600px] h-dvh select-none flex flex-col '>
             <HeaderBar />
             <div className='flex-grow overflow-auto hide-scrollbar'>
               <Routes>
