@@ -25,7 +25,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-
     // 실시간 상품 랭킹 조회
     @GetMapping("/rankings")
     public ResponseEntity<ProductRankingListResponse> getProductRankings(
@@ -47,6 +46,13 @@ public class ProductController {
     public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable(name = "productId") Long productId, @MemberId Long memberId) {
         ProductDetailResponse response = productService.getProduct(productId, memberId);
         return ResponseEntity.ok(response);
+    }
+
+    // 추천 상품 조회
+    @GetMapping("/{productId}/recommendations")
+    public ResponseEntity<List<ProductResponse>> getRecommendationProducts(@PathVariable(name = "productId") Long productId) {
+        List<ProductResponse> responses = productService.getRecommendationProducts(productId);
+        return ResponseEntity.ok(responses);
     }
 
     // 상품 옵션 목록 조회

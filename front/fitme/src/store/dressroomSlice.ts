@@ -139,9 +139,14 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
       productTopId: dressroom.nowTop.id,
       productBottomId: dressroom.nowBottom.id,
     };
-    const response = await api.post<any>(
-      '/api/dressroom?modelId=' + dressroom.nowModel.id + '&productTopId=' + dressroom.nowTop.id
-    );
+    let endpoint = '/api/dressroom?modelId=' + dressroom.nowModel.id;
+    if (dressroom.nowTop.id !== 0) {
+      endpoint += '&productTopId=' + dressroom.nowTop.id;
+    }
+    if (dressroom.nowBottom.id !== 0) {
+      endpoint += '&productBottomId=' + dressroom.nowBottom.id;
+    }
+    const response = await api.post<any>(endpoint);
 
     MySwal.close();
     console.log(response.data.imageUrl);
