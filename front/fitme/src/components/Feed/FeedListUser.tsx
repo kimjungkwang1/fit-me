@@ -2,6 +2,11 @@ import React from 'react';
 
 export default function FeedListUser() {
   const imageNumbers = Array.from({ length: 41 }, (_, i) => i + 1);
+  const columns: number[][] = [[], [], []];
+  imageNumbers.forEach((num, i) => {
+    columns[i % 3].push(num);
+  });
+
   return (
     <>
       <div className='grid grid-cols-3 justify-between mx-[2vw]'>
