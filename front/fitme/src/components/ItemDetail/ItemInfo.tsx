@@ -1,6 +1,7 @@
 import { TbThumbUp, TbThumbUpFilled } from 'react-icons/tb';
 import Tags from '../Common/Tags';
 import { Carousel } from 'flowbite-react';
+import CarouselTheme from '../../style/CarouselTheme';
 import { isAuthenticated } from '../../services/auth';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -69,7 +70,7 @@ export default function ItemInfo({
       <div>
         {/* 상품 이미지 */}
         <div className='flex w-full aspect-square bg-white justify-center relative'>
-          <Carousel pauseOnHover slide={false}>
+          <Carousel theme={CarouselTheme} pauseOnHover slide={false}>
             {mainImages.map((img, index) => (
               <img
                 src={img.url}
