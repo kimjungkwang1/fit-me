@@ -33,11 +33,10 @@ public class AuthenticationProcessFilter extends OncePerRequestFilter {
         "/api/brands", "/auth/login",
         "/error", "/css", "/js", "/img", "/favicon.ico");
 
-    private static final List<String> CHECK_URL = List.of("/like");
+    private static final List<String> CHECK_URL = List.of("/like", "/favorites");
 
     /**
-     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및
-     * authenticate 수행
+     * "/auth/login"으로 시작하는 URL 요청은 logIn 검증 및 authenticate X 그 외의 URL 요청은 access token 검증 및 authenticate 수행
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
