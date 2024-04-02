@@ -1,10 +1,9 @@
-import { TbThumbUpFilled } from 'react-icons/tb';
+import { TbThumbUp, TbThumbUpFilled } from 'react-icons/tb';
 import Tags from '../Common/Tags';
 import { Carousel } from 'flowbite-react';
 import { isAuthenticated } from '../../services/auth';
 import { api } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useState } from 'react';
 
 type ImageType = {
@@ -86,13 +85,13 @@ export default function ItemInfo({
             // true
             <TbThumbUpFilled
               onClick={likeHandler}
-              className='absolute bottom-[5px] right-[5px] w-10 h-10 text-darkgray bg-bluegray rounded-full p-1'
+              className='absolute bottom-[5px] right-[5px] w-10 h-10 text-gray-800 p-1'
             />
           ) : (
             // false
-            <TbThumbUpFilled
+            <TbThumbUp
               onClick={likeHandler}
-              className='absolute bottom-[5px] right-[5px] w-10 h-10 text-white bg-bluegray rounded-full p-1'
+              className='absolute bottom-[5px] right-[5px] w-10 h-10 text-gray-800 p-1'
             />
           )}
         </div>
