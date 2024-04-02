@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { PrivateRoute } from './services/PrivateRoute';
 import MainPage from './pages/MainPage';
@@ -21,7 +21,6 @@ import FooterBar from './components/footerBar';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import NotFoundPage from './pages/NotFoundPage';
-import complete from './pages/CompletePage';
 import CompletePage from './pages/CompletePage';
 // import TestPage from './pages/test';
 
@@ -33,8 +32,8 @@ const App: React.FC = () => {
   return (
     <>
       <Provider store={store}>
-        <div className='flex justify-center'>
-          <div className='max-w-[600px] h-screen select-none flex flex-col '>
+        <div id='root' className='flex justify-center'>
+          <div className='max-w-[600px] h-dvh select-none flex flex-col '>
             <HeaderBar />
             <div className='flex-grow overflow-auto hide-scrollbar'>
               <Routes>
