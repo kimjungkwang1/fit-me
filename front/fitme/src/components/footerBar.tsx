@@ -56,7 +56,7 @@ const FooterBar: React.FC = () => {
                   strokeLinejoin='round'
                 />
               </svg>
-              <span className='text-[8px] font-normal relative bottom-[3px]'>카테고리</span>
+              <span className='text-[8px] font-normal relative bottom-[2px]'>카테고리</span>
             </button>
             <button className={getButtonStyle('feed')} onClick={() => handleClick('feed')}>
               <svg
@@ -80,7 +80,7 @@ const FooterBar: React.FC = () => {
                   <path d='M839 1291 c-48 -15 -70 -33 -100 -79 -41 -65 -40 -123 4 -188 60 -91 -30 -85 1235 -82 1061 3 1108 4 1141 22 47 25 68 52 85 108 13 42 13 54 0 97 -17 57 -64 105 -121 120 -45 13 -2203 14 -2244 2z' />
                 </g>
               </svg>
-              <span className='text-[8px] font-normal relative bottom-[3px]'>피드</span>
+              <span className='text-[8px] font-normal relative bottom-[2px]'>피드</span>
             </button>
             <button className={getButtonStyle('home')} onClick={() => handleClick('home')}>
               <svg
@@ -95,7 +95,7 @@ const FooterBar: React.FC = () => {
                   d='M15.45,7L14,5.551V2c0-0.55-0.45-1-1-1h-1c-0.55,0-1,0.45-1,1v0.553L9,0.555C8.727,0.297,8.477,0,8,0S7.273,0.297,7,0.555  L0.55,7C0.238,7.325,0,7.562,0,8c0,0.563,0.432,1,1,1h1v6c0,0.55,0.45,1,1,1h3v-5c0-0.55,0.45-1,1-1h2c0.55,0,1,0.45,1,1v5h3  c0.55,0,1-0.45,1-1V9h1c0.568,0,1-0.437,1-1C16,7.562,15.762,7.325,15.45,7z'
                 />
               </svg>
-              <span className='text-[8px] font-normal relative bottom-[3px]'>홈</span>
+              <span className='text-[8px] font-normal relative bottom-[2px]'>홈</span>
             </button>
             <button
               className={getButtonStyle('dressroom')}
@@ -116,7 +116,7 @@ const FooterBar: React.FC = () => {
                   <path d='M2400 4444 c-277 -73 -477 -325 -482 -608 -1 -75 13 -103 72 -143 64 -44 157 -21 199 48 11 17 22 59 26 93 12 99 41 164 104 227 70 70 141 99 241 99 100 0 171 -29 241 -99 71 -72 101 -144 101 -249 -1 -60 -6 -84 -30 -135 -36 -76 -74 -115 -177 -182 -183 -118 -285 -303 -285 -515 l0 -78 -1087 -628 c-1021 -590 -1092 -633 -1159 -699 -79 -78 -125 -158 -149 -257 -66 -279 102 -558 384 -642 50 -14 253 -16 2164 -16 l2108 0 76 25 c142 48 254 147 317 278 128 268 30 554 -245 717 -52 31 -547 319 -1101 639 l-1008 584 0 62 c0 138 42 208 181 301 117 78 184 149 238 253 53 102 71 178 71 298 0 188 -54 318 -189 453 -98 98 -169 140 -287 170 -92 24 -242 26 -324 4z m1240 -2426 c580 -336 1070 -622 1087 -635 18 -13 44 -43 58 -67 70 -120 24 -276 -99 -332 l-53 -24 -2085 2 -2085 3 -49 30 c-30 19 -60 49 -79 79 -26 43 -30 59 -30 120 0 60 4 79 28 119 15 26 40 56 55 67 76 55 2169 1259 2182 1254 8 -3 489 -280 1070 -616z' />
                 </g>
               </svg>
-              <span className='text-[8px] font-normal relative bottom-[3px]'>드레스룸</span>
+              <span className='text-[8px] font-normal relative bottom-[2px]'>드레스룸</span>
             </button>
             <button className={getButtonStyle('mypage')} onClick={() => handleClick('mypage')}>
               <div className='w-1/2'></div>
@@ -131,7 +131,7 @@ const FooterBar: React.FC = () => {
                   d='M256 298.997333q54.005333 0 112.501333 23.498667t58.496 61.504l0 42.997333-342.005333 0 0-42.997333q0-38.005333 58.496-61.504t112.501333-23.498667zM256 256q-34.997333 0-60-25.002667t-25.002667-60 25.002667-60.501333 60-25.504 60 25.504 25.002667 60.501333-25.002667 60-60 25.002667z'
                 />
               </svg>
-              <span className='text-[8px] font-normal relative bottom-[3px]'>마이페이지</span>
+              <span className='text-[8px] font-normal relative bottom-[2px]'>마이페이지</span>
             </button>
           </nav>
         </div>
