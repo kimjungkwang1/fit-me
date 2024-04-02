@@ -44,10 +44,10 @@ const App: React.FC = () => {
                 <Route path='/category' element={<CategoryPage />} />
                 <Route path='/detail/:item_id' element={<ItemDetailPage />} />
                 <Route path='/search' element={<SearchPage />} />
-                <Route path='/cart' element={<CartPage />} />
+                <Route path='/cart' element={<PrivateRoute element={<CartPage />} />} />
                 {/* /payment/complete 페이지 아직 없음 */}
                 <Route path='/payment/complete' element={<CompletePage />} />
-                <Route path='/dressroom' element={<DressroomPage />} />
+                <Route path='/dressroom' element={<PrivateRoute element={<DressroomPage />} />} />
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
