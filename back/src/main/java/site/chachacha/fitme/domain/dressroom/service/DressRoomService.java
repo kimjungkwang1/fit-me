@@ -79,6 +79,8 @@ public class DressRoomService {
         List<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
             modelId, productTopId, productBottomId);
 
+        System.out.println("existingDressRoom = " + existingDressRoom.size());
+
         // 존재하지 않으면 새로운 이미지 생성
         if (!existingDressRoom.isEmpty()) {
             boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
