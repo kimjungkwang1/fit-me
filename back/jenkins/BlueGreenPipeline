@@ -1,13 +1,6 @@
 pipeline {
     agent any
     environment {
-        NEW_NAME = 'BackendDev'
-        OLD_NAME = 'BackendDev'
-        UNUSED_PORT = ''
-        A_IP = '172.17.10.0'
-        B_IP = '172.17.10.1'
-        FIXED_IP = ''
-        isA = true
         DOCKER_IMAGE = 'yuyeoul/fitme-back:latest'
         NGINX_CONTAINER_NAME = 'nginxs'
     }
@@ -15,22 +8,26 @@ pipeline {
         stage('Find Unused Port') {
             steps {
                 script {
-                    // 8080과 8081 포트 중 사용하지 않는 포트를 찾습니다.
-                    if (!sh(script: 'lsof -i:8080', returnStatus: true)) {
+                    // A와 B 중 사용되지 않는 경우를 찾습니다.
+                    if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q 'BackendDev_A'", returnStatus: true) != 0) {
+                        // A가 사용되지 않는 경우
+                        // 로그 출력
+                        echo "Let's go with A"
+
+                        env.isA = true
                         env.UNUSED_PORT = '8080'
-                        env.FIXED_IP = env.A_IP
-                        env.NEW_NAME = env.NEW_NAME + ':A'
-                        env.OLD_NAME = env.OLD_NAME + ':B'
-                    }
-                    else if (!sh(script: 'lsof -i:8081', returnStatus: true)) {
-                        env.UNUSED_PORT = '8081'
-                        env.FIXED_IP = env.B_IP
-                        env.NEW_NAME = env.NEW_NAME + ':B'
-                        env.OLD_NAME = env.OLD_NAME + ':A'
-                        env.isA = false
+                        env.NEW_NAME = 'BackendDev_A'
+                        env.OLD_NAME = 'BackendDev_B'
                     }
                     else {
-                        error("Both ports 8080 and 8081 are in use.")
+                        // B가 사용되지 않는 경우
+                        // 로그 출력
+                        echo "Let's go with B"
+
+                        env.isA = false
+                        env.UNUSED_PORT = '8081'
+                        env.NEW_NAME = 'BackendDev_B'
+                        env.OLD_NAME = 'BackendDev_A'
                     }
                 }
             }
@@ -38,7 +35,7 @@ pipeline {
         stage('Run New Image') {
             steps {
                 script {
-                    sh "docker run -d -v /home/fitme/images/reviews:/fitme/backend/images/reviews -p ${env.FIXED_IP}:${env.UNUSED_PORT}:8080 --name ${env.NEW_NAME} yuyeoul/fitme-back:latest > container_id.txt"
+                    sh "docker run -d -v /home/fitme/images/reviews:/fitme/backend/images/reviews -p 0.0.0.0:${env.UNUSED_PORT}:8080 --name ${env.NEW_NAME} yuyeoul/fitme-back:latest > container_id.txt"
 
                     // Get the ID of the container
                     containerId = readFile('container_id.txt').trim()
@@ -82,19 +79,43 @@ pipeline {
                 }
             }
         }
-        // Nginx 컨테이너의 설정 파일을 업데이트하고 reload합니다.
-        stage('Update Nginx') {
+        // 새로 시작된 컨테이너의 ip 주소를 알아낸다.
+        stage('Get New Container IP') {
             steps {
                 script {
-                    // Jenkins 컨테이너 내 설정 파일을 Nginx 컨테이너 내 설정로 복사하고 reload합니다.
-                    // ToDo: isA로 분기처리해서 A, B에 맞게 설정 파일을 복사하도록 수정해야 합니다.
+                    // 새로 시작된 컨테이너의 IP 주소를 알아냅니다.
+                    def containerIP = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${env.NEW_NAME}", returnStdout: true).trim()
+                    echo "Container IP: ${containerIP}"
+                    env.NEW_CONTAINER_IP = containerIP
+                }
+            }
+        }
+        // Nginx 컨테이너의 설정 파일을 복제한다.
+        stage('Edit Nginx Conf File') {
+            steps {
+                script {
+                    // Jenkins 컨테이너 내 설정 파일을 Nginx 컨테이너 내 설정로 복사
+                    if (env.isA) {
+                        sh "docker cp ../../nginx-conf/a ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site"
+                    }
+                    else {
+                        sh "docker cp ../../nginx-conf/b ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site"
+                    }
+                }
 
-                    sh "docker cp jenkins:/var/jenkins_home
+                script {
+                    // ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site 파일에서 0.0.0.0을 env.NEW_CONTAINER_IP로 바꿔준다.
+                    sh "docker exec ${env.NGINX_CONTAINER_NAME} sed -i 's/0.0.0.0/${env.NEW_CONTAINER_IP}/g' /etc/nginx/sites-available/fit-me.site"
+
+                    echo "docker exec ${env.NGINX_CONTAINER_NAME} cat /etc/nginx/sites-available/fit-me.site"
+                }
+
+                script {
+                    // Nginx 설정 reload
                     sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
                 }
             }
         }
-
         stage('Stop Existing Container') {
             steps {
                 script {
