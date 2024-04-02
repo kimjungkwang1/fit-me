@@ -22,7 +22,7 @@ export default function BoughtItem({ id, name, url, brandName }: ItemType) {
           </div>
           <div className='mt-1 justify-start text-start'>
             <div className='text-xs'>{brandName}</div>
-            <div className='text-xs truncate'>{name}</div>
+            <p className='text-xs truncate'>{name}</p>
             <div className='flex justify-between'></div>
           </div>
         </Link>
