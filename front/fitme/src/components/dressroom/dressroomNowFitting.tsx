@@ -7,7 +7,7 @@ export default function DressroomNowFitting() {
   const bottom = useSelector((state: RootState) => state.dressroom.nowBottom);
   return (
     <>
-      <div className='flex flex-col m-2 ml-4 p-4 border border-gray-300 rounded-lg text-sm'>
+      <div className='flex flex-col m-2 ml-4 p-4 border border-gray-300 rounded-lg text-sm text-center'>
         <p>상의</p>
         {top.id === 0 ? (
           <div className='min-w-[60px] min-h-[80px] w-[60%] pt-[60%] object-contain mx-auto bg-gray-300 rounded-md mb-2'></div>
