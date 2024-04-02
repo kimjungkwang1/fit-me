@@ -22,6 +22,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import NotFoundPage from './pages/NotFoundPage';
 import CompletePage from './pages/CompletePage';
+import ScrollToTop from './services/ScrollTop';
 // import TestPage from './pages/test';
 
 const App: React.FC = () => {
@@ -53,7 +54,7 @@ const App: React.FC = () => {
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
-                <Route path='/feed/myfeed' element={<MyFeedPage />} />
+                <Route path='/feed/myfeed' element={<FeedPage />} />
                 <Route path='/feed/write' element={<FeedWritePage />} />
                 <Route path='*' element={<NotFoundPage />} />
                 {/* <Route path='/test' element={<TestPage />} /> */}

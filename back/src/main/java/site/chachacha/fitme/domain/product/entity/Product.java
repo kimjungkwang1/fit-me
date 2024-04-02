@@ -1,10 +1,10 @@
 package site.chachacha.fitme.domain.product.entity;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,13 +44,13 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<ProductLike> productLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<ProductView> productViews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<ProductReview> productReviews = new ArrayList<>();
 
     @ColumnDefault("0")
@@ -77,17 +77,20 @@ public class Product extends BaseEntity {
 
 //    private int weeklyPopularityScore = 0;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<ProductOption> productOptions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<MainImage> mainImage = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<DetailImage> detailImage = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = PERSIST, orphanRemoval = true)
+    private List<ProductRecommendation> productRecommendations = new ArrayList<>();
 
     @Builder
     public Product(Brand brand, Category category, String name, Gender gender, String ageRange,
@@ -138,5 +141,9 @@ public class Product extends BaseEntity {
 
     public void addProductOption(ProductOption productOption) {
         this.productOptions.add(productOption);
+    }
+
+    public void addRecommendation(ProductRecommendation productRecommendation) {
+        this.productRecommendations.add(productRecommendation);
     }
 }

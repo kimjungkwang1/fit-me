@@ -13,11 +13,13 @@ import site.chachacha.fitme.domain.review.entity.ProductReview;
 @NoArgsConstructor(access = PROTECTED)
 public class ProductReviewResponseWithMemberNickname extends ProductReviewResponse {
 
+    private Long memberId;
     private String memberNickname;
 
     protected ProductReviewResponseWithMemberNickname(Long id, int rating, String content,
-        String imageUrl, LocalDateTime createdAt, String memberNickname) {
+        String imageUrl, LocalDateTime createdAt, Long memberId, String memberNickname) {
         super(id, rating, content, imageUrl, createdAt);
+        this.memberId = memberId;
         this.memberNickname = memberNickname;
     }
 
@@ -28,6 +30,7 @@ public class ProductReviewResponseWithMemberNickname extends ProductReviewRespon
             .content(productReview.getContent())
             .imageUrl(productReview.getImageUrl())
             .createdAt(productReview.getCreatedDate())
+            .memberId(productReview.getMember().getId())
             .memberNickname(productReview.getMember().getNickname())
             .build();
     }
