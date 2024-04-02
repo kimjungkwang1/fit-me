@@ -1,7 +1,5 @@
 package site.chachacha.fitme.domain.dressroom.repository;
 
-import static site.chachacha.fitme.domain.dressroom.entity.QDressRoom.dressRoom;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -52,26 +50,24 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
 
     @Override
     public Boolean findByProductTopAndNull(Long productTopId) {
-        Optional<Long> result = Optional.ofNullable(queryFactory
+        return !queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
             .where(dressRoom.productTop.id.eq(productTopId)
                 .and(dressRoom.productBottom.isNull()))
-            .fetchOne());
-
-        return result.isPresent();
+            .limit(1)
+            .fetch().isEmpty();
     }
 
     @Override
     public Boolean findByProductBottomAndNull(Long productBottomId) {
-        Optional<Long> result = Optional.ofNullable(queryFactory
+        return !queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
             .where(dressRoom.productBottom.id.eq(productBottomId)
                 .and(dressRoom.productTop.isNull()))
-            .fetchOne());
-
-        return result.isPresent();
+            .limit(1)
+            .fetch().isEmpty();
     }
 
     private BooleanExpression ltDressRoomId(Long dressRoomId) {
