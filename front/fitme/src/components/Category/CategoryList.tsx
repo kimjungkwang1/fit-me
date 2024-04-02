@@ -21,7 +21,7 @@ const CategoryList: React.FC<CategoryProps> = ({ category, onClick }) => {
         <div className='bg-gray-300 rounded-xl bolder-solid border-2 border-black w-20 h-20'>
           <img src={imagePath} alt={category.id.toString()} className='rounded-xl' />
         </div>
-        <div className='flex justify-center'>{category.name}</div>
+        <div className='flex justify-center text-sm'>{category.name}</div>
       </button>
     </>
   );
