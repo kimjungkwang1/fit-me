@@ -23,6 +23,7 @@ import { store } from './store/store';
 import NotFoundPage from './pages/NotFoundPage';
 import complete from './pages/CompletePage';
 import CompletePage from './pages/CompletePage';
+import ScrollToTop from './services/ScrollTop';
 // import TestPage from './pages/test';
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
   return (
     <>
       <Provider store={store}>
+        <ScrollToTop />
         <div className='flex justify-center'>
           <div className='max-w-[600px] h-screen select-none flex flex-col '>
             <HeaderBar />
@@ -54,7 +56,7 @@ const App: React.FC = () => {
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
-                <Route path='/feed/myfeed' element={<MyFeedPage />} />
+                <Route path='/feed/myfeed' element={<FeedPage />} />
                 <Route path='/feed/write' element={<FeedWritePage />} />
                 <Route path='*' element={<NotFoundPage />} />
                 {/* <Route path='/test' element={<TestPage />} /> */}
