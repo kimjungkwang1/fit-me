@@ -16,7 +16,7 @@ public class ProductRecommendationRepositoryImpl implements
     @Override
     public List<ProductRecommendation> findByProductIdWithProduct(Long productId) {
         return queryFactory.selectFrom(productRecommendation)
-            .leftJoin(productRecommendation.product).fetchJoin()
+            .leftJoin(productRecommendation.recommendation).fetchJoin()
             .where(productRecommendation.product.id.eq(productId))
             .fetch();
     }
