@@ -97,7 +97,7 @@ public class ProductService {
 
     // 추천 상품 조회
     public List<ProductResponse> getRecommendationProducts(Long productId) {
-        List<ProductRecommendation> productRecommendations = productRecommendationRepository.findAllByProductIdWithProduct(
+        List<ProductRecommendation> productRecommendations = productRecommendationRepository.findByProductIdWithProduct(
             productId);
 
         return productRecommendations
