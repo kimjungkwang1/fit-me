@@ -13,7 +13,7 @@ export default function Dressroom() {
   return (
     <>
       <div className=''>
-        <div className='flex'>
+        <div className='flex text-sm'>
           <div
             className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
               tab === '피팅 해보기' ? 'bg-gray-300 ' : 'bg-white'
