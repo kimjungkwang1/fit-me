@@ -24,9 +24,11 @@ import site.chachacha.fitme.domain.product.dto.ProductResponse;
 import site.chachacha.fitme.domain.product.dto.ProductSearchRequest;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.entity.ProductOption;
+import site.chachacha.fitme.domain.product.entity.ProductRecommendation;
 import site.chachacha.fitme.domain.product.exception.ProductNotFoundException;
 import site.chachacha.fitme.domain.product.repository.ProductCustomRepository;
 import site.chachacha.fitme.domain.product.repository.ProductOptionRepository;
+import site.chachacha.fitme.domain.product.repository.ProductRecommendationRepository;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
 
 @Slf4j
@@ -42,6 +44,7 @@ public class ProductService {
     private final ProductCustomRepository productCustomRepository;
     private final ProductLikeRepository productLikeRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final ProductRecommendationRepository productRecommendationRepository;
     private final MemberRepository memberRepository;
 
     // 실시간 상품 랭킹 조회
@@ -71,8 +74,10 @@ public class ProductService {
     // 상품 목록 조회
     public List<ProductResponse> getProducts(ProductSearchRequest request) {
         List<Product> products = productCustomRepository.findAllByProductConditions(
-            request.getLastId(), request.getLastPopularityScore(), request.getLastPrice(), request.getSize(), request.getKeyword(),
-            request.getAgeRanges(), request.getBrandIds(), request.getCategoryIds(), request.getStartPrice(), request.getEndPrice(),
+            request.getLastId(), request.getLastPopularityScore(), request.getLastPrice(),
+            request.getSize(), request.getKeyword(),
+            request.getAgeRanges(), request.getBrandIds(), request.getCategoryIds(),
+            request.getStartPrice(), request.getEndPrice(),
             request.getSortBy());
         return products
             .stream()
@@ -90,6 +95,17 @@ public class ProductService {
         return ProductDetailResponse.of(product, liked);
     }
 
+    // 추천 상품 조회
+    public List<ProductResponse> getRecommendationProducts(Long productId) {
+        List<ProductRecommendation> productRecommendations = productRecommendationRepository.findAllByProductIdWithProduct(
+            productId);
+
+        return productRecommendations
+            .stream()
+            .map(productRecommendation -> ProductResponse.from(productRecommendation.getProduct()))
+            .toList();
+    }
+
     // 상품 옵션 목록 조회
     public List<ProductOptionResponse> getProductOptions(Long productId) {
         Product product = productRepository.findById(productId)
@@ -100,9 +116,11 @@ public class ProductService {
 
     // 좋아요한 상품 목록 조회
     public List<ProductResponse> getFavoriteProducts(Long memberId) {
-        Member member = memberRepository.findNotDeletedById(memberId).orElseThrow(NoSuchMemberException::new);
+        Member member = memberRepository.findNotDeletedById(memberId)
+            .orElseThrow(NoSuchMemberException::new);
         List<ProductLike> productLikes = productLikeRepository.findAllByMember(member);
-        return productLikes.stream().map(productLike -> ProductResponse.from(productLike.getProduct()))
+        return productLikes.stream()
+            .map(productLike -> ProductResponse.from(productLike.getProduct()))
             .collect(Collectors.toList());
     }
 }
