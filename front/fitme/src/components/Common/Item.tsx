@@ -54,7 +54,7 @@ export default function Item({
             <p className='font-bold'>{price.toLocaleString()}원</p>
             <div className='flex justify-between'>
               <p className='text-xs flex flex-row items-baseline'>
-                <TbThumbUp className='font-light' />
+                <TbThumbUp className='font-light mr-[2px]' />
                 {likeCount}
               </p>
               <p className='text-xs'>
