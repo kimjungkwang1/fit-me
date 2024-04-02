@@ -115,6 +115,10 @@ public class Product extends BaseEntity {
         this.likeCount = this.likeCount + 1;
     }
 
+    public void updateMonthlyPopularityScore(int monthlyPopularityScore) {
+        this.monthlyPopularityScore = monthlyPopularityScore;
+    }
+
     public void deleteLike() {
         this.likeCount = this.likeCount - 1;
     }

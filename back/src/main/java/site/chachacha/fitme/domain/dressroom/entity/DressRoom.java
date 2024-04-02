@@ -49,6 +49,23 @@ public class DressRoom extends BaseEntity {
 
     @Builder
     private DressRoom(Model model, Product productTop, Product productBottom, Member member) {
+        // 상의, 하의 둘 다 입힌 경우
+        if (productTop != null && productBottom != null) {
+            this.imageUrl =
+                "https://fit-me.site/images/dressroom/men/sum/" + productTop.getId() + "_"
+                    + productBottom.getId() + ".jpg";
+        }
+        // 상의만 입힌 경우
+        else if (productTop != null) {
+            this.imageUrl =
+                "https://fit-me.site/images/dressroom/men/top/" + productTop.getId() + ".jpg";
+        }
+        // 하의만 입힌 경우
+        else if (productBottom != null) {
+            this.imageUrl =
+                "https://fit-me.site/images/dressroom/men/bottom/" + productBottom.getId() + ".jpg";
+        }
+
         this.model = model;
         this.productTop = productTop;
         this.productBottom = productBottom;
