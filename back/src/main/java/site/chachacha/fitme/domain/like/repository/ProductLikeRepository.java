@@ -26,4 +26,6 @@ public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> 
     boolean existsByProductAndMember(Product product, Member member);
 
     Optional<ProductLike> findByProductAndMember(Product product, Member member);
+
+    List<ProductLike> findAllByMember(Member member);
 }

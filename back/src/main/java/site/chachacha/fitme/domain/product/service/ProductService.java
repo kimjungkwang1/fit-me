@@ -11,7 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.chachacha.fitme.domain.like.entity.ProductLike;
 import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
+import site.chachacha.fitme.domain.member.entity.Member;
+import site.chachacha.fitme.domain.member.exception.NoSuchMemberException;
+import site.chachacha.fitme.domain.member.repository.MemberRepository;
 import site.chachacha.fitme.domain.product.dto.ProductDetailResponse;
 import site.chachacha.fitme.domain.product.dto.ProductOptionResponse;
 import site.chachacha.fitme.domain.product.dto.ProductRankingListResponse;
@@ -38,6 +42,7 @@ public class ProductService {
     private final ProductCustomRepository productCustomRepository;
     private final ProductLikeRepository productLikeRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final MemberRepository memberRepository;
 
     // 실시간 상품 랭킹 조회
     public ProductRankingListResponse getProductRankings(int lastRank, int size) {
@@ -88,5 +93,13 @@ public class ProductService {
             .orElseThrow(() -> new ProductNotFoundException(productId));
         List<ProductOption> productOptions = productOptionRepository.findAllByProduct(product);
         return productOptions.stream().map(ProductOptionResponse::from).toList();
+    }
+
+    // 좋아요한 상품 목록 조회
+    public List<ProductResponse> getFavoriteProducts(Long memberId) {
+        Member member = memberRepository.findNotDeletedById(memberId).orElseThrow(NoSuchMemberException::new);
+        List<ProductLike> productLikes = productLikeRepository.findAllByMember(member);
+        return productLikes.stream().map(productLike -> ProductResponse.from(productLike.getProduct()))
+            .collect(Collectors.toList());
     }
 }

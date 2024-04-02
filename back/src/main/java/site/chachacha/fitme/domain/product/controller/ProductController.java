@@ -25,6 +25,16 @@ public class ProductController {
 
     private final ProductService productService;
 
+
+    // 실시간 상품 랭킹 조회
+    @GetMapping("/rankings")
+    public ResponseEntity<ProductRankingListResponse> getProductRankings(
+        @RequestParam(defaultValue = "0", name = "lastRank") Integer lastRank,
+        @RequestParam(defaultValue = "30", name = "size") Integer size) {
+        ProductRankingListResponse responses = productService.getProductRankings(lastRank, size);
+        return ResponseEntity.ok(responses);
+    }
+
     // 상품 목록 조회
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(@ModelAttribute @Validated ProductSearchRequest request) {
@@ -46,12 +56,10 @@ public class ProductController {
         return ResponseEntity.ok(responses);
     }
 
-    // 실시간 상품 랭킹 조회
-    @GetMapping("/rankings")
-    public ResponseEntity<ProductRankingListResponse> getProductRankings(
-        @RequestParam(defaultValue = "0", name = "lastRank") Integer lastRank,
-        @RequestParam(defaultValue = "30", name = "size") Integer size) {
-        ProductRankingListResponse responses = productService.getProductRankings(lastRank, size);
+    // 좋아요한 상품 목록 조회
+    @GetMapping("/favorites")
+    public ResponseEntity<List<ProductResponse>> getFavoriteProducts(@MemberId Long memberId) {
+        List<ProductResponse> responses = productService.getFavoriteProducts(memberId);
         return ResponseEntity.ok(responses);
     }
 }
