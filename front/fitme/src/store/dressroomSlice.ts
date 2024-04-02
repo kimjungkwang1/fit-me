@@ -75,16 +75,22 @@ export const getCartForDressroom = createAsyncThunk(
 );
 
 // 드레스룸 구매목록 가져오기
-// todo api 완성되면 바꾸기
 export const getOrders = createAsyncThunk('dressroom/getOrders', async () => {
   const response = await api.get<any>('/api/orders');
-  return response.data.map((item: any) => ({
-    id: item.id,
-    productId: item.productId,
-    name: item.product.name,
-    url: item.product.mainImages[0].url,
-    category: item.product.mainImages.categoryId,
-  }));
+  const orders: dressRoomItem[] = [];
+  response.data.forEach((order: any) => {
+    order.orderProducts.forEach((item: any) => {
+      const productInfo: dressRoomItem = {
+        id: item.product.id,
+        productId: item.product.id,
+        name: item.product.name,
+        url: item.product.url,
+        category: item.product.categoryId,
+      };
+      orders.push(productInfo); // 새 배열에 상품 정보 추가
+    });
+  });
+  return orders;
 });
 
 //모델 가져오기
@@ -102,7 +108,9 @@ export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { 
   const fittings = state.dressroom.fittings;
   const lastFittingId = fittings.length > 0 ? fittings[fittings.length - 1].id : undefined;
 
-  const endpoint = lastFittingId ? `/api/list?dressRoomId=${lastFittingId}` : '/api/dressroom/list';
+  const endpoint = lastFittingId
+    ? `/api/dressroom/list?dressRoomId=${lastFittingId}`
+    : '/api/dressroom/list';
 
   const response = await api.get<any>(endpoint);
   return response.data.map((item: any) => ({
@@ -143,14 +151,10 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
 
 //피팅 삭제
 export const deleteFittings = createAsyncThunk('dresroom/deleteFittings', async (id: number) => {
-  const response = await api.post<any>('/api/dressroom', {
-    data: {
-      dressRoomId: id,
-    },
-  });
+  const response = await api.delete<any>(`/api/dressroom?dressRoomId=${id}`);
   return response;
 });
-//피팅 삭제
+//프로필 변경
 export const changeProfile = createAsyncThunk('dresroom/changeProfile', async (url: string) => {
   const response = await api.post<any>('/api/dressroom', {
     data: {
@@ -176,6 +180,13 @@ const dressroomSlice = createSlice({
     },
     setResult: (state, action: PayloadAction<fitting>) => {
       state.result = action.payload;
+    },
+    deleteMyFiittings: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const itemIndex = state.fittings.findIndex((item) => item.id === id);
+      if (itemIndex !== -1) {
+        state.fittings.splice(itemIndex, 1);
+      }
     },
   },
   extraReducers: (bulider) => {
@@ -234,7 +245,7 @@ const dressroomSlice = createSlice({
       })
       .addCase(getFittings.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.fittings = action.payload;
+        state.fittings = [...state.fittings, ...action.payload];
       })
       .addCase(getFittings.rejected, (state) => {
         state.status = 'failed';
@@ -243,4 +254,5 @@ const dressroomSlice = createSlice({
 });
 
 export default dressroomSlice.reducer;
-export const { setNowTop, setNowBottom, setModel, setResult } = dressroomSlice.actions;
+export const { setNowTop, setNowBottom, setModel, setResult, deleteMyFiittings } =
+  dressroomSlice.actions;

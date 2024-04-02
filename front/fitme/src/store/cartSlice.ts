@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { api } from '../services/api';
+import { RootState } from './store';
+import { useNavigate } from 'react-router-dom';
 //장바구니 아이템
 interface CartItem {
   id: number;
@@ -7,7 +9,9 @@ interface CartItem {
   name: string;
   price: number;
   color: string;
+  productOptionId: number;
   size: string;
+  productSizeId: number;
   url: string;
   quantity: number;
   stockQuantity: number;
@@ -34,21 +38,7 @@ interface option {
 }
 //초기상태
 const initialState: CartState = {
-  items: [
-    {
-      id: 1,
-      productId: 1,
-      name: 'string',
-      price: 8,
-      color: 'string',
-      size: 'string',
-      url: 'string',
-      quantity: 8,
-      stockQuantity: 8,
-      isChecked: true,
-      category: 9,
-    },
-  ],
+  items: [],
   totalProductCount: 0,
   status: 'idle',
   totalPrice: 0,
@@ -58,7 +48,6 @@ const initialState: CartState = {
     address: 'string',
   },
 };
-
 // 카트 정보 가져오기
 export const getCart = createAsyncThunk('cart/getCart', async () => {
   const response = await api.get<any>('/api/cart/products');
@@ -74,6 +63,8 @@ export const getCart = createAsyncThunk('cart/getCart', async () => {
     stockQuantity: item.productOption.stockQuantity,
     isChecked: true,
     category: item.product.categoryId,
+    productOptionId: item.productOption.id,
+    productSizeId: item.productOption.productSizeId,
   }));
 });
 // 카트에 아이템 추가
@@ -103,6 +94,26 @@ export const updateQuantity = createAsyncThunk(
     return { id, quantity };
   }
 );
+// 카트에서 주문
+export const order = createAsyncThunk('cart/order', async (_, { rejectWithValue, getState }) => {
+  const state = getState() as RootState;
+  const checkedItems = state.cart.items.filter((item) => item.isChecked);
+  const orderItems = checkedItems.map((item) => ({
+    productId: item.productId,
+    productOptionId: item.productOptionId,
+    productSizeId: item.productSizeId,
+    quantity: item.quantity,
+  }));
+  try {
+    const response = await api.post<any>('/api/orders', {
+      orderRequests: orderItems,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    return rejectWithValue(error.response.data);
+  }
+});
 
 //주소 가져오기
 export const getAddress = createAsyncThunk('cart/getAddress', async () => {
@@ -178,6 +189,15 @@ export const cartSlice = createSlice({
         state.address.address = address;
       })
       .addCase(getAddress.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(order.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(order.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+      })
+      .addCase(order.rejected, (state) => {
         state.status = 'failed';
       });
   },
