@@ -34,7 +34,7 @@ public class ProductReviewService {
     private final String imgUrl = "/images/reviews/";
 
     public List<ProductReviewResponseWithMemberNickname> getReviews(Long productId) {
-        return productReviewRepository.findAllByProductId(productId).stream()
+        return productReviewRepository.findAllByProductIdWithMember(productId).stream()
             .map(ProductReviewResponseWithMemberNickname::of)
             .toList();
     }
