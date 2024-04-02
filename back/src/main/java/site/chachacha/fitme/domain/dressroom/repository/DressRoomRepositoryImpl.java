@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
-import site.chachacha.fitme.domain.dressroom.entity.QDressRoom;
 
 @RequiredArgsConstructor
 public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
@@ -56,8 +55,8 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
         Optional<Long> result = Optional.ofNullable(queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
-            .where(QDressRoom.dressRoom.productTop.id.eq(productTopId)
-                .and(QDressRoom.dressRoom.productBottom.isNull()))
+            .where(dressRoom.productTop.id.eq(productTopId)
+                .and(dressRoom.productBottom.isNull()))
             .fetchOne());
 
         return result.isPresent();
@@ -68,8 +67,8 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
         Optional<Long> result = Optional.ofNullable(queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
-            .where(QDressRoom.dressRoom.productBottom.id.eq(productBottomId)
-                .and(QDressRoom.dressRoom.productTop.isNull()))
+            .where(dressRoom.productBottom.id.eq(productBottomId)
+                .and(dressRoom.productTop.isNull()))
             .fetchOne());
 
         return result.isPresent();
