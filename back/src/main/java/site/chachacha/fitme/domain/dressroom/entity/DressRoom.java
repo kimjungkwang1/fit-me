@@ -55,4 +55,9 @@ public class DressRoom extends BaseEntity {
         this.member = member;
         this.member.addDressRoom(this);
     }
+
+    // == 비즈니스 로직 == //
+    public void deleteDressRoom() {
+        this.member = null;
+    }
 }

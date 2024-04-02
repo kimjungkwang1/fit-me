@@ -6,7 +6,12 @@ export default function FeedListUser() {
     <>
       <div className='grid grid-cols-3 justify-between mx-[2vw]'>
         {imageNumbers.map((num) => (
-          <img className='p-1' src={`https://fit-me.site/images/feed/ootd/ootd${num}.png`} alt='' />
+          <img
+            key={num}
+            className='p-1'
+            src={`https://fit-me.site/images/feed/ootd/ootd${num}.png`}
+            alt=''
+          />
         ))}
       </div>
     </>

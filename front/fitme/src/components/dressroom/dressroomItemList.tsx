@@ -119,7 +119,7 @@ export default function DressroomItemLst() {
               .map((item) => (
                 <div className='p-2' key={item.id}>
                   <img
-                    className=''
+                    className='object-cover aspect-square'
                     src={item.url}
                     alt='상품'
                     onClick={() => handleFitting(item.productId, item.url, item.category)}
@@ -167,6 +167,7 @@ export default function DressroomItemLst() {
               .map((item) => (
                 <div className='p-2' key={item.id}>
                   <img
+                    className='object-cover aspect-square'
                     src={item.url}
                     alt='상품'
                     onClick={() => handleFitting(item.productId, item.url, item.category)}
