@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import OrderList from '../../components/MyPage/orderItem';
-import Rating from '../../components/MyPage/rating';
+import Rating from '../../components/MyPage/stars';
 
-const Order = () => {
+const Review = () => {
   return (
     <>
       <OrderList />
@@ -42,4 +42,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default Review;
