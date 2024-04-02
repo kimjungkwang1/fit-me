@@ -11,7 +11,7 @@ import ItemDetailPage from './pages/ItemDetailPage';
 import SearchPage from './pages/SearchPage';
 import CartPage from './pages/cart';
 import DressroomPage from './pages/dressroom';
-import MyPage from './pages/MyPage/Mypage';
+import MyPage from './pages/MyPage/MyPageMain';
 import FeedPage from './pages/FeedPage';
 import FeedDetailPage from './pages/FeedDetailPage';
 import MyFeedPage from './pages/MyFeedPage';
