@@ -1,14 +1,30 @@
 import React from 'react';
 import SearchHistoryKeyword from './SearchHistoryKeyword';
 
-export default function SearchHistory() {
+type SearchType = {
+  name: string;
+  date: string;
+};
+
+type SearchHistoryProps = {
+  searchKeyword: (k: string) => void;
+};
+
+export default function SearchHistory({ searchKeyword }: SearchHistoryProps) {
+  console.log(JSON.parse(localStorage.getItem('recent')!));
   return (
     <div>
-      <SearchHistoryKeyword keyword='후드티' date='3.21' />
-      <SearchHistoryKeyword keyword='슬랙스' date='3.21' />
-      <SearchHistoryKeyword keyword='청자켓' date='3.20' />
-      <SearchHistoryKeyword keyword='원피스' date='3.20' />
-      <SearchHistoryKeyword keyword='우너피스' date='3.09' />
+      {localStorage.getItem('recent') &&
+        JSON.parse(localStorage.getItem('recent')!)
+          .reverse()
+          .map((search: SearchType, index: number) => (
+            <SearchHistoryKeyword
+              key={index}
+              keyword={search.name}
+              date={search.date}
+              searchKeyword={searchKeyword}
+            />
+          ))}
     </div>
   );
 }

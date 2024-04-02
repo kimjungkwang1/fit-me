@@ -1,7 +1,6 @@
 package site.chachacha.fitme.domain.order.controller;
 
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import site.chachacha.fitme.advice.exception.GoneException;
 import site.chachacha.fitme.common.annotation.MemberId;
-import site.chachacha.fitme.domain.order.dto.OrderRequest;
+import site.chachacha.fitme.domain.order.dto.OrderListRequest;
 import site.chachacha.fitme.domain.order.exception.NotEnoughStockException;
 import site.chachacha.fitme.domain.order.service.OrderService;
 
@@ -36,16 +36,17 @@ public class OrderController {
     // 주문 생성
     @PostMapping
     public ResponseEntity<Void> createOrder(@MemberId Long memberId,
-        @Validated @RequestBody List<OrderRequest> orderRequests)
+        @Validated @RequestBody OrderListRequest orderListRequest)
         throws GoneException, NotEnoughStockException {
-        Long orderId = orderService.createOrder(memberId, orderRequests);
+        Long orderId = orderService.createOrder(memberId, orderListRequest.getOrderRequests());
 
         return ResponseEntity.created(URI.create("/api/order/" + orderId)).build();
     }
 
     // 주문 취소
     @DeleteMapping
-    public ResponseEntity<Void> cancelOrder(@MemberId Long memberId, Long orderId)
+    public ResponseEntity<Void> cancelOrder(@MemberId Long memberId,
+        @RequestParam(name = "orderId") Long orderId)
         throws GoneException {
         orderService.cancelOrder(memberId, orderId);
 

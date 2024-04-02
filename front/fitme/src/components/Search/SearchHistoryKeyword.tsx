@@ -4,9 +4,10 @@ import { RxCross2 } from 'react-icons/rx';
 type Keyword = {
   keyword: string;
   date: string;
+  searchKeyword: (k: string) => void;
 };
 
-export default function SearchHistoryKeyword({ keyword, date }: Keyword) {
+export default function SearchHistoryKeyword({ keyword, date, searchKeyword }: Keyword) {
   return (
     <>
       <div className='flex flex-row m-3'>
@@ -16,7 +17,7 @@ export default function SearchHistoryKeyword({ keyword, date }: Keyword) {
         </div>
 
         {/* 검색어 기록 */}
-        <div>
+        <div className='flex flex-row items-center' onClick={() => searchKeyword(keyword)}>
           <span className='align-middle text-sm mx-3 truncate'>{keyword}</span>
         </div>
 
@@ -24,9 +25,6 @@ export default function SearchHistoryKeyword({ keyword, date }: Keyword) {
         <div className='flex flex-row flex-grow justify-end items-center'>
           <div>
             <span className='flex flex-grow align-middle text-xs'>{date}</span>
-          </div>
-          <div>
-            <RxCross2 className='flex flex-grow align-middle text-xs m-1' />
           </div>
         </div>
       </div>
