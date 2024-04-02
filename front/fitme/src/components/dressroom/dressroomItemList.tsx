@@ -65,7 +65,7 @@ export default function DressroomItemLst() {
 
   return (
     <>
-      <div className='flex'>
+      <div className='flex text-sm'>
         <div
           className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
             tab === '장바구니' ? 'bg-gray-300 ' : 'bg-white'
