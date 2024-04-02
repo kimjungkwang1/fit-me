@@ -8,19 +8,18 @@ export default function FeedListUser() {
   });
 
   return (
-    <div className='flex justify-between mx-[2vw]'>
-      {columns.map((column, idx) => (
-        <div key={idx} className='flex flex-col p-1 w-[33.33%]'>
-          {column.map((num) => (
+    <>
+      <div className='grid grid-cols-3 justify-between mx-[2vw]'>
+        {imageNumbers.map((num) => (
+          <div className='m-1 aspect-[7/10] flex justify-center items-center rounded-md border-solid border-2 border-black hover:scale-105 duration-300'>
             <img
-              key={num}
-              className='mb-1'
+              className='w-full h-full object-cover rounded-sm'
               src={`https://fit-me.site/images/feed/ootd/ootd${num}.png`}
-              alt={`ootd ${num}`}
+              alt=''
             />
-          ))}
-        </div>
-      ))}
-    </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

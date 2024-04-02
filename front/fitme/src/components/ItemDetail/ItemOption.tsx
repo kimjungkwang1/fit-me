@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ItemOptionSelected from './ItemOptionSelected';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
@@ -31,6 +31,7 @@ type ItemOptionProps = {
 };
 
 export default function ItemOption({ price }: ItemOptionProps) {
+  const navigate = useNavigate();
   // 옵션 선택창 오픈 함수
   const [openModal, setOpenModal] = useState(false);
   const modalHandler = () => {
@@ -138,7 +139,7 @@ export default function ItemOption({ price }: ItemOptionProps) {
   };
   const dispatch = useDispatch<AppDispatch>();
   // 선택된 옵션 장바구니에 모두 추가
-  const addToCart = () => {
+  const addToCart = async (n: number) => {
     modalHandler();
     if (!selectedList) {
       return;
@@ -152,7 +153,15 @@ export default function ItemOption({ price }: ItemOptionProps) {
       quantity: item.quantity,
     }));
 
-    dispatch(addCartItem({ id: +item_id, options }));
+    await dispatch(addCartItem({ id: +item_id, options }));
+
+    if (n === 1) {
+      // 드레스룸으로
+      navigate('/dressroom');
+    } else if (n === 2) {
+      // 장바구니로
+      navigate('/cart');
+    }
   };
   // const addToCart = () => {
   //   axios.post(
@@ -279,25 +288,25 @@ export default function ItemOption({ price }: ItemOptionProps) {
         {/* 하단 버튼 */}
         {openModal ? (
           <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
-            {/* 입어보기(장바구니) 버튼 */}
+            {/* 입어보기 버튼 */}
             <div
-              onClick={addToCart}
+              onClick={() => addToCart(1)}
               className='w-full mr-2 bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'
             >
-              <span>입어보기(장바구니)</span>
+              <span>입어보기</span>
             </div>
 
-            {/* 구매하기 버튼 */}
+            {/* 장바구니 버튼 */}
             <div
-              onClick={modalHandler}
+              onClick={() => addToCart(2)}
               className='w-full bg-bluegray border border-solid border-black rounded-lg px-2 py-3 text-center text-white text-sm font-semibold'
             >
-              <span>바로구매</span>
+              <span>장바구니</span>
             </div>
           </div>
         ) : (
           <div className='bg-white p-2 flex flex-row fixed bottom-0 w-full max-w-[600px]'>
-            {/* 입어보기 버튼 */}
+            {/* 옵션선택 버튼 */}
             <div
               onClick={modalHandler}
               className='w-full bg-white border border-solid border-black rounded-lg px-2 py-3 text-center text-sm font-semibold'

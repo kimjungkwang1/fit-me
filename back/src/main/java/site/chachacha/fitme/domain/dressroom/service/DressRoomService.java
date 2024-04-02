@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -77,11 +76,11 @@ public class DressRoomService {
 
         // 캐싱
         // DressRoom Entity 중에 같은 Model, ProductTop, ProductBottom이 있는지 확인
-        Optional<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
+        List<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
             modelId, productTopId, productBottomId);
 
         // 존재하지 않으면 새로운 이미지 생성
-        if (!existingDressRoom.isPresent()) {
+        if (!existingDressRoom.isEmpty()) {
             boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
             boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(productBottomId);
 
@@ -126,6 +125,8 @@ public class DressRoomService {
     public void deleteDressRoom(Long memberId, Long dressRoomId) {
         DressRoom dressRoom = dressRoomRepository.findByIdAndMemberId(memberId, dressRoomId)
             .orElseThrow(() -> new GoneException("존재하지 않는 드레스룸입니다."));
+
+        dressRoom.deleteDressRoom();
 
         dressRoomRepository.save(dressRoom);
     }
