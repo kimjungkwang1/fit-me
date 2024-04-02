@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { TbThumbUp } from 'react-icons/tb';
 
 type ImageType = {
   id: number;
@@ -52,7 +53,10 @@ export default function Item({
             <p className='text-xs truncate'>{name}</p>
             <p className='font-bold'>{price.toLocaleString()}원</p>
             <div className='flex justify-between'>
-              <p className='text-xs'>{likeCount}</p>
+              <p className='text-xs flex flex-row items-baseline'>
+                <TbThumbUp className='font-light' />
+                {likeCount}
+              </p>
               <p className='text-xs'>
                 <span className='text-yellow-300'>★</span> {reviewRating.toFixed(1)} (
                 {reviewCount.toLocaleString()}개)
