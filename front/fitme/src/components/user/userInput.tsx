@@ -217,7 +217,10 @@ const UserInput: React.FC<UserInputProps> = ({ onSubmit, apiData }) => {
             className='block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-black bg-white px-5 py-2.5 text-gray-700 focus:border-black focus:outline-none focus:ring focus:ring-red-300 focus:ring-opacity-40 dark:border-black dark:bg-darkgray dark:text-gray-300 dark:focus:border-red-300'
           />
         </div>
-        <button className='w-2/3 mt-10 px-5 py-2.5 rounded-lg bg-red-300' onClick={handleSubmit}>
+        <button
+          className='w-2/3 mt-10 px-5 py-2.5 rounded-lg bg-bluegray font-bold text-white'
+          onClick={handleSubmit}
+        >
           {location.pathname === '/signup' ? '회원가입 완료' : '수정하기'}
         </button>
       </div>
