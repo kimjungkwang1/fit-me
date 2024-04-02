@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Order from './order';
+import Review from './ReviewPage';
 import Modify from './modify';
-import ItemList from '../../components/MyPage/ItemList';
+import MyItemList from '../../components/MyPage/MyItemList';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 
@@ -40,7 +40,7 @@ const Mypage: React.FC = () => {
 
   useEffect(() => {
     let tab = query.get('tab');
-    const validTabs = ['bought', 'fav', 'order', 'modify'];
+    const validTabs = ['bought', 'fav', 'modify'];
 
     if (tab && validTabs.includes(tab)) {
       // 'tab' 파라미터가 유효한 경우 해당 탭으로 설정합니다.
@@ -53,7 +53,7 @@ const Mypage: React.FC = () => {
 
   // 버튼의 스타일을 결정하는 함수
   const getButtonStyle = (tabName: string) => {
-    return `text-gray-600 w-1/4 py-4 px-6 block ${
+    return `text-gray-600 w-1/3 py-4 px-6 block text-md ${
       selectedTab === tabName ? 'bg-darkgray text-white' : 'bg-white hover:underline'
     } focus:outline-none`;
   };
@@ -72,11 +72,9 @@ const Mypage: React.FC = () => {
   const getContent = (tabName: string) => {
     switch (tabName) {
       case 'bought':
-        return <ItemList tabName={tabName} />;
+        return <MyItemList tabName={tabName} />;
       case 'fav':
-        return <ItemList tabName={tabName} />;
-      case 'order':
-        return <Order />;
+        return <MyItemList tabName={tabName} />;
       case 'modify':
         return <>{apiData && <Modify userInfo={apiData} />}</>;
     }
@@ -94,15 +92,12 @@ const Mypage: React.FC = () => {
             로그아웃
           </button>
         </div>
-        <nav className='flex'>
+        <nav className='flex mb-2'>
           <button className={getButtonStyle('bought')} onClick={() => changeTab('bought')}>
             구매 목록
           </button>
           <button className={getButtonStyle('fav')} onClick={() => changeTab('fav')}>
             좋아요
-          </button>
-          <button className={getButtonStyle('order')} onClick={() => changeTab('order')}>
-            주문내역
           </button>
           <button className={getButtonStyle('modify')} onClick={() => changeTab('modify')}>
             정보 수정

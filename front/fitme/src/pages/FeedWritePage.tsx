@@ -4,8 +4,8 @@ import FeedPostForm from '../components/Feed/FeedPostForm';
 export default function FeedWritePage() {
   return (
     <>
-      <User></User>
-      <FeedPostForm></FeedPostForm>
+      <User />
+      <FeedPostForm />
     </>
   );
 }
