@@ -1,5 +1,7 @@
 package site.chachacha.fitme.domain.dressroom.repository;
 
+import static site.chachacha.fitme.domain.dressroom.entity.QDressRoom.dressRoom;
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
