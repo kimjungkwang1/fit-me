@@ -5,8 +5,8 @@ import CommentList from '../components/Feed/CommentList';
 export default function FeedDetailPage() {
   return (
     <>
-      <FeedDetail></FeedDetail>
-      <CommentList></CommentList>
+      <FeedDetail />
+      <CommentList />
     </>
   );
 }
