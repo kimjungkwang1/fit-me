@@ -7,6 +7,7 @@ export default function FeedListMagazine() {
       <div className='grid grid-cols-3 flex-wrap justify-between mx-[2vw]'>
         {imageNumbers.map((num) => (
           <img
+            key={num}
             className='p-1'
             src={`https://fit-me.site/images/feed/magazine/magazine${num}.png`}
             alt=''

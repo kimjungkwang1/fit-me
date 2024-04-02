@@ -4,16 +4,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { FaCheck } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
-import { deleteFittings, getFittings } from '../../store/dressroomSlice';
+import { deleteFittings, deleteMyFiittings, getFittings } from '../../store/dressroomSlice';
 import { IoPerson } from 'react-icons/io5';
+import { useInView } from 'react-intersection-observer';
 export default function DressroomMyFittingList() {
+  // 무한스크롤 구현
+  const [ref, inView] = useInView();
+  const [lastRank, setLastRank] = useState<number>(0);
+
   const dispatch = useDispatch<AppDispatch>();
   const myfittings = useSelector((state: RootState) => state.dressroom.fittings);
   const [changemode, setChangemode] = useState<boolean>(false);
-
+  useEffect(() => {
+    if (inView) {
+      dispatch(getFittings());
+    }
+  }, [inView]);
   useEffect(() => {
     dispatch(getFittings());
   }, []);
+
   return (
     <>
       {/* <Button className='w-[50%] m-2 ml-auto' color='gray' onClick={() => setChangemode(true)}>
@@ -37,7 +47,10 @@ export default function DressroomMyFittingList() {
               ) : (
                 <button
                   className='absolute top-0 right-[-4px] p-2 bg-red-500 text-white opacity-100 rounded-full w-8 h-8 z-10'
-                  onClick={() => dispatch(deleteFittings(item.id))}
+                  onClick={() => {
+                    dispatch(deleteFittings(item.id));
+                    dispatch(deleteMyFiittings(item.id));
+                  }}
                 >
                   <FaXmark></FaXmark>
                 </button>
@@ -45,6 +58,8 @@ export default function DressroomMyFittingList() {
             </div>
           </div>
         ))}
+
+        <div ref={ref} className='h-1' />
       </div>
     </>
   );

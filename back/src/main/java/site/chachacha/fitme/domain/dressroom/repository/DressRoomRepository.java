@@ -14,4 +14,8 @@ public interface DressRoomRepository extends JpaRepository<DressRoom, Long>,
 
     Optional<DressRoom> findByModelAndProductTopAndProductBottom(Long modelId, Long productTopId,
         Long productBottomId);
+
+    Boolean findByProductTopAndNull(Long productTopId);
+
+    Boolean findByProductBottomAndNull(Long productBottomId);
 }
