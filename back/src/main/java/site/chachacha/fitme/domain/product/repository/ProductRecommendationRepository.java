@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.chachacha.fitme.domain.product.entity.ProductRecommendation;
 
 public interface ProductRecommendationRepository extends
-    JpaRepository<ProductRecommendation, Long> {
+    JpaRepository<ProductRecommendation, Long>, ProductRecommendationQueryDslRepository {
 
     List<ProductRecommendation> findByProductIdWithProduct(Long productId);
 }
