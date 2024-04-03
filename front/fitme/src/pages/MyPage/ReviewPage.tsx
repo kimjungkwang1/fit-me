@@ -28,16 +28,17 @@ const Review = () => {
       alert('사진을 등록해주세요.');
       return;
     }
-
+    const formData = new FormData();
     // productReviewRequest JSON 객체를 생성하고 이를 문자열로 변환
-    const productReviewRequest = JSON.stringify({
+    const productReviewRequest = {
       rating: rating,
       content: reviewText,
-    });
-    console.log(productReviewRequest);
+    };
+    formData.append(
+      'productReviewRequest',
+      new Blob([JSON.stringify(productReviewRequest)], { type: 'application/json' })
+    );
 
-    const formData = new FormData();
-    formData.append('productReviewRequest', productReviewRequest);
     formData.append('image', selectedFile);
 
     // axios
@@ -45,7 +46,7 @@ const Review = () => {
     try {
       await api.post(`/api/products/${id}/reviews`, formData, {
         headers: {
-          'Content-Type': undefined,
+          'Content-Type': 'multipart/form-data',
         },
       });
       alert('리뷰 등록 완료!');
