@@ -20,6 +20,9 @@ public interface DressRoomQueryDslRepository {
     List<DressRoom> findByModelAndProductBottomAndProductTopIsNull(Long modelId,
         Long productBottomId);
 
+    Optional<DressRoom> findByMemberIdAndModelIdAndProductTopIdAndProductBottomId(Long memberId,
+        Long modelId, Long productTopId, Long productBottomId);
+
     Boolean findByProductTopAndNull(Long productTopId);
 
     Boolean findByProductBottomAndNull(Long productBottomId);

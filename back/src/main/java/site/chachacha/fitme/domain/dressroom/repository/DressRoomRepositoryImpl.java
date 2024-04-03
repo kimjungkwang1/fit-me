@@ -71,6 +71,20 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
     }
 
     @Override
+    public Optional<DressRoom> findByMemberIdAndModelIdAndProductTopIdAndProductBottomId(
+        Long memberId,
+        Long modelId, Long productTopId, Long productBottomId) {
+        return Optional.ofNullable(queryFactory.selectFrom(dressRoom)
+            .where(dressRoom.member.id.eq(memberId)
+                .and(dressRoom.model.id.eq(modelId))
+                .and(productTopId == null ? dressRoom.productTop.isNull()
+                    : dressRoom.productTop.id.eq(productTopId))
+                .and(productBottomId == null ? dressRoom.productBottom.isNull()
+                    : dressRoom.productBottom.id.eq(productBottomId)))
+            .fetchOne());
+    }
+
+    @Override
     public Boolean findByProductTopAndNull(Long productTopId) {
         return !queryFactory
             .select(dressRoom.id)

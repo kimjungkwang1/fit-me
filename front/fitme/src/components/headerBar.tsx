@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip } from 'flowbite-react';
 import { isAuthenticated } from '../services/auth';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
+import { resetState } from '../store/searchSlice';
 
 const HeaderBar: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('mypage');
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (location.pathname === '/' || location.pathname === '/home') {
@@ -36,6 +40,11 @@ const HeaderBar: React.FC = () => {
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const resetSearchConditions = () => {
+    dispatch(resetState());
+    navigate('/search');
   };
 
   let left, right, content;
@@ -85,7 +94,7 @@ const HeaderBar: React.FC = () => {
   } else {
     let additionalElement;
     const basicElement = (
-      <button onClick={() => navigate('/search')} key='basicElement'>
+      <button onClick={() => resetSearchConditions()} key='basicElement'>
         <Tooltip content='검색'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
