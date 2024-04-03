@@ -31,7 +31,7 @@ public class ProductReviewService {
     private final ProductReviewRepository productReviewRepository;
     private final MemberRepository memberRepository;
     private final OrderProductRepository orderProductRepository;
-    private final String imgUrl = "/images/reviews/";
+    private final String imgUrl = ".images/reviews/";
 
     public List<ProductReviewResponseWithMemberNickname> getReviews(Long productId) {
         return productReviewRepository.findAllByProductIdWithMember(productId).stream()
@@ -105,14 +105,14 @@ public class ProductReviewService {
         // 사진 업로드
         // ./images/reviews에서 {member_id} 폴더를 만들고, review_id로 파일명을 변경하여 저장
         // 폴더 만들기
-        File file = new File("." + imgUrl + member.getId());
+        File file = new File(imgUrl + member.getId());
         if (!file.exists()) {
             file.mkdirs();
         }
 
         // 파일 저장
         multipartFile.transferTo(new File(
-            "." + imgUrl + member.getId() + "/" + newProductReview.getId() + "." + extension));
+            imgUrl + member.getId() + "/" + newProductReview.getId() + "." + extension));
 
         // 저장
         newProductReview.updateImageUrl(newProductReview.getId());
