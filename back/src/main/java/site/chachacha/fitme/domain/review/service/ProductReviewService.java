@@ -1,14 +1,17 @@
 package site.chachacha.fitme.domain.review.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import site.chachacha.fitme.advice.exception.GoneException;
 import site.chachacha.fitme.advice.exception.UnauthorizedException;
+import site.chachacha.fitme.domain.dressroom.exception.FileSaveException;
 import site.chachacha.fitme.domain.member.entity.Member;
 import site.chachacha.fitme.domain.member.repository.MemberRepository;
 import site.chachacha.fitme.domain.order.repository.OrderProductRepository;
@@ -22,6 +25,7 @@ import site.chachacha.fitme.domain.review.exception.DuplicatedReviewException;
 import site.chachacha.fitme.domain.review.exception.ImageUploadException;
 import site.chachacha.fitme.domain.review.repository.ProductReviewRepository;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class ProductReviewService {
     }
 
     // 리뷰 등록
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createReview(Long memberId, Long productId, ProductReviewRequest request,
         MultipartFile multipartFile)
         throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException, IOException {
@@ -113,7 +117,13 @@ public class ProductReviewService {
         finalUrl += newProductReview.getId() + "." + extension;
 
         // 파일 저장
-        multipartFile.transferTo(new File(finalUrl));
+        byte[] bytes = multipartFile.getBytes();
+        try (FileOutputStream fos = new FileOutputStream(finalUrl)) {
+            fos.write(bytes);
+        } catch (IOException e) {
+            log.error("이미지 저장 중 오류 발생", e);
+            throw new FileSaveException();
+        }
 
         // 저장
         newProductReview.updateImageUrl(finalUrl);
