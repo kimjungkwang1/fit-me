@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Item from '../Common/Item';
-import axios from 'axios';
+import { useInView } from 'react-intersection-observer';
+import { api } from '../../services/api';
 
 type ImageType = {
   id: number;
@@ -30,6 +31,14 @@ type CategoryItemListProps = {
   sortBy: string;
 };
 
+type ParamsType = {
+  lastId: number;
+  brandIds?: string;
+  categoryIds?: string;
+  ageRanges?: string;
+  sortBy?: string;
+};
+
 export default function CategoryItemList({
   selectedBrands,
   selectedCategories,
@@ -37,16 +46,14 @@ export default function CategoryItemList({
   sortBy,
 }: CategoryItemListProps) {
   const [list, setList] = useState<ItemType[]>([]);
+  const [lastId, setLastId] = useState<number>(0);
+  // 무한스크롤 구현
+  const [ref, inView] = useInView();
 
-  useEffect(() => {
-    let params = {};
-
-    if (selectedBrands.length > 0) {
-      params = {
-        ...params,
-        brandIds: selectedBrands.join(','),
-      };
-    }
+  const infiniteScroll = () => {
+    let params: ParamsType = {
+      lastId: lastId,
+    };
 
     if (selectedCategories.length > 0) {
       params = {
@@ -55,28 +62,26 @@ export default function CategoryItemList({
       };
     }
 
-    if (selectedAges.length > 0) {
-      params = {
-        ...params,
-        ageRanges: selectedAges.map((age) => `${age}s`).join(','),
-      };
-    }
-
-    if (sortBy === 'latest') {
-      params = {
-        ...params,
-        sortBy: sortBy,
-      };
-    }
-
-    axios
-      .get(`https://fit-me.site/api/products`, {
+    api
+      .get(`/api/products`, {
         params: params,
       })
       .then(({ data }) => {
-        setList(data);
+        if (data.length > 0) {
+          setLastId(data[data.length - 1].id);
+          console.log(lastId);
+        }
+        setList((prevList) => [...prevList, ...data]);
       });
-  }, [selectedBrands, selectedCategories, selectedAges, sortBy]);
+  };
+
+  useEffect(() => {
+    if (inView) {
+      // console.log(inView, '무한 스크롤 요청');
+
+      infiniteScroll();
+    }
+  }, [inView]);
 
   return (
     <div>
@@ -96,6 +101,7 @@ export default function CategoryItemList({
             />
           ))}
       </div>
+      <div ref={ref} className='h-1' />
     </div>
   );
 }
