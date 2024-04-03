@@ -23,7 +23,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import NotFoundPage from './pages/NotFoundPage';
 import CompletePage from './pages/CompletePage';
-import ScrollToTop from './services/ScrollTop';
+import TopButton from './components/Common/TopButton';
 // import TestPage from './pages/test';
 
 const App: React.FC = () => {
@@ -62,6 +62,7 @@ const App: React.FC = () => {
                 {/* <Route path='/test' element={<TestPage />} /> */}
               </Routes>
             </div>
+            <TopButton />
             <FooterBar />
           </div>
         </div>
