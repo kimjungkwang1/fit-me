@@ -40,19 +40,11 @@ interface DressroomState {
 //초기상태
 const initialState: DressroomState = {
   cartItems: [],
-  orders: [
-    {
-      id: 15298,
-      productId: 15298,
-      name: 'string',
-      url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg',
-      category: 3000,
-    },
-  ],
+  orders: [],
   models: [],
   fittings: [],
-  nowTop: { id: 0, url: 'https://fit-me.site/images/products/15298/main/mainimage_15298_2.jpg' },
-  nowBottom: { id: 0, url: 'https://fit-me.site/images/products/15299/main/mainimage_15299_6.jpg' },
+  nowTop: { id: 0, url: '' },
+  nowBottom: { id: 0, url: '' },
   nowModel: { id: 1, url: '' },
   result: { id: 0, url: 'https://fit-me.site/images/model/3.jpg' },
   status: 'idle',
