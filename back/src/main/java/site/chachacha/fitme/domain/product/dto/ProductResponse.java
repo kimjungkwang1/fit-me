@@ -15,7 +15,7 @@ public class ProductResponse {
     private Integer price;
     private List<MainImageResponse> mainImages;
     private BrandResponse brand;
-    private int popularityScore;
+    private double popularityScore;
     private int likeCount;
     private double reviewRating;
     private int reviewCount;
