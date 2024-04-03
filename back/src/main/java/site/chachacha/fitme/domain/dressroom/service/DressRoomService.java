@@ -1,16 +1,30 @@
 package site.chachacha.fitme.domain.dressroom.service;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import site.chachacha.fitme.advice.exception.BadRequestException;
 import site.chachacha.fitme.advice.exception.GoneException;
+import site.chachacha.fitme.domain.dressroom.dto.DressRoomAIRequest;
 import site.chachacha.fitme.domain.dressroom.dto.DressRoomResponse;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.dressroom.entity.Model;
+import site.chachacha.fitme.domain.dressroom.exception.FileSaveException;
 import site.chachacha.fitme.domain.dressroom.exception.InferenceFailureException;
 import site.chachacha.fitme.domain.dressroom.repository.DressRoomRepository;
 import site.chachacha.fitme.domain.dressroom.repository.ModelRepository;
@@ -19,6 +33,7 @@ import site.chachacha.fitme.domain.member.repository.MemberRepository;
 import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DressRoomService {
@@ -27,6 +42,8 @@ public class DressRoomService {
     private final ModelRepository modelRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+
+    private final String imgUrl = ".images/dressroom/men/";
 
     // DressRoom 목록 조회
     public List<DressRoomResponse> findNoOffsetByMemberId(Long memberId, Long dressRoomId) {
@@ -75,55 +92,101 @@ public class DressRoomService {
 
         // 존재하지 않으면 새로운 이미지 생성
         if (existingDressRoom.isEmpty()) {
+            Boolean topAlready = null;
+            Boolean bottomAlready = null;
+
             // productTopId, productBottomId 둘 다 있는 경우
             if (productTopId != null && productBottomId != null) {
-                Boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
-                Boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(
-                    productBottomId);
-
-                throw new IllegalArgumentException(
-                    "topAlready = " + topAlready + ", bottomAlready = " + bottomAlready);
+                topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
+                bottomAlready = dressRoomRepository.findByProductBottomAndNull(productBottomId);
             }
             // productTopId가 있는 경우
             else if (productTopId != null) {
-                Boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
-                Boolean bottomAlready = null;
-
-                throw new IllegalArgumentException("topAlready = " + topAlready);
+                topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
             }
             // productBottomId가 있는 경우
             else if (productBottomId != null) {
-                Boolean topAlready = null;
-                Boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(
-                    productBottomId);
-
-                throw new IllegalArgumentException("bottomAlready = " + bottomAlready);
+                bottomAlready = dressRoomRepository.findByProductBottomAndNull(productBottomId);
             }
 
-            throw new IllegalArgumentException("ㅈ 됐어요");
+            // AI 서버에 요청
+            WebClient webClient = WebClient.builder()
+                .baseUrl("http://222.107.238.75:8111")
+                .build();
 
-//            WebClient webClient = WebClient.builder()
-//                .baseUrl("http://222.107.238.75:8111")
-//                .build();
-//
-//            DressRoomAIRequest request = DressRoomAIRequest.builder()
-//                .modelId(modelId)
-//                .productTopId(productTopId)
-//                .topAlready(topAlready)
-//                .productBottomId(productBottomId)
-//                .bottomAlready(bottomAlready)
-//                .build();
-//
-//            webClient.post()
-//                .uri(uriBuilder -> uriBuilder.path("/api/dressroom")
-//                    .build())
-//                .contentType(APPLICATION_JSON)
-//                .body(BodyInserters.fromValue(request))
-//                .retrieve()
-//                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-//                    Mono.error(new InferenceFailureException("AI 서버 오류가 발생했습니다.")))
-//                .bodyToMono(String.class)
-//                .block();
+            DressRoomAIRequest request = DressRoomAIRequest.builder()
+                .modelId(modelId)
+                .productTopId(productTopId)
+                .topAlready(topAlready)
+                .productBottomId(productBottomId)
+                .bottomAlready(bottomAlready)
+                .build();
+
+            webClient.post()
+                .uri(uriBuilder -> uriBuilder.path("/api/dressroom").build())
+                .contentType(APPLICATION_JSON)
+                .body(BodyInserters.fromValue(request))
+                .retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
+                    Mono.error(new InferenceFailureException("AI 서버 오류가 발생했습니다.")))
+                .bodyToMono(Resource.class) // Resource 타입으로 파일 데이터를 받음
+                .doOnNext(resource -> {
+                    try {
+                        String filename = imgUrl;
+
+                        // .images/dressroom 폴더가 없으면 생성
+                        Path path = Paths.get(filename);
+                        if (!Files.exists(path)) {
+                            Files.createDirectories(path);
+                        }
+
+                        // 상의와 하의가 모두 있는 경우
+                        if (productTopId != null && productBottomId != null) {
+                            // sum 폴더가 없으면 생성
+                            filename += "sum/";
+
+                            path = Paths.get(filename);
+                            if (!Files.exists(path)) {
+                                Files.createDirectories(path);
+                            }
+
+                            filename += productTopId + "_" + productBottomId + ".jpg";
+                        }
+                        // 상의만 있는 경우
+                        else if (productTopId != null) {
+                            // top 폴더가 없으면 생성
+                            filename += "top/";
+
+                            path = Paths.get(filename);
+                            if (!Files.exists(path)) {
+                                Files.createDirectories(path);
+                            }
+
+                            filename += productTopId + ".jpg";
+                        }
+                        // 하의만 있는 경우
+                        else if (productBottomId != null) {
+                            // bottom 폴더가 없으면 생성
+                            filename += "bottom/";
+
+                            path = Paths.get(filename);
+                            if (!Files.exists(path)) {
+                                Files.createDirectories(path);
+                            }
+
+                            filename += productBottomId + ".jpg";
+                        }
+
+                        // 파일 저장 로직
+                        path = Paths.get(filename);
+                        Files.copy(resource.getInputStream(), path,
+                            StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        log.error("파일 저장 중 오류 발생", e);
+                        throw new FileSaveException();
+                    }
+                })
+                .block();
         }
 
         DressRoom dressRoom = DressRoom.builder()

@@ -1,7 +1,6 @@
 package site.chachacha.fitme.domain.order.repository;
 
 import static site.chachacha.fitme.domain.order.entity.QOrder.order;
-import static site.chachacha.fitme.domain.order.entity.QOrderProduct.orderProduct;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -16,10 +15,9 @@ public class OrderRepositoryImpl implements OrderRepositoryQueryDsl {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Order> findAllByMemberIdWithOrderProduct(Long memberId, Pageable pageable) {
+    public List<Order> findAllByMemberId(Long memberId, Pageable pageable) {
         return queryFactory
             .selectFrom(order)
-            .leftJoin(order.orderProducts, orderProduct).fetchJoin()
             .where(order.member.id.eq(memberId))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
