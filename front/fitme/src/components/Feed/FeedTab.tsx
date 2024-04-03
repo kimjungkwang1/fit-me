@@ -9,7 +9,7 @@ export default function FeedTab() {
       <div className='flex'>
         <div
           className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-            tab === '매거진' ? 'bg-gray-300 ' : 'bg-white'
+            tab === '매거진' ? 'bg-white' : 'bg-gray-300 text-gray-100'
           }`}
           onClick={() => setTabs('매거진')}
         >
@@ -17,7 +17,7 @@ export default function FeedTab() {
         </div>
         <div
           className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-            tab === '유저피드' ? 'bg-gray-300' : 'bg-white'
+            tab === '유저피드' ? 'bg-white' : 'bg-gray-300 text-gray-100'
           }`}
           onClick={() => setTabs('유저피드')}
         >

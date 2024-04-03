@@ -68,7 +68,7 @@ export default function DressroomItemLst() {
       <div className='flex text-sm'>
         <div
           className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-            tab === '장바구니' ? 'bg-gray-300 ' : 'bg-white'
+            tab === '장바구니' ? 'bg-white' : 'bg-gray-300 text-gray-100'
           }`}
           onClick={() => setTabs('장바구니')}
         >
@@ -76,7 +76,7 @@ export default function DressroomItemLst() {
         </div>
         <div
           className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-            tab === '구매목록' ? 'bg-gray-300' : 'bg-white'
+            tab === '구매목록' ? 'bg-white' : 'bg-gray-300 text-gray-100'
           }`}
           onClick={() => setTabs('구매목록')}
         >
