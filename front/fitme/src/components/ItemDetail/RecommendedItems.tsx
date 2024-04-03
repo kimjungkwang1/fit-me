@@ -38,22 +38,24 @@ export default function RecommendedItems({ id }: RecommendedItemsProps) {
 
   return (
     <div className='m-[3%]'>
-      <span className='text-sm font-semibold'>함께 보면 좋은 상품</span>
-      <div className='flex flex-wrap flex-row mx-[2%] place-content-start gap-y-3'>
+      {recomList.length !== 0 && <span className='text-sm font-semibold'>함께 보면 좋은 상품</span>}
+      <div className='flex mx-[2%] place-content-start gap-y-3'>
         {recomList &&
-          recomList.map((recom, index) => (
-            <Item
-              key={index}
-              id={recom.id}
-              name={recom.name}
-              price={recom.price}
-              mainImages={recom.mainImages}
-              brand={recom.brand}
-              likeCount={recom.likeCount}
-              reviewRating={recom.reviewRating}
-              reviewCount={recom.reviewCount}
-            />
-          ))}
+          recomList
+            .slice(0, 3)
+            .map((recom, index) => (
+              <Item
+                key={index}
+                id={recom.id}
+                name={recom.name}
+                price={recom.price}
+                mainImages={recom.mainImages}
+                brand={recom.brand}
+                likeCount={recom.likeCount}
+                reviewRating={recom.reviewRating}
+                reviewCount={recom.reviewCount}
+              />
+            ))}
       </div>
     </div>
   );
