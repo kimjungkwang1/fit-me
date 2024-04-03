@@ -13,6 +13,7 @@ const Review = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null); // 이미지 프리뷰 URL을 저장할 상태
 
   const submitReview = async () => {
+    console.log(id);
     // rating이 0이거나 리뷰 텍스트가 10자 이하인 경우 경고 메시지를 표시합니다.
     if (rating === 0 && reviewText.length < 10 && selectedFile === null) {
       alert('모든 정보를 작성해주세요.');
@@ -28,41 +29,29 @@ const Review = () => {
       return;
     }
 
-    function fileToBase64(file: File) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // 파일 읽기 성공 시
-        reader.onerror = (error) => reject(error); // 파일 읽기 실패 시
-        reader.readAsDataURL(file); // 파일을 Data URL 형태로 읽어옵니다.
-      });
-    }
-
-    // FormData 객체 생성
-    const imageBase64 = await fileToBase64(selectedFile);
-
     // productReviewRequest JSON 객체를 생성하고 이를 문자열로 변환
     const productReviewRequest = JSON.stringify({
       rating: rating,
       reviewText: reviewText,
     });
+    console.log(productReviewRequest);
 
-    const requestJson = JSON.stringify({
-      productReviewRequest: productReviewRequest,
-      image: imageBase64,
-    });
+    const formData = new FormData();
+    formData.append('productReviewRequest', productReviewRequest);
+    formData.append('image', selectedFile);
 
-    console.log(reviewText);
-    console.log(rating);
     // axios
+    // api.post(`/api/products/${id}/reviews`).then();
     try {
-      // axios 라이브러리를 사용하여 서버에 POST 요청을 보냅니다.
-      const response = await api.post(`/api/products/${id}/reviews`, requestJson);
-      console.log('리뷰가 성공적으로 등록되었습니다.', response);
+      await api.post(`/api/products/${id}/reviews`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      navigate('/mypage?tab=bought');
     } catch (error) {
-      console.error('리뷰 등록 중 오류 발생:', error);
+      console.error('리뷰 제출 중 에러 발생:', error);
     }
-
-    navigate('/mypage?tab=bought');
   };
 
   // 파일 선택 핸들러
