@@ -123,7 +123,7 @@ public class DressRoomService {
                 .build();
 
             webClient.post()
-                .uri(uriBuilder -> uriBuilder.path("/api/dressroom").build())
+                .uri(uriBuilder -> uriBuilder.path("/api/fitmeai").build())
                 .contentType(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
