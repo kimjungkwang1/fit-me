@@ -1,5 +1,5 @@
 package site.fitme.batch.entity.order;
 
-public enum OrderStatus {
+public enum     OrderStatus {
     ORDER, CANCEL
 }
