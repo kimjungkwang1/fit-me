@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchBar from '../components/Search/SearchBar';
 import SearchResult from '../components/Search/SearchResult';
 import { api } from '../services/api';
@@ -12,6 +12,12 @@ import { updateList, resetList, checkWaitReset } from '../store/searchSlice';
 export default function SearchPage() {
   const dispatch = useDispatch<AppDispatch>();
   const [ref, inView] = useInView();
+
+  // 데이터 로딩중일 때 true로 바뀜
+  const [loading, setLoading] = useState(false);
+  const startLoading = () => {
+    setLoading(true);
+  };
 
   // 선택된 필터 목록 구성
   const keyword = useSelector((state: RootState) => state.search.keyword, shallowEqual);
@@ -85,16 +91,21 @@ export default function SearchPage() {
       };
     }
 
+    setLoading(true);
     api
       .get(`/api/products`, {
         params: params,
       })
       .then(({ data }) => {
+        setLoading(false);
         if (data.length === 0) {
           return;
         }
 
         dispatch(updateList(data));
+      })
+      .catch((error) => {
+        setLoading(false);
       });
   };
 
@@ -118,6 +129,8 @@ export default function SearchPage() {
     fetchData();
   }, [keyword, selectedBrands, selectedCategories, selectedAges, sortBy]);
 
+  // waitReset == true일 때에는 아직 리셋이 진행중인 것
+  // false로 바뀌면 데이터를 받아온다
   useEffect(() => {
     const fetchData = () => {
       if (waitReset) {
@@ -131,12 +144,12 @@ export default function SearchPage() {
 
   return (
     <>
-      <SearchBar />
+      <SearchBar startLoading={startLoading} />
       <FilterBar />
       {list.length === 0 ? (
         keyword === '' ? (
           <SearchHistory />
-        ) : waitReset ? (
+        ) : loading ? (
           <div></div>
         ) : (
           <div className='flex py-14'>
