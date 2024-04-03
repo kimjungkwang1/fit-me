@@ -32,7 +32,7 @@ type CategoryItemListProps = {
 };
 
 type ParamsType = {
-  lastId: number;
+  lastId?: number | null;
   brandIds?: string;
   categoryIds?: string;
   ageRanges?: string;
@@ -43,15 +43,15 @@ export default function CategoryItemList({
   selectedBrands,
   selectedCategories,
   selectedAges,
-  sortBy,
 }: CategoryItemListProps) {
   const [list, setList] = useState<ItemType[]>([]);
-  const [lastId, setLastId] = useState<number>(0);
+  const [lastId, setLastId] = useState<number | null>(null);
   // 무한스크롤 구현
   const [ref, inView] = useInView();
 
   const infiniteScroll = () => {
     let params: ParamsType = {
+      sortBy: 'latest',
       lastId: lastId,
     };
 
@@ -69,7 +69,6 @@ export default function CategoryItemList({
       .then(({ data }) => {
         if (data.length > 0) {
           setLastId(data[data.length - 1].id);
-          console.log(lastId);
         }
         setList((prevList) => [...prevList, ...data]);
       });
