@@ -52,7 +52,7 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
 
     @Override
     public Boolean findByProductTopAndNull(Long productTopId) {
-        return queryFactory
+        return !queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
             .where(dressRoom.productTop.id.eq(productTopId)

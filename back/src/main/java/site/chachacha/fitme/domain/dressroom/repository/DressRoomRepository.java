@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
+import site.chachacha.fitme.domain.product.entity.Product;
 
 public interface DressRoomRepository extends JpaRepository<DressRoom, Long>,
     DressRoomQueryDslRepository {
@@ -14,6 +15,10 @@ public interface DressRoomRepository extends JpaRepository<DressRoom, Long>,
 
     List<DressRoom> findByModelAndProductTopAndProductBottom(Long modelId, Long productTopId,
         Long productBottomId);
+
+    boolean existsByProductTopAndProductBottomIsNull(Product productTop);
+
+    boolean existsByProductBottomAndProductTopIsNull(Product productBottom);
 
     Boolean findByProductTopAndNull(Long productTopId);
 
