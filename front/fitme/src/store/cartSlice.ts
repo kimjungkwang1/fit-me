@@ -43,9 +43,9 @@ const initialState: CartState = {
   status: 'idle',
   totalPrice: 0,
   address: {
-    name: 'String',
-    phoneNumber: 'String',
-    address: 'string',
+    name: '',
+    phoneNumber: '',
+    address: '',
   },
 };
 // 카트 정보 가져오기
