@@ -95,7 +95,7 @@ const HeaderBar: React.FC = () => {
   } else {
     let additionalElement;
     const basicElement = (
-      <button onClick={() => navigate('/search')} key='basicElement'>
+      <button className='mx-1' onClick={() => resetSearchConditions()} key='basicElement'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -115,7 +115,7 @@ const HeaderBar: React.FC = () => {
     if (currentTab === 'cart') {
     } else if (currentTab === 'feed' || currentTab === 'feedDetail') {
       additionalElement = (
-        <button onClick={() => navigate('/feed/myfeed')} key='additionalElement'>
+        <button className='mx-1' onClick={() => navigate('/feed/myfeed')} key='additionalElement'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -134,7 +134,7 @@ const HeaderBar: React.FC = () => {
       );
     } else {
       additionalElement = (
-        <button onClick={() => navigate('/cart')} key='additionalElement'>
+        <button className='mx-1' onClick={() => navigate('/cart')} key='additionalElement'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -168,6 +168,10 @@ const HeaderBar: React.FC = () => {
     }
   } else if (currentTab === 'feed' || currentTab === 'feedDetail') {
     content = '피드';
+  } else if (currentTab === 'dressroom') {
+    content = '드레스룸';
+  } else if (currentTab === 'category') {
+    content = '카테고리';
   } else {
     content = 'Fit Me';
   }
@@ -181,7 +185,7 @@ const HeaderBar: React.FC = () => {
             <div className='mt-1 grow flex items-center justify-center text-xl font-bold'>
               {content}
             </div>
-            <div className='w-28 pr-4 mt-1 flex items-center justify-end'>{right}</div>
+            <div className='w-28 pr-3 mt-1 flex items-center justify-end'>{right}</div>
           </div>
         </header>
       )}

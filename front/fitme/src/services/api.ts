@@ -2,9 +2,9 @@ import axios from 'axios';
 
 export const api = axios.create({
   baseURL: 'https://fit-me.site',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
   withCredentials: true,
 });
 

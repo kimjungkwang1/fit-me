@@ -14,7 +14,7 @@ export default function BoughtItem({ id, name, url, brandName }: ItemType) {
 
   return (
     <>
-      <div className='w-full h-full'>
+      <div className='w-full h-full flex flex-col justify-between'>
         <Link to={`/detail/${id}`}>
           <div>
             {url ? (
