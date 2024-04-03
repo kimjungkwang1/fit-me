@@ -1,0 +1,13 @@
+server:
+    port: ${SERVER.PORT}
+
+spring:
+    config:
+        import: 'aws-parameterstore:'
+        activate:
+            on-profile: dev
+
+    datasource:
+        url: jdbc:mysql://${MY_SQL.HOST}:${MY_SQL.PORT}/${MY_SQL.DATABASE}?useSSL=false&serverTimezone=Asia/Seoul
+        username: ${DB.USERNAME}
+        password: ${DB.PASSWORD}
