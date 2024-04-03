@@ -46,7 +46,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             .fetch();
     }
 
-    private BooleanExpression generateWhereCondition(String sortBy, Long lastId, Integer lastPopularityScore, Integer lastPrice) {
+    private BooleanExpression generateWhereCondition(String sortBy, Long lastId, Double lastPopularityScore, Integer lastPrice) {
         if (SORT_BY_LATEST.equals(sortBy)) {
             return ltLastId(lastId);
         }
