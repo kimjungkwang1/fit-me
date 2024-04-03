@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { setKeyword } from '../../store/searchSlice';
 
-export default function SearchBar() {
+type SearchBarProps = {
+  startLoading: () => void;
+};
+
+export default function SearchBar({ startLoading }: SearchBarProps) {
   const dispatch = useDispatch<AppDispatch>();
   const keyword = useSelector((state: RootState) => state.search.keyword);
 
@@ -22,6 +26,8 @@ export default function SearchBar() {
         alert('검색어를 입력하세요.');
         return;
       }
+
+      startLoading();
       // 엔터 키를 눌렀을 때만 searchKeyword 호출
       dispatch(setKeyword(typingKeyword));
       // 최근 검색어 저장할 배열이 없으면 선언
