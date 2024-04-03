@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../services/api';
+import Noimage from '../../assets/images/noimage.png';
 
 type Review = {
   id: number; // 리뷰 아이디
@@ -21,6 +22,7 @@ export default function ItemReview({ id, reviewCount, reviewRating }: ItemReview
   useEffect(() => {
     api.get(`/api/products/${id}/reviews`).then(({ data }) => {
       setReviews(data);
+      console.log(data);
     });
   }, []);
 
@@ -39,13 +41,33 @@ export default function ItemReview({ id, reviewCount, reviewRating }: ItemReview
         <div className='flex flex-col my-1'>
           <div className='flex justify-between'>
             <span className='text-xs'>
-              작성자 : <span className='font-semibold'>{reviews[0].memberNickname}</span>
+              작성자 :{' '}
+              <span className='font-semibold'>{reviews[reviews.length - 1].memberNickname}</span>
             </span>
             <span className='text-xs'>
-              평점 : <span className='text-yellow-300'>{'★'.repeat(reviews[0].rating)}</span>
+              평점 :{' '}
+              <span className='text-yellow-300'>
+                {'★'.repeat(reviews[reviews.length - 1].rating)}
+              </span>
             </span>
           </div>
-          <span className='text-xs'>{reviews[reviews.length - 1].content}</span>
+          <div className='flex mt-2'>
+            <img
+              className='aspect-[3/4] w-20 border-beige border-2'
+              src={
+                reviews[reviews.length - 1].imageUrl
+                  ? reviews[reviews.length - 1].imageUrl.replace('./', 'https://fit-me.site/')
+                  : Noimage
+              }
+              alt=''
+            />
+            <div className='ml-4'>
+              <div className='text-xs mb-2'>
+                {reviews[reviews.length - 1].createdAt.toString().replace('T', ' ')}
+              </div>
+              <div className='text-sm'>{reviews[reviews.length - 1].content}</div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className='h-24 p-8 text-center'>등록된 리뷰가 없습니다.</div>
