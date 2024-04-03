@@ -24,7 +24,7 @@ export default function Cart() {
   return (
     <>
       <div className='w-full flex justify-center'>
-        <div className='w-full h-screen'>
+        <div className='w-full'>
           <div className='p-2'>
             <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
               드레스룸 가기
