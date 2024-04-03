@@ -25,6 +25,7 @@ export default function DressroomButton() {
   const models = useSelector((state: RootState) => state.dressroom.models);
   const nowTop = useSelector((state: RootState) => state.dressroom.nowTop);
   const nowBottom = useSelector((state: RootState) => state.dressroom.nowBottom);
+
   useEffect(() => {
     const makeFittingIfNeeded = async () => {
       if (shouldMakeFittings) {
@@ -42,12 +43,20 @@ export default function DressroomButton() {
   return (
     <>
       <div className='flex justify-center'>
-        <Button className='w-[40%] mx-1' color='gray' onClick={() => setOpenChangeModal(true)}>
-          <span className='text-xs'>사진변경</span>
+        <Button
+          className='w-[40%] mx-1'
+          color='gray'
+          onClick={() => {
+            dispatch(setResult({ id: 0, url: 'https://fit-me.site/images/model/3.jpg' }));
+            dispatch(setNowTop({ id: 0, url: '' }));
+            dispatch(setNowBottom({ id: 0, url: '' }));
+          }}
+        >
+          <span className='text-xs'>초기화</span>
         </Button>
       </div>
 
-      <Modal show={openChangeModal} popup onClose={() => setOpenChangeModal(false)}>
+      {/* <Modal show={openChangeModal} popup onClose={() => setOpenChangeModal(false)}>
         <Modal.Header>사진 변경</Modal.Header>
         <Modal.Body>
           <div className='p-1'>
@@ -77,7 +86,7 @@ export default function DressroomButton() {
             </div>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </>
   );
 }

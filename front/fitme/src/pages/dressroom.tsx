@@ -33,17 +33,17 @@ export default function Dressroom() {
         </div>
         {tab === '피팅 해보기' ? (
           <div className='flex flex-col h-[50%]'>
-            <div className='flex items-center justify-center h-[75%]'>
+            <div className='flex items-center justify-center h-[80%]'>
               <div className='w-[40%] p-2'>
                 <DressroomNowFitting />
               </div>
               <div className='flex flex-col flex-grow p-2 h-full flex-grow'>
                 <img
-                  className='h-[100%] bg-gray-100 mx-auto m-2'
+                  className='h-[80%] bg-gray-100 mx-auto m-2'
                   src={result.url}
                   alt='피팅결과'
                 ></img>
-                {/* <DressroomButton /> */}
+                <DressroomButton />
               </div>
             </div>
             <DressroomItemList />
