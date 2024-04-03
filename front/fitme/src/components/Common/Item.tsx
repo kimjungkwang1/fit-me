@@ -40,7 +40,7 @@ export default function Item({
 
   return (
     <>
-      <div className={`flex-col mb-2 ${isFavTab ? '' : 'w-[31.5%] mx-[0.916%]'}`}>
+      <div className={`flex-col mb-2 ${isFavTab ? 'w-full' : 'w-[31.5%] mx-[0.916%]'}`}>
         <Link to={`/detail/${id}`}>
           <div>
             {mainImages[0] ? (
