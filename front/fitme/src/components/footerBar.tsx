@@ -44,7 +44,7 @@ const FooterBar: React.FC = () => {
   return (
     <footer>
       {selectedTab !== 'detail' && (
-        <div className='bg-white h-[55px] fixed bottom-0 max-w-[600px]'>
+        <div className='bg-white h-[55px] fixed bottom-0 max-w-[600px] z-50'>
           <nav className='flex h-full'>
             <button className={getButtonStyle('category')} onClick={() => handleClick('category')}>
               <svg width='40%' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
