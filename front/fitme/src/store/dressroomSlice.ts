@@ -116,7 +116,7 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
   const MySwal = withReactContent(Swal);
   let swalLoading;
   MySwal.fire({
-    title: 'ai가 이미지 생성중입니다.',
+    title: 'AI가 이미지 생성중입니다.',
     html: '잠시만 기다려주세요',
     allowOutsideClick: false,
     didOpen: () => {
