@@ -24,8 +24,7 @@ public class BatchScheduler {
     private final Job calculatePopularityScoreJob;
 
     // 매일 새벽 5시에 실행
-//    @Scheduled(cron = "0 0 5 * * ?")
-    @Scheduled(cron = "0 00 14 * * ?")
+    @Scheduled(cron = "0 0 5 * * ?")
     public void runJob() {
         try {
             jobLauncher.run(calculatePopularityScoreJob, new JobParametersBuilder()
