@@ -1,5 +1,4 @@
 import { LuHistory } from 'react-icons/lu';
-import { RxCross2 } from 'react-icons/rx';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { setKeyword } from '../../store/searchSlice';
