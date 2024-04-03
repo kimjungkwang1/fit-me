@@ -105,17 +105,17 @@ public class DressRoomService {
 
             // productTopId, productBottomId 둘 다 있는 경우
             if (productTopId != null && productBottomId != null) {
-                topAlready = dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
-                bottomAlready = dressRoomRepository.existsByProductBottomAndProductTopIsNull(
+                topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
+                bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
                     bottom);
             }
             // productTopId가 있는 경우
             else if (productTopId != null) {
-                topAlready = dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
+                topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
             }
             // productBottomId가 있는 경우
             else if (productBottomId != null) {
-                bottomAlready = dressRoomRepository.existsByProductBottomAndProductTopIsNull(
+                bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
                     bottom);
             }
 
