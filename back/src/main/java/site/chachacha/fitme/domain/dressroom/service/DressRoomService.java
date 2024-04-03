@@ -1,19 +1,13 @@
 package site.chachacha.fitme.domain.dressroom.service;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 import site.chachacha.fitme.advice.exception.BadRequestException;
 import site.chachacha.fitme.advice.exception.GoneException;
-import site.chachacha.fitme.domain.dressroom.dto.DressRoomAIRequest;
 import site.chachacha.fitme.domain.dressroom.dto.DressRoomResponse;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
 import site.chachacha.fitme.domain.dressroom.entity.Model;
@@ -80,32 +74,56 @@ public class DressRoomService {
             modelId, productTopId, productBottomId);
 
         // 존재하지 않으면 새로운 이미지 생성
-        if (!existingDressRoom.isEmpty()) {
-            boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
-            boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(productBottomId);
+        if (existingDressRoom.isEmpty()) {
+            // productTopId, productBottomId 둘 다 있는 경우
+            if (productTopId != null && productBottomId != null) {
+                Boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
+                Boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(
+                    productBottomId);
 
-            WebClient webClient = WebClient.builder()
-                .baseUrl("http://222.107.238.75:8000")
-                .build();
+                throw new IllegalArgumentException(
+                    "topAlready = " + topAlready + ", bottomAlready = " + bottomAlready);
+            }
+            // productTopId가 있는 경우
+            else if (productTopId != null) {
+                Boolean topAlready = dressRoomRepository.findByProductTopAndNull(productTopId);
+                Boolean bottomAlready = null;
 
-            DressRoomAIRequest request = DressRoomAIRequest.builder()
-                .modelId(modelId)
-                .productTopId(productTopId)
-                .topAlready(topAlready)
-                .productBottomId(productBottomId)
-                .bottomAlready(bottomAlready)
-                .build();
+                throw new IllegalArgumentException("topAlready = " + topAlready);
+            }
+            // productBottomId가 있는 경우
+            else if (productBottomId != null) {
+                Boolean topAlready = null;
+                Boolean bottomAlready = dressRoomRepository.findByProductBottomAndNull(
+                    productBottomId);
 
-            webClient.post()
-                .uri(uriBuilder -> uriBuilder.path("/api/dressroom")
-                    .build())
-                .contentType(APPLICATION_JSON)
-                .body(BodyInserters.fromValue(request))
-                .retrieve()
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                    Mono.error(new InferenceFailureException("AI 서버 오류가 발생했습니다.")))
-                .bodyToMono(String.class)
-                .block();
+                throw new IllegalArgumentException("bottomAlready = " + bottomAlready);
+            }
+
+            throw new IllegalArgumentException("ㅈ 됐어요");
+
+//            WebClient webClient = WebClient.builder()
+//                .baseUrl("http://222.107.238.75:8111")
+//                .build();
+//
+//            DressRoomAIRequest request = DressRoomAIRequest.builder()
+//                .modelId(modelId)
+//                .productTopId(productTopId)
+//                .topAlready(topAlready)
+//                .productBottomId(productBottomId)
+//                .bottomAlready(bottomAlready)
+//                .build();
+//
+//            webClient.post()
+//                .uri(uriBuilder -> uriBuilder.path("/api/dressroom")
+//                    .build())
+//                .contentType(APPLICATION_JSON)
+//                .body(BodyInserters.fromValue(request))
+//                .retrieve()
+//                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
+//                    Mono.error(new InferenceFailureException("AI 서버 오류가 발생했습니다.")))
+//                .bodyToMono(String.class)
+//                .block();
         }
 
         DressRoom dressRoom = DressRoom.builder()

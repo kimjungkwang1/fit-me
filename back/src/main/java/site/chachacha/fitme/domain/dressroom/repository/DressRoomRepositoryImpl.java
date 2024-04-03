@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import site.chachacha.fitme.domain.dressroom.entity.DressRoom;
-import site.chachacha.fitme.domain.dressroom.entity.QDressRoom;
 
 @RequiredArgsConstructor
 public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
@@ -53,26 +52,24 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
 
     @Override
     public Boolean findByProductTopAndNull(Long productTopId) {
-        Optional<Long> result = Optional.ofNullable(queryFactory
+        return !queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
-            .where(QDressRoom.dressRoom.productTop.id.eq(productTopId)
-                .and(QDressRoom.dressRoom.productBottom.isNull()))
-            .fetchOne());
-
-        return result.isPresent();
+            .where(dressRoom.productTop.id.eq(productTopId)
+                .and(dressRoom.productBottom.isNull()))
+            .limit(1)
+            .fetch().isEmpty();
     }
 
     @Override
     public Boolean findByProductBottomAndNull(Long productBottomId) {
-        Optional<Long> result = Optional.ofNullable(queryFactory
+        return !queryFactory
             .select(dressRoom.id)
             .from(dressRoom)
-            .where(QDressRoom.dressRoom.productBottom.id.eq(productBottomId)
-                .and(QDressRoom.dressRoom.productTop.isNull()))
-            .fetchOne());
-
-        return result.isPresent();
+            .where(dressRoom.productBottom.id.eq(productBottomId)
+                .and(dressRoom.productTop.isNull()))
+            .limit(1)
+            .fetch().isEmpty();
     }
 
     private BooleanExpression ltDressRoomId(Long dressRoomId) {
