@@ -25,9 +25,11 @@ export default function Cart() {
     <>
       <div className='w-full flex justify-center'>
         <div className='w-full h-screen'>
-          <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
-            드레스룸 가기
-          </Button>
+          <div className='p-2'>
+            <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
+              드레스룸 가기
+            </Button>
+          </div>
           {items.length === 0 ? (
             <div className='flex flex-col items-center p-2'>
               <TbMoodEmpty className='text-7xl'></TbMoodEmpty>
@@ -40,20 +42,22 @@ export default function Cart() {
             items.map((item) => <CartItem key={item.id} item={item} />)
           )}
           <CartAddress address={address}></CartAddress>
-          <Button
-            color='gray'
-            className='my-2 w-[100%]'
-            onClick={() => {
-              try {
-                if (items.length > 0) {
-                  dispatch(order());
-                  navigate('/payment/complete');
-                }
-              } catch (error) {}
-            }}
-          >
-            결제하기 |{totalPrice.toLocaleString()}
-          </Button>
+          <div className='p-2 px-2'>
+            <Button
+              color='gray'
+              className='my-2 w-[100%]'
+              onClick={() => {
+                try {
+                  if (items.length > 0) {
+                    dispatch(order());
+                    navigate('/payment/complete');
+                  }
+                } catch (error) {}
+              }}
+            >
+              결제하기 |{totalPrice.toLocaleString()}
+            </Button>
+          </div>
         </div>
       </div>
     </>
