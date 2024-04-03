@@ -54,7 +54,7 @@ export default function Item({
             )}
           </div>
           <div className='mt-1 justify-start text-start'>
-            <p className='text-xs'>{brand.name}</p>
+            <p className='text-xs truncate'>{brand.name}</p>
             <p className='text-xs truncate'>{name}</p>
             <p className='font-bold'>{price.toLocaleString()}원</p>
             <div className='flex justify-between'>

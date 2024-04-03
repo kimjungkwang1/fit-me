@@ -1,4 +1,3 @@
-import React from 'react';
 import SearchHistoryKeyword from './SearchHistoryKeyword';
 
 type SearchType = {
@@ -6,24 +5,14 @@ type SearchType = {
   date: string;
 };
 
-type SearchHistoryProps = {
-  searchKeyword: (k: string) => void;
-};
-
-export default function SearchHistory({ searchKeyword }: SearchHistoryProps) {
-  console.log(JSON.parse(localStorage.getItem('recent')!));
+export default function SearchHistory() {
   return (
     <div>
       {localStorage.getItem('recent') &&
         JSON.parse(localStorage.getItem('recent')!)
           .reverse()
           .map((search: SearchType, index: number) => (
-            <SearchHistoryKeyword
-              key={index}
-              keyword={search.name}
-              date={search.date}
-              searchKeyword={searchKeyword}
-            />
+            <SearchHistoryKeyword key={index} keyword={search.name} date={search.date} />
           ))}
     </div>
   );
