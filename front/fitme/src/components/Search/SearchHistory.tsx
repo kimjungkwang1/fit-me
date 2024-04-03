@@ -6,11 +6,7 @@ type SearchType = {
   date: string;
 };
 
-type SearchHistoryProps = {
-  searchKeyword: (k: string) => void;
-};
-
-export default function SearchHistory({ searchKeyword }: SearchHistoryProps) {
+export default function SearchHistory() {
   console.log(JSON.parse(localStorage.getItem('recent')!));
   return (
     <div>
@@ -18,12 +14,7 @@ export default function SearchHistory({ searchKeyword }: SearchHistoryProps) {
         JSON.parse(localStorage.getItem('recent')!)
           .reverse()
           .map((search: SearchType, index: number) => (
-            <SearchHistoryKeyword
-              key={index}
-              keyword={search.name}
-              date={search.date}
-              searchKeyword={searchKeyword}
-            />
+            <SearchHistoryKeyword key={index} keyword={search.name} date={search.date} />
           ))}
     </div>
   );

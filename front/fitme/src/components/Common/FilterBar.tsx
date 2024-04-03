@@ -3,6 +3,15 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import FilterButton from './FilterButton';
 import FilterSelected from './FilterSelected';
 import { BiSearch } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import {
+  getBrands,
+  toggleBrand,
+  toggleCategory,
+  toggleAge,
+  setSortBy,
+} from '../../store/searchSlice';
 
 type OptionType = {
   id: number;
@@ -10,64 +19,55 @@ type OptionType = {
   selected: boolean;
 };
 
-type FilterBarProps = {
-  brands: OptionType[];
-  selectedBrands: number[];
-  selectedBrandsHandler: (id: number) => void;
+export default function FilterBar() {
+  const dispatch = useDispatch<AppDispatch>();
 
-  categories: OptionType[];
-  selectedCategories: number[];
-  selectedCategoriesHandler: (id: number) => void;
-
-  ages: OptionType[];
-  selectedAges: number[];
-  selectedAgesHandler: (id: number) => void;
-
-  minPrice: number;
-  maxPrice: number;
-  minPriceHandler: (min: number) => void;
-  maxPriceHandler: (max: number) => void;
-
-  sortBy: string;
-  sortByHandler: (sort: string) => void;
-};
-
-export default function FilterBar({
-  brands,
-  selectedBrands,
-  selectedBrandsHandler,
-  categories,
-  selectedCategories,
-  selectedCategoriesHandler,
-  ages,
-  selectedAges,
-  selectedAgesHandler,
-  minPrice,
-  maxPrice,
-  minPriceHandler,
-  maxPriceHandler,
-  sortBy,
-  sortByHandler,
-}: FilterBarProps) {
   const [openModal, setOpenModal] = useState(false);
 
-  // 보여줄 브랜드 목록 구성
-  const [showBrands, setShowBrands] = useState<OptionType[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const searchKeywordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  // 브랜드
+  // 브랜드 목록 api호출
+  useEffect(() => {
+    dispatch(getBrands());
+  }, []);
+  const brands = useSelector((state: RootState) => state.search.brands);
+  const selectedBrands = useSelector((state: RootState) => state.search.selectedBrands);
+  const selectedBrandsHandler = (id: number) => {
+    dispatch(toggleBrand(id));
+  };
+  // 브랜드 목록은 너무 많기 때문에 앞 10개만 보여줄 것
+  const [showBrands, setShowBrands] = useState<OptionType[]>([...brands].slice(0, 10));
+  const [searchBrand, setSearchBrand] = useState<string>('');
+  const searchBrandHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    setSearchKeyword(input);
+    setSearchBrand(input);
   };
   useEffect(() => {
-    if (searchKeyword === '') {
+    if (searchBrand === '') {
       setShowBrands([...brands].slice(0, 10));
     } else {
       const filteredBrands = brands.filter((brand) =>
-        brand.name.toLowerCase().includes(searchKeyword.toLowerCase())
+        brand.name.toLowerCase().includes(searchBrand.toLowerCase())
       );
       setShowBrands(filteredBrands.slice(0, 10));
     }
-  }, [brands, searchKeyword]);
+  }, [brands, searchBrand]);
+
+  // 카테고리
+  const categories = useSelector((state: RootState) => state.search.categories);
+  const selectedCategories = useSelector((state: RootState) => state.search.selectedCategories);
+  const selectedCategoriesHandler = (id: number) => {
+    dispatch(toggleCategory(id));
+  };
+
+  // 연령대
+  const ages = useSelector((state: RootState) => state.search.ages);
+  const selectedAges = useSelector((state: RootState) => state.search.selectedAges);
+  const selectedAgesHandler = (id: number) => {
+    dispatch(toggleAge(id));
+  };
+
+  // 정렬
+  const sortBy = useSelector((state: RootState) => state.search.sortBy);
 
   return (
     <>
@@ -103,14 +103,6 @@ export default function FilterBar({
                 : `${selectedAges.length}개 연령대 필터`
               : `연령대`}
           </div>
-          <div
-            className='mr-[3px] inline-block px-3 py-1 text-xs text-center border border-solid border-gray-400 rounded-lg'
-            onClick={() => setOpenModal(true)}
-          >
-            {minPrice === 0 && maxPrice === 1000000
-              ? `가격`
-              : `${minPrice.toLocaleString()}원~${maxPrice.toLocaleString()}원`}
-          </div>
         </div>
         <Dropdown
           label=''
@@ -127,16 +119,16 @@ export default function FilterBar({
             </span>
           )}
         >
-          <Dropdown.Item className='text-xs' onClick={() => sortByHandler('')}>
+          <Dropdown.Item className='text-xs' onClick={() => dispatch(setSortBy(''))}>
             인기순
           </Dropdown.Item>
-          <Dropdown.Item className='text-xs' onClick={() => sortByHandler('latest')}>
+          <Dropdown.Item className='text-xs' onClick={() => dispatch(setSortBy('latest'))}>
             최신순
           </Dropdown.Item>
-          <Dropdown.Item className='text-xs' onClick={() => sortByHandler('priceAsc')}>
+          <Dropdown.Item className='text-xs' onClick={() => dispatch(setSortBy('priceAsc'))}>
             가격 낮은 순
           </Dropdown.Item>
-          <Dropdown.Item className='text-xs' onClick={() => sortByHandler('priceDesc')}>
+          <Dropdown.Item className='text-xs' onClick={() => dispatch(setSortBy('priceDesc'))}>
             가격 높은 순
           </Dropdown.Item>
         </Dropdown>
@@ -190,7 +182,7 @@ export default function FilterBar({
                   type='text'
                   placeholder='브랜드를 검색해보세요'
                   className='bg-gray-200 w-full focus: outline-none ml-1'
-                  onChange={searchKeywordHandler}
+                  onChange={searchBrandHandler}
                 />
               </div>
               <div className='flex flex-row flex-wrap gap-2'>
@@ -239,12 +231,6 @@ export default function FilterBar({
                     />
                   ))}
               </div>
-            </div>
-
-            {/* 가격 double range slider */}
-            <div>
-              <span className='flex font-semibold mt-5 mb-2'>가격</span>
-              <div />
             </div>
 
             {/* 닫는 버튼 */}
