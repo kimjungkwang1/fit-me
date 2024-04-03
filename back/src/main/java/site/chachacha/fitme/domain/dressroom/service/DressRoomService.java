@@ -89,6 +89,15 @@ public class DressRoomService {
         List<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
             modelId, productTopId, productBottomId);
 
+        DressRoom dressRoom = DressRoom.builder()
+            .model(model)
+            .productTop(top)
+            .productBottom(bottom)
+            .member(member)
+            .build();
+
+        DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
+
         // 존재하지 않으면 새로운 이미지 생성
         if (existingDressRoom.isEmpty()) {
             Boolean topAlready = null;
@@ -114,6 +123,7 @@ public class DressRoomService {
                 .build();
 
             DressRoomAIRequest request = DressRoomAIRequest.builder()
+                .dressRoomId(savedDressRoom.getId())
                 .modelId(modelId)
                 .productTopId(productTopId)
                 .topAlready(topAlready)
@@ -193,15 +203,6 @@ public class DressRoomService {
                 })
                 .block();
         }
-
-        DressRoom dressRoom = DressRoom.builder()
-            .model(model)
-            .productTop(top)
-            .productBottom(bottom)
-            .member(member)
-            .build();
-
-        DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
         return DressRoomResponse.of(savedDressRoom);
     }
