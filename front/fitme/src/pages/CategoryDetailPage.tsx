@@ -7,6 +7,7 @@ const CategoryDetailPage: React.FC = () => {
 
   return (
     <>
+      <div className='w-full mb-3'></div>
       <CategoryItemList
         selectedBrands={[]}
         selectedCategories={[Number(id)]}
