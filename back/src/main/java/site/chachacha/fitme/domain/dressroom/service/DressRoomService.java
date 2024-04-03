@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -73,6 +74,16 @@ public class DressRoomService {
         // model이 존재하지 않으면 GoneException 발생
         Model model = modelRepository.findById(modelId)
             .orElseThrow(() -> new GoneException("존재하지 않는 모델입니다."));
+
+        // DressRoom이 이미 존재하는지 조회
+        Optional<DressRoom> existDressRoom = dressRoomRepository.findByMemberIdAndModelIdAndProductTopIdAndProductBottomId(
+            memberId, modelId, productTopId, productBottomId);
+
+        // DressRoom이 이미 존재하는 경우
+        if (existDressRoom.isPresent()) {
+            // 그대로 반환
+            return DressRoomResponse.of(existDressRoom.get());
+        }
 
         // 상, 하의 둘 다 요청이 들어온 경우
         if (productTopId != null && productBottomId != null) {
@@ -292,7 +303,7 @@ public class DressRoomService {
                 try {
                     if (bytes == null) {
                         log.info("byte is null");
-                        throw new InferenceFailureException("이미지 저장 실패");
+                        throw new FileSaveException();
                     }
 
                     String filename = imgUrl;
