@@ -103,6 +103,11 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
+    public double getReviewRating() {
+        // 소수 둘째자리에서 반올림
+        return Math.round(this.reviewRating * 10) / 10.0;
+    }
+
     // == 비즈니스 로직 == //
     public void addReview(ProductReview productReview, int rating) {
         productReviews.add(productReview);
