@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class DressRoomAIRequest {
 
+    private Long dressRoomId;
     private Long modelId;
     private Long productTopId;
     private Boolean topAlready;
@@ -17,9 +18,9 @@ public class DressRoomAIRequest {
     private Boolean bottomAlready;
 
     @Builder
-    private DressRoomAIRequest(Long modelId, Long productTopId,
-        Boolean topAlready,
-        Long productBottomId, Boolean bottomAlready) {
+    private DressRoomAIRequest(Long dressRoomId, Long modelId, Long productTopId,
+        Boolean topAlready, Long productBottomId, Boolean bottomAlready) {
+        this.dressRoomId = dressRoomId;
         this.modelId = modelId;
         this.productTopId = productTopId;
         this.topAlready = topAlready;
