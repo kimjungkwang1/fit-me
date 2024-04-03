@@ -19,8 +19,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.fitme.batch.entity.memebr.Member;
 import site.fitme.batch.entity.common.BaseEntity;
+import site.fitme.batch.entity.memebr.Member;
 
 @Getter
 @Entity
@@ -41,14 +41,4 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.ORDER;
-
-    @Builder
-    public Order(Member member, List<OrderProduct> orderProducts) {
-        this.member = member;
-        this.member.addOrder(this);
-
-        this.orderProducts = orderProducts;
-        this.orderProducts
-            .forEach(orderProduct -> orderProduct.setOrder(this));
-    }
 }
