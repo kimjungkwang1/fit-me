@@ -20,9 +20,9 @@ export default function DressroomMyFittingList() {
       dispatch(getFittings());
     }
   }, [inView]);
-  useEffect(() => {
-    dispatch(getFittings());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getFittings());
+  // }, []);
 
   return (
     <>
