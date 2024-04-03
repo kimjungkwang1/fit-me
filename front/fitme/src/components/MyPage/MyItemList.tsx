@@ -105,17 +105,20 @@ const MyItemList: React.FC<TabProps> = ({ tabName }) => {
           <div className='flex flex-wrap flex-row mx-[2%] place-content-start gap-y-3'>
             {favlist &&
               favlist.map((item, index) => (
-                <Item
-                  key={index}
-                  id={item.id}
-                  name={item.name}
-                  price={item.price}
-                  mainImages={item.mainImages}
-                  brand={item.brand}
-                  likeCount={item.likeCount}
-                  reviewRating={item.reviewRating}
-                  reviewCount={item.reviewCount}
-                />
+                <React.Fragment key={index}>
+                  <Item
+                    key={index}
+                    id={item.id}
+                    name={item.name}
+                    price={item.price}
+                    mainImages={item.mainImages}
+                    brand={item.brand}
+                    likeCount={item.likeCount}
+                    reviewRating={item.reviewRating}
+                    reviewCount={item.reviewCount}
+                  />
+                  {/* <button className='w-fit w-[31.5%]'>좋아요 취소</button> */}
+                </React.Fragment>
               ))}
           </div>
         ) : null}
