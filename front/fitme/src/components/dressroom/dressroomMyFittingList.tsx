@@ -21,7 +21,9 @@ export default function DressroomMyFittingList() {
     }
   }, [inView]);
   // useEffect(() => {
-  //   dispatch(getFittings());
+  //   if (myfittings.length > 0) {
+  //     dispatch(getFittings());
+  //   }
   // }, []);
 
   return (
@@ -33,9 +35,9 @@ export default function DressroomMyFittingList() {
         {myfittings.map((item) => (
           <div className='relative my-2 p-2' key={item.id}>
             <div>
-              <a href={item.url} className='w-[90%]'>
+              <div className='w-[90%]'>
                 <img src={item.url} alt='' />
-              </a>
+              </div>
               {changemode ? (
                 <IoPerson
                   className='absolute top-0 right-[-4px] p-2 bg-green-500 text-white opacity-100 rounded-full w-8 h-8 z-10 cursor-pointer'

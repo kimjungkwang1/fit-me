@@ -4,10 +4,12 @@ import DressroomNowFitting from '../components/dressroom/dressroomNowFitting';
 import DressroomItemList from '../components/dressroom/dressroomItemList';
 import DressroomMyFittingList from '../components/dressroom/dressroomMyFittingList';
 import DressroomButton from '../components/dressroom/DressroomButton';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store/store';
+import { getFittings2 } from '../store/dressroomSlice';
 type selectedTabType = '피팅 해보기' | '내 피팅 목록';
 export default function Dressroom() {
+  const dispatch = useDispatch<AppDispatch>();
   const result = useSelector((state: RootState) => state.dressroom.result);
   const [tab, setTabs] = useState<selectedTabType>('피팅 해보기');
   return (
@@ -26,7 +28,10 @@ export default function Dressroom() {
             className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
               tab === '내 피팅 목록' ? 'bg-white' : 'bg-gray-300 text-gray-100'
             }`}
-            onClick={() => setTabs('내 피팅 목록')}
+            onClick={() => {
+              setTabs('내 피팅 목록');
+              dispatch(getFittings2());
+            }}
           >
             내 피팅 목록
           </div>

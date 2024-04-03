@@ -98,13 +98,23 @@ export const getModels = createAsyncThunk('dressroom/getModels', async () => {
 export const getFittings = createAsyncThunk('dresroom/getFittings', async (_, { getState }) => {
   const state = getState() as RootState;
   const fittings = state.dressroom.fittings;
-  const lastFittingId = fittings.length > 0 ? fittings[fittings.length - 1].id : undefined;
+  if (fittings.length > 0) {
+    const lastFittingId = fittings.length > 0 ? fittings[fittings.length - 1].id : undefined;
 
-  const endpoint = lastFittingId
-    ? `/api/dressroom/list?dressRoomId=${lastFittingId}`
-    : '/api/dressroom/list';
+    const endpoint = lastFittingId
+      ? `/api/dressroom/list?dressRoomId=${lastFittingId}`
+      : '/api/dressroom/list';
 
-  const response = await api.get<any>(endpoint);
+    const response = await api.get<any>(endpoint);
+    return response.data.map((item: any) => ({
+      id: item.id,
+      url: item.imageUrl,
+    }));
+  }
+  return [];
+});
+export const getFittings2 = createAsyncThunk('dresroom/getFittings2', async (_, { getState }) => {
+  const response = await api.get<any>('/api/dressroom/list');
   return response.data.map((item: any) => ({
     id: item.id,
     url: item.imageUrl,
@@ -141,7 +151,6 @@ export const makeFittings = createAsyncThunk('dresroom/makeFittings', async (_, 
     const response = await api.post<any>(endpoint);
 
     MySwal.close();
-    console.log(response.data.imageUrl);
     return { id: response.data.id, url: response.data.imageUrl };
   } catch (error) {
     MySwal.close();
@@ -248,6 +257,16 @@ const dressroomSlice = createSlice({
         state.fittings = [...state.fittings, ...action.payload];
       })
       .addCase(getFittings.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(getFittings2.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getFittings2.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.fittings = action.payload;
+      })
+      .addCase(getFittings2.rejected, (state) => {
         state.status = 'failed';
       });
   },
