@@ -136,6 +136,8 @@ export default function SearchPage() {
       {list.length === 0 ? (
         keyword === '' ? (
           <SearchHistory />
+        ) : waitReset ? (
+          <div></div>
         ) : (
           <div className='flex py-14'>
             <span className='w-full text-center text-xl'>검색 결과가 없습니다.</span>

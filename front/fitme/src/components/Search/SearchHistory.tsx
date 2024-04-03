@@ -1,4 +1,3 @@
-import React from 'react';
 import SearchHistoryKeyword from './SearchHistoryKeyword';
 
 type SearchType = {
@@ -7,7 +6,6 @@ type SearchType = {
 };
 
 export default function SearchHistory() {
-  console.log(JSON.parse(localStorage.getItem('recent')!));
   return (
     <div>
       {localStorage.getItem('recent') &&
