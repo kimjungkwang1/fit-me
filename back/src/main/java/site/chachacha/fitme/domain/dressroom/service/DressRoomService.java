@@ -131,6 +131,13 @@ public class DressRoomService {
                 .bottomAlready(bottomAlready)
                 .build();
 
+            log.info("dressRoomId: {}", request.getDressRoomId());
+            log.info("modelId: {}", request.getModelId());
+            log.info("productTopId: {}", request.getProductTopId());
+            log.info("topAlready: {}", request.getTopAlready());
+            log.info("productBottomId: {}", request.getProductBottomId());
+            log.info("bottomAlready: {}", request.getBottomAlready());
+
             webClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/api/fitmeai").build())
                 .contentType(APPLICATION_JSON)
