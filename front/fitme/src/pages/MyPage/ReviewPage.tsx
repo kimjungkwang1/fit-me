@@ -32,7 +32,7 @@ const Review = () => {
     // productReviewRequest JSON 객체를 생성하고 이를 문자열로 변환
     const productReviewRequest = JSON.stringify({
       rating: rating,
-      reviewText: reviewText,
+      content: reviewText,
     });
     console.log(productReviewRequest);
 
@@ -45,9 +45,10 @@ const Review = () => {
     try {
       await api.post(`/api/products/${id}/reviews`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': undefined,
         },
       });
+      alert('리뷰 등록 완료!');
       navigate('/mypage?tab=bought');
     } catch (error) {
       console.error('리뷰 제출 중 에러 발생:', error);

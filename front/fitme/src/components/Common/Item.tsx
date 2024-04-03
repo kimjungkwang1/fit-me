@@ -47,7 +47,7 @@ export default function Item({
               <img
                 src={mainImages[0].url}
                 alt='main_image'
-                className='aspect-[3/4] object-cover rounded-lg'
+                className='aspect-[3/4] object-cover rounded-lg border-beige border-2'
               />
             ) : (
               <div className='bg-gray-400 aspect-[3/4] object-cover rounded-lg' />
