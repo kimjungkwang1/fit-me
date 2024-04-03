@@ -112,10 +112,13 @@ public class DressRoomService {
                     .member(member)
                     .build();
 
-                // 캐시된 상의를 기반으로 하의 추가
-                requestAIServer(modelId, productTopId, productBottomId, dressRoom, true, false);
+                DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
-                return DressRoomResponse.of(dressRoom);
+                // 캐시된 상의를 기반으로 하의 추가
+                requestAIServer(modelId, productTopId, productBottomId, savedDressRoom, true,
+                    false);
+
+                return DressRoomResponse.of(savedDressRoom);
             }
             // 상의 캐싱되어 있지 않은 경우
             else {
@@ -133,10 +136,13 @@ public class DressRoomService {
                         .member(member)
                         .build();
 
-                    // 캐시된 하의를 기반으로 상의 추가
-                    requestAIServer(modelId, productTopId, productBottomId, dressRoom, false, true);
+                    DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
-                    return DressRoomResponse.of(dressRoom);
+                    // 캐시된 하의를 기반으로 상의 추가
+                    requestAIServer(modelId, productTopId, productBottomId, savedDressRoom, false,
+                        true);
+
+                    return DressRoomResponse.of(savedDressRoom);
                 }
                 // 하의 캐싱되어 있지 않은 경우
                 else {
@@ -148,11 +154,13 @@ public class DressRoomService {
                         .member(member)
                         .build();
 
+                    DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
+
                     // 캐시된 상의, 하의가 없는 경우
-                    requestAIServer(modelId, productTopId, productBottomId, dressRoom, false,
+                    requestAIServer(modelId, productTopId, productBottomId, savedDressRoom, false,
                         false);
 
-                    return DressRoomResponse.of(dressRoom);
+                    return DressRoomResponse.of(savedDressRoom);
                 }
             }
         }
@@ -191,10 +199,13 @@ public class DressRoomService {
                     .member(member)
                     .build();
 
-                // 캐시된 상의가 없는 경우
-                requestAIServer(modelId, productTopId, productBottomId, dressRoom, false, null);
+                DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
-                return DressRoomResponse.of(dressRoom);
+                // 캐시된 상의가 없는 경우
+                requestAIServer(modelId, productTopId, productBottomId, savedDressRoom, false,
+                    null);
+
+                return DressRoomResponse.of(savedDressRoom);
             }
         }
         // 하의만 요청이 들어온 경우
@@ -232,10 +243,13 @@ public class DressRoomService {
                     .member(member)
                     .build();
 
-                // 캐시된 하의가 없는 경우
-                requestAIServer(modelId, productTopId, productBottomId, dressRoom, null, false);
+                DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
-                return DressRoomResponse.of(dressRoom);
+                // 캐시된 하의가 없는 경우
+                requestAIServer(modelId, productTopId, productBottomId, savedDressRoom, null,
+                    false);
+
+                return DressRoomResponse.of(savedDressRoom);
             }
         }
 
