@@ -42,7 +42,6 @@ const Review = () => {
     formData.append('image', selectedFile);
 
     // axios
-    // api.post(`/api/products/${id}/reviews`).then();
     try {
       await api.post(`/api/products/${id}/reviews`, formData, {
         headers: {
