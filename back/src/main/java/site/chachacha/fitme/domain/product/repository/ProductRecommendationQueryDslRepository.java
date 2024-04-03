@@ -5,5 +5,5 @@ import site.chachacha.fitme.domain.product.entity.ProductRecommendation;
 
 public interface ProductRecommendationQueryDslRepository {
 
-    List<ProductRecommendation> findAllByIdWithProduct(Long productId);
+    List<ProductRecommendation> findByProductIdWithProduct(Long productId);
 }

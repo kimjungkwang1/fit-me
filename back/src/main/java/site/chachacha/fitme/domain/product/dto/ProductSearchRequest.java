@@ -11,7 +11,7 @@ public class ProductSearchRequest {
 
     private Long lastId;
 
-    private Integer lastPopularityScore;
+    private Double lastPopularityScore;
 
     private Integer lastPrice;
 

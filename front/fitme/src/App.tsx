@@ -12,6 +12,7 @@ import SearchPage from './pages/SearchPage';
 import CartPage from './pages/cart';
 import DressroomPage from './pages/dressroom';
 import MyPage from './pages/MyPage/MyPageMain';
+import ReviewPage from './pages/MyPage/ReviewPage';
 import FeedPage from './pages/FeedPage';
 import FeedDetailPage from './pages/FeedDetailPage';
 import MyFeedPage from './pages/MyFeedPage';
@@ -34,9 +35,9 @@ const App: React.FC = () => {
     <>
       <Provider store={store}>
         <div id='root' className='flex justify-center'>
-          <div className='max-w-[600px] h-dvh select-none flex flex-col '>
+          <div className='w-full max-w-[600px] h-dvh select-none flex flex-col '>
             <HeaderBar />
-            <div className='flex-grow overflow-auto hide-scrollbar'>
+            <div className='w- full flex-grow hide-scrollbar py-[55px]'>
               <Routes>
                 <Route path='/' element={<MainPage />} />
                 <Route path='/home' element={<MainPage />} />
@@ -52,6 +53,7 @@ const App: React.FC = () => {
                 <Route path='/payment/complete' element={<CompletePage />} />
                 <Route path='/dressroom' element={<PrivateRoute element={<DressroomPage />} />} />
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
+                <Route path='/review' element={<ReviewPage />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
                 <Route path='/feed/myfeed' element={<FeedPage />} />

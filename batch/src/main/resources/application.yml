@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+
+# aws parameter store
+aws:
+  paramstore:
+    enabled: true
+    prefix: /FitMe
+    name: WAS
+    profileSeparator: _

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../../services/api';
 
 type ItemType = {
   id: number;
@@ -9,6 +10,8 @@ type ItemType = {
 };
 
 export default function BoughtItem({ id, name, url, brandName }: ItemType) {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className='w-full h-full'>
@@ -26,7 +29,12 @@ export default function BoughtItem({ id, name, url, brandName }: ItemType) {
             <div className='flex justify-between'></div>
           </div>
         </Link>
-        <button className='w-full rounded-md mt-2 bg-gray-200 py-1'>리뷰등록</button>
+        <button
+          className='w-full rounded-md mt-2 bg-bluegray text-white py-1'
+          onClick={() => navigate('/review', { state: { id, name, url, brandName } })}
+        >
+          리뷰등록
+        </button>
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../services/api';
 import BoughtItem from './boughtItem';
 import Item from '../Common/Item';
+import { useNavigate } from 'react-router-dom';
 
 interface TabProps {
   tabName: string;
@@ -60,6 +61,7 @@ type ItemType2 = {
 const MyItemList: React.FC<TabProps> = ({ tabName }) => {
   const [boughtlist, setBoughtList] = useState<ItemType1[]>();
   const [favlist, setFavList] = useState<ItemType2[]>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (tabName === 'bought') {
@@ -102,20 +104,32 @@ const MyItemList: React.FC<TabProps> = ({ tabName }) => {
               ))}
           </div>
         ) : tabName === 'fav' ? (
-          <div className='flex flex-wrap flex-row mx-[2%] place-content-start gap-y-3'>
+          // <div className='flex flex-wrap flex-row mx-[2%] place-content-start gap-y-3'>
+          <div className='grid grid-flow-row-dense grid-cols-3'>
             {favlist &&
               favlist.map((item, index) => (
-                <Item
-                  key={index}
-                  id={item.id}
-                  name={item.name}
-                  price={item.price}
-                  mainImages={item.mainImages}
-                  brand={item.brand}
-                  likeCount={item.likeCount}
-                  reviewRating={item.reviewRating}
-                  reviewCount={item.reviewCount}
-                />
+                <div className='flex flex-col items-center p-2' key={index}>
+                  <Item
+                    key={index}
+                    id={item.id}
+                    name={item.name}
+                    price={item.price}
+                    mainImages={item.mainImages}
+                    brand={item.brand}
+                    likeCount={item.likeCount}
+                    reviewRating={item.reviewRating}
+                    reviewCount={item.reviewCount}
+                  />
+                  <button
+                    className='w-full rounded-md mt-2 bg-bluegray text-white py-1 mt-3'
+                    onClick={() => {
+                      api.delete(`/api/products/${item.id}/like`);
+                      navigate(0);
+                    }}
+                  >
+                    좋아요 취소
+                  </button>
+                </div>
               ))}
           </div>
         ) : null}

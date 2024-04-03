@@ -180,7 +180,7 @@ const HeaderBar: React.FC = () => {
   return (
     <>
       {currentTab !== 'login' && (
-        <header className='h-[55px]'>
+        <header className='h-[55px] fixed z-20 w-full max-w-[600px]'>
           <div className='h-[55px] bg-white flex border-b-2 border-gray-300'>
             <div className='w-28 pl-4 mt-1 flex items-center'>{left}</div>
             <div className='mt-1 grow flex items-center justify-center text-xl font-bold'>
