@@ -43,7 +43,7 @@ public class DressRoomService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    private final String imgUrl = ".images/dressroom/men/";
+    private final String imgUrl = "./images/dressroom/men/";
 
     // DressRoom 목록 조회
     public List<DressRoomResponse> findNoOffsetByMemberId(Long memberId, Long dressRoomId) {

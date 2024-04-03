@@ -31,7 +31,7 @@ public class ProductReviewService {
     private final ProductReviewRepository productReviewRepository;
     private final MemberRepository memberRepository;
     private final OrderProductRepository orderProductRepository;
-    private final String imgUrl = ".images/reviews/";
+    private final String imgUrl = "./images/reviews/";
 
     public List<ProductReviewResponseWithMemberNickname> getReviews(Long productId) {
         return productReviewRepository.findAllByProductIdWithMember(productId).stream()
