@@ -34,11 +34,11 @@ public class DressRoom extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Model model;
 
-    @JoinColumn(name = "product_id_top")
+    @JoinColumn(name = "product_top_id")
     @ManyToOne(fetch = LAZY)
     private Product productTop;
 
-    @JoinColumn(name = "product_id_bottom")
+    @JoinColumn(name = "product_bottom_id")
     @ManyToOne(fetch = LAZY)
     private Product productBottom;
 

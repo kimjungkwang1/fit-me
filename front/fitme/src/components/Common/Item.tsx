@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { TbThumbUp } from 'react-icons/tb';
 
 type ImageType = {
@@ -33,9 +33,14 @@ export default function Item({
   reviewRating,
   reviewCount,
 }: ItemType) {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tab = queryParams.get('tab');
+  const isFavTab = location.pathname === '/mypage' && tab === 'fav';
+
   return (
     <>
-      <div className='flex-col w-[31.5%] mx-[0.916%] mb-2'>
+      <div className={`flex-col mb-2 ${isFavTab ? '' : 'w-[31.5%] mx-[0.916%]'}`}>
         <Link to={`/detail/${id}`}>
           <div>
             {mainImages[0] ? (
