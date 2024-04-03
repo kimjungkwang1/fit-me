@@ -115,11 +115,15 @@ public class DressRoomService {
 
             // 상의 이미 캐싱되어 있는 경우
             if (!dressRoomWithTop.isEmpty()) {
+                // 하의를 조회한다.
+                Product bottom = productRepository.findById(productBottomId)
+                    .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
+
                 // 저장
                 DressRoom dressRoom = DressRoom.builder()
                     .model(model)
                     .productTop(dressRoomWithTop.get(0).getProductTop())
-                    .productBottom(dressRoomWithTop.get(0).getProductBottom())
+                    .productBottom(bottom)
                     .member(member)
                     .build();
 
@@ -139,10 +143,14 @@ public class DressRoomService {
 
                 // 하의 이미 캐싱되어 있는 경우
                 if (!dressRoomWithBottom.isEmpty()) {
+                    // 상의 조회
+                    Product top = productRepository.findById(productTopId)
+                        .orElseThrow(() -> new GoneException("존재하지 않는 상의입니다."));
+
                     // 저장
                     DressRoom dressRoom = DressRoom.builder()
                         .model(model)
-                        .productTop(dressRoomWithBottom.get(0).getProductTop())
+                        .productTop(top)
                         .productBottom(dressRoomWithBottom.get(0).getProductBottom())
                         .member(member)
                         .build();
@@ -187,7 +195,7 @@ public class DressRoomService {
                 DressRoom dressRoom = DressRoom.builder()
                     .model(model)
                     .productTop(dressRooms.get(0).getProductTop())
-                    .productBottom(dressRooms.get(0).getProductBottom())
+                    .productBottom(null)
                     .member(member)
                     .build();
 
@@ -230,7 +238,7 @@ public class DressRoomService {
                 // 그대로 반환하면 돼
                 DressRoom dressRoom = DressRoom.builder()
                     .model(model)
-                    .productTop(dressRooms.get(0).getProductTop())
+                    .productTop(null)
                     .productBottom(dressRooms.get(0).getProductBottom())
                     .member(member)
                     .build();
