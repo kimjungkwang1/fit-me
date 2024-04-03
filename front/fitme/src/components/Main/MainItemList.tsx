@@ -59,7 +59,7 @@ export default function MainItemList() {
 
   useEffect(() => {
     if (inView) {
-      console.log(inView, '무한 스크롤 요청');
+      // console.log(inView, '무한 스크롤 요청');
 
       infiniteScroll();
     }
