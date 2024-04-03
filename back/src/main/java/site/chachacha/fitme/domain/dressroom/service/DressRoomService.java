@@ -3,15 +3,14 @@ package site.chachacha.fitme.domain.dressroom.service;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,9 +128,13 @@ public class DressRoomService {
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
                     Mono.error(new InferenceFailureException("AI 서버 오류가 발생했습니다.")))
-                .bodyToMono(Resource.class) // Resource 타입으로 파일 데이터를 받음
-                .doOnNext(resource -> {
+                .bodyToMono(byte[].class)
+                .doOnNext(bytes -> {
                     try {
+                        if (bytes == null) {
+                            throw new InferenceFailureException("AI 서버 오류가 발생했습니다.");
+                        }
+
                         String filename = imgUrl;
 
                         // .images/dressroom 폴더가 없으면 생성
@@ -177,12 +180,14 @@ public class DressRoomService {
                             filename += productBottomId + ".jpg";
                         }
 
-                        // 파일 저장 로직
-                        path = Paths.get(filename);
-                        Files.copy(resource.getInputStream(), path,
-                            StandardCopyOption.REPLACE_EXISTING);
+                        try (FileOutputStream fos = new FileOutputStream(filename)) {
+                            fos.write(bytes);
+                        } catch (IOException e) {
+                            log.error("이미지 저장 중 오류 발생", e);
+                            throw new FileSaveException();
+                        }
                     } catch (IOException e) {
-                        log.error("파일 저장 중 오류 발생", e);
+                        log.error("폴더 생성 중 중 오류 발생", e);
                         throw new FileSaveException();
                     }
                 })
