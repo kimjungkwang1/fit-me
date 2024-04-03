@@ -22,6 +22,7 @@ import site.chachacha.fitme.domain.product.entity.Product;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class ProductReview extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -61,7 +62,7 @@ public class ProductReview extends BaseEntity {
         this.content = content;
     }
 
-    public void updateImageUrl(Long id) {
-        this.imageUrl += id + "/" + "image.jpg";
+    public void updateImageUrl(String finalUrl) {
+        this.imageUrl = finalUrl;
     }
 }
