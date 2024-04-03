@@ -12,6 +12,8 @@ import {
   toggleAge,
   setSortBy,
 } from '../../store/searchSlice';
+import customModalTheme from '../../style/ModalTheme';
+import customDropdownTheme from '../../style/DropdownTheme';
 
 type OptionType = {
   id: number;
@@ -105,6 +107,7 @@ export default function FilterBar() {
           </div>
         </div>
         <Dropdown
+          theme={customDropdownTheme}
           label=''
           placement='bottom'
           renderTrigger={() => (
@@ -134,7 +137,12 @@ export default function FilterBar() {
         </Dropdown>
 
         {/* 옵션 선택 모달 */}
-        <Modal dismissible onClose={() => setOpenModal(false)} show={openModal}>
+        <Modal
+          theme={customModalTheme}
+          dismissible
+          onClose={() => setOpenModal(false)}
+          show={openModal}
+        >
           <Modal.Body>
             {/* 선택된 옵션 리스트 */}
             <div>
