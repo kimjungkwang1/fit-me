@@ -114,7 +114,6 @@ export default function DressroomItemLst() {
                 if (selected1 === '전체') return true;
                 if (selected1 === '상의') return Math.floor(item.category / 1000) === 1;
                 if (selected1 === '하의') return Math.floor(item.category / 1000) === 3;
-                return true;
               })
               .map((item) => (
                 <div className='p-2' key={item.id}>
@@ -162,10 +161,9 @@ export default function DressroomItemLst() {
                 if (selected2 === '전체') return true;
                 if (selected2 === '상의') return Math.floor(item.category / 1000) === 1;
                 if (selected2 === '하의') return Math.floor(item.category / 1000) === 3;
-                return true;
               })
-              .map((item) => (
-                <div className='p-2' key={item.id}>
+              .map((item, index) => (
+                <div className='p-2' key={index}>
                   <img
                     className='object-cover aspect-square'
                     src={item.url}
