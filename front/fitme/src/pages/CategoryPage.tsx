@@ -162,7 +162,7 @@ export default function CategoryPage() {
 
   return (
     <div>
-      <FilterBar
+      {/* <FilterBar
         brands={brands}
         selectedBrands={selectedBrands}
         selectedBrandsHandler={selectedBrandsHandler}
@@ -178,7 +178,7 @@ export default function CategoryPage() {
         maxPriceHandler={maxPriceHandler}
         sortBy={sortBy}
         sortByHandler={sortByHandler}
-      />
+      /> */}
       <CategoryItemList
         selectedBrands={selectedBrands}
         selectedCategories={selectedCategories}

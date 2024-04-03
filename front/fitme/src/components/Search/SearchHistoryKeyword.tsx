@@ -1,13 +1,20 @@
 import { LuHistory } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { setKeyword } from '../../store/searchSlice';
 
 type Keyword = {
   keyword: string;
   date: string;
-  searchKeyword: (k: string) => void;
 };
 
-export default function SearchHistoryKeyword({ keyword, date, searchKeyword }: Keyword) {
+export default function SearchHistoryKeyword({ keyword, date }: Keyword) {
+  const dispatch = useDispatch<AppDispatch>();
+  const searchKeyword = (k: string) => {
+    dispatch(setKeyword(k));
+  };
+
   return (
     <>
       <div className='flex flex-row m-3'>
