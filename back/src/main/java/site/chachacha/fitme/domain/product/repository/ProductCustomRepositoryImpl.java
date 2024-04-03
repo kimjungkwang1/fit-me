@@ -24,7 +24,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     private static final String SORT_BY_PRICE_DESC = "priceDesc";
 
     @Override
-    public List<Product> findAllByProductConditions(Long lastId, Integer lastPopularityScore, Integer lastPrice, Integer size, String keyword,
+    public List<Product> findAllByProductConditions(Long lastId, Double lastPopularityScore, Integer lastPrice, Integer size, String keyword,
         List<String> ageRanges, List<Long> brandIds, List<Long> categoryIds, Integer startPrice, Integer endPrice, String sortBy) {
 
         return queryFactory
@@ -86,7 +86,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         return product.id.lt(lastId); // id < lastId
     }
 
-    private BooleanExpression popularCursorCondition(Integer lastPopularityScore, Long lastId) {
+    private BooleanExpression popularCursorCondition(Double lastPopularityScore, Long lastId) {
         if (lastPopularityScore == null || lastId == null) {
             return null;
         }
