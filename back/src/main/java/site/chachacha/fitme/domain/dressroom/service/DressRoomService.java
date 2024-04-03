@@ -84,6 +84,25 @@ public class DressRoomService {
                 .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
         }
 
+        Boolean topAlready = null;
+        Boolean bottomAlready = null;
+
+        // productTopId, productBottomId 둘 다 있는 경우
+        if (productTopId != null && productBottomId != null) {
+            topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
+            bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
+                bottom);
+        }
+        // productTopId가 있는 경우
+        else if (productTopId != null) {
+            topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
+        }
+        // productBottomId가 있는 경우
+        else if (productBottomId != null) {
+            bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
+                bottom);
+        }
+
         // 캐싱
         // DressRoom Entity 중에 같은 Model, ProductTop, ProductBottom이 있는지 확인
         List<DressRoom> existingDressRoom = dressRoomRepository.findByModelAndProductTopAndProductBottom(
@@ -96,29 +115,11 @@ public class DressRoomService {
             .member(member)
             .build();
 
+        // 이 저장 로직은 움직이지 마세요.
         DressRoom savedDressRoom = dressRoomRepository.save(dressRoom);
 
         // 존재하지 않으면 새로운 이미지 생성
         if (existingDressRoom.isEmpty()) {
-            Boolean topAlready = null;
-            Boolean bottomAlready = null;
-
-            // productTopId, productBottomId 둘 다 있는 경우
-            if (productTopId != null && productBottomId != null) {
-                topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
-                bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
-                    bottom);
-            }
-            // productTopId가 있는 경우
-            else if (productTopId != null) {
-                topAlready = !dressRoomRepository.existsByProductTopAndProductBottomIsNull(top);
-            }
-            // productBottomId가 있는 경우
-            else if (productBottomId != null) {
-                bottomAlready = !dressRoomRepository.existsByProductBottomAndProductTopIsNull(
-                    bottom);
-            }
-
             // AI 서버에 요청
             WebClient webClient = WebClient.builder()
                 .baseUrl("http://222.107.238.75:8111")
