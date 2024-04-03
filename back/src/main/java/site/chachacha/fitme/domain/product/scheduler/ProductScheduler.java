@@ -3,6 +3,7 @@ package site.chachacha.fitme.domain.product.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class ProductScheduler {
         }
 
         // 업데이트 시간 저장
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = now.format(formatter);
         redisTemplate.opsForValue().set(RANKING_UPDATE_TIME_NAME, formattedDateTime);

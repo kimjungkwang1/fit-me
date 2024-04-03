@@ -6,7 +6,7 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
   return (
     <div className='flex flex-col justify-center items-center h-full gap-8'>
-      <img src={NotFound} alt='notfound' />
+      <img src={NotFound} alt='notfound' className='w-[90%]' />
       <div className='text-3xl'>
         <div>잘못된 경로 혹은 접근입니다.</div>
       </div>

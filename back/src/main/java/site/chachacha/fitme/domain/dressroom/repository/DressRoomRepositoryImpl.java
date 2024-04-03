@@ -42,12 +42,46 @@ public class DressRoomRepositoryImpl implements DressRoomQueryDslRepository {
         return queryFactory
             .selectFrom(dressRoom)
             .where(dressRoom.model.id.eq(modelId)
+                .and(dressRoom.productTop.id.eq(productTopId))
+                .and(dressRoom.productBottom.id.eq(productBottomId)))
+            .limit(1)
+            .fetch();
+    }
+
+    @Override
+    public List<DressRoom> findByModelAndProductTopAndProductBottomIsNull(Long modelId,
+        Long productTopId) {
+        return queryFactory.selectFrom(dressRoom)
+            .where(dressRoom.model.id.eq(modelId)
+                .and(dressRoom.productTop.id.eq(productTopId))
+                .and(dressRoom.productBottom.isNull()))
+            .limit(1)
+            .fetch();
+    }
+
+    @Override
+    public List<DressRoom> findByModelAndProductBottomAndProductTopIsNull(Long modelId,
+        Long productBottomId) {
+        return queryFactory.selectFrom(dressRoom)
+            .where(dressRoom.model.id.eq(modelId)
+                .and(dressRoom.productBottom.id.eq(productBottomId))
+                .and(dressRoom.productTop.isNull()))
+            .limit(1)
+            .fetch();
+    }
+
+    @Override
+    public Optional<DressRoom> findByMemberIdAndModelIdAndProductTopIdAndProductBottomId(
+        Long memberId,
+        Long modelId, Long productTopId, Long productBottomId) {
+        return Optional.ofNullable(queryFactory.selectFrom(dressRoom)
+            .where(dressRoom.member.id.eq(memberId)
+                .and(dressRoom.model.id.eq(modelId))
                 .and(productTopId == null ? dressRoom.productTop.isNull()
                     : dressRoom.productTop.id.eq(productTopId))
                 .and(productBottomId == null ? dressRoom.productBottom.isNull()
                     : dressRoom.productBottom.id.eq(productBottomId)))
-            .limit(1)
-            .fetch();
+            .fetchOne());
     }
 
     @Override

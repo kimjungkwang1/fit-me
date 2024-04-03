@@ -102,7 +102,7 @@ public class ProductService {
 
         return productRecommendations
             .stream()
-            .map(productRecommendation -> ProductResponse.from(productRecommendation.getProduct()))
+            .map(productRecommendation -> ProductResponse.from(productRecommendation.getRecommendation()))
             .toList();
     }
 
