@@ -95,7 +95,7 @@ const HeaderBar: React.FC = () => {
   } else {
     let additionalElement;
     const basicElement = (
-      <button onClick={() => navigate('/search')} key='basicElement'>
+      <button onClick={() => resetSearchConditions()} key='basicElement'>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
