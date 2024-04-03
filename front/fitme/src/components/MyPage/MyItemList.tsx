@@ -93,7 +93,7 @@ const MyItemList: React.FC<TabProps> = ({ tabName }) => {
           <div className='grid grid-flow-row-dense grid-cols-3'>
             {boughtlist &&
               boughtlist.map((item) => (
-                <div className='aspect-[4/7] flex justify-center p-1' key={item.id}>
+                <div className='flex justify-center p-1' key={item.id}>
                   <BoughtItem
                     id={item.id}
                     name={item.name}
@@ -121,7 +121,7 @@ const MyItemList: React.FC<TabProps> = ({ tabName }) => {
                     reviewCount={item.reviewCount}
                   />
                   <button
-                    className='w-full rounded-md mt-2 bg-bluegray text-white py-1 mt-3'
+                    className='w-full rounded-md mt-2 bg-bluegray text-white py-1'
                     onClick={() => {
                       api.delete(`/api/products/${item.id}/like`);
                       navigate(0);
