@@ -7,7 +7,7 @@ import site.chachacha.fitme.domain.order.entity.Order;
 
 public interface OrderRepositoryQueryDsl {
 
-    List<Order> findAllByMemberIdWithOrderProduct(Long memberId, Pageable pageable);
+    List<Order> findAllByMemberId(Long memberId, Pageable pageable);
 
     Optional<Order> findByIdAndMemberId(Long orderId, Long memberId);
 }
