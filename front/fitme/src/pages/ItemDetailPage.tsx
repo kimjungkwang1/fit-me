@@ -72,6 +72,7 @@ export default function ItemDetailPage() {
           <ItemDetailImg detailImages={item.detailImages} />
           <RecommendedItems id={item.id} />
           <ItemReview
+            name={item.name}
             id={item.id}
             reviewCount={item.reviewCount}
             reviewRating={item.reviewRating}

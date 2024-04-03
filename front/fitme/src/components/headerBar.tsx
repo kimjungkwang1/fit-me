@@ -39,7 +39,15 @@ const HeaderBar: React.FC = () => {
   }, [location.pathname]);
 
   const handleBack = () => {
-    navigate(-1);
+    const visitCount = sessionStorage.getItem('visitCount');
+
+    // 방문 횟수가 없거나 1이하라면, 즉, 이전 페이지가 없다면 루트로 이동합니다.
+    if (!visitCount || parseInt(visitCount, 10) <= 1) {
+      navigate('/');
+    } else {
+      // 이전 페이지가 있다면, 이전 페이지로 이동합니다.
+      navigate(-1);
+    }
   };
 
   const resetSearchConditions = () => {
