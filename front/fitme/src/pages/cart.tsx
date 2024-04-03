@@ -23,8 +23,8 @@ export default function Cart() {
   }, []);
   return (
     <>
-      <div className='flex justify-center'>
-        <div className=' h-screen'>
+      <div className='w-full flex justify-center'>
+        <div className='w-full h-screen'>
           <Button color='gray' className='mb-2 w-[100%]' onClick={() => navigate('/dressroom')}>
             드레스룸 가기
           </Button>
@@ -45,8 +45,10 @@ export default function Cart() {
             className='my-2 w-[100%]'
             onClick={() => {
               try {
-                dispatch(order());
-                navigate('/payment/complete');
+                if (items.length > 0) {
+                  dispatch(order());
+                  navigate('/payment/complete');
+                }
               } catch (error) {}
             }}
           >

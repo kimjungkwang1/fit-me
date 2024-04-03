@@ -16,7 +16,7 @@ export default function Dressroom() {
         <div className='flex text-sm'>
           <div
             className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-              tab === '피팅 해보기' ? 'bg-gray-300 ' : 'bg-white'
+              tab === '피팅 해보기' ? 'bg-white' : 'bg-gray-300 text-gray-100'
             }`}
             onClick={() => setTabs('피팅 해보기')}
           >
@@ -24,7 +24,7 @@ export default function Dressroom() {
           </div>
           <div
             className={`w-[50%] text-center shadow-sm mb-2 border p-2 ${
-              tab === '내 피팅 목록' ? 'bg-gray-300' : 'bg-white'
+              tab === '내 피팅 목록' ? 'bg-white' : 'bg-gray-300 text-gray-100'
             }`}
             onClick={() => setTabs('내 피팅 목록')}
           >
