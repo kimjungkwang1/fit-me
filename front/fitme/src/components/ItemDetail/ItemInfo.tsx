@@ -25,7 +25,6 @@ type TagType = {
 type ItemInfoProps = {
   id: number;
   mainImages: ImageType[];
-  likeCount: number;
   initialLiked: boolean;
   brand: BrandType;
   name: string;
@@ -36,7 +35,6 @@ type ItemInfoProps = {
 export default function ItemInfo({
   id,
   mainImages,
-  likeCount,
   initialLiked,
   brand,
   name,
@@ -70,7 +68,7 @@ export default function ItemInfo({
       <div>
         {/* 상품 이미지 */}
         <div className='flex w-full aspect-square bg-white justify-center relative'>
-          <Carousel theme={CarouselTheme} pauseOnHover slide={false}>
+          <Carousel theme={CarouselTheme}>
             {mainImages.map((img, index) => (
               <img
                 src={img.url}

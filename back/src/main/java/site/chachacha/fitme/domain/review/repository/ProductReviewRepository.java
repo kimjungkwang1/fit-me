@@ -10,7 +10,7 @@ import site.chachacha.fitme.domain.review.entity.ProductReview;
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long>,
     ProductReviewQueryDslRepository {
 
-    List<ProductReview> findAllByProductId(Long productId);
+    List<ProductReview> findAllByProductIdWithMember(Long productId);
 
     Optional<ProductReview> findByIdWithMember(Long reviewId);
 

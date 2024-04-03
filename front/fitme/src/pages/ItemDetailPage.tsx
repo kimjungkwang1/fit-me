@@ -63,7 +63,6 @@ export default function ItemDetailPage() {
           <ItemInfo
             id={item.id}
             mainImages={item.mainImages}
-            likeCount={item.likeCount}
             initialLiked={item.liked}
             brand={item.brand}
             name={item.name}
@@ -71,7 +70,7 @@ export default function ItemDetailPage() {
             tags={item.tags}
           />
           <ItemDetailImg detailImages={item.detailImages} />
-          <RecommendedItems />
+          <RecommendedItems id={item.id} />
           <ItemReview
             id={item.id}
             reviewCount={item.reviewCount}
