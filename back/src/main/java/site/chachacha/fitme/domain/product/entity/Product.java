@@ -73,7 +73,7 @@ public class Product extends BaseEntity {
 
     private int likeCount = 0;
 
-    private int monthlyPopularityScore = 0;
+    private double monthlyPopularityScore = 0.0;
 
 //    private int weeklyPopularityScore = 0;
 
