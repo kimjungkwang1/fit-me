@@ -31,7 +31,7 @@ public class ProductReviewService {
     private final ProductReviewRepository productReviewRepository;
     private final MemberRepository memberRepository;
     private final OrderProductRepository orderProductRepository;
-    private final String imgUrl = "./images/reviews/";
+    private final String imageUrl = "./images/reviews/";
 
     public List<ProductReviewResponseWithMemberNickname> getReviews(Long productId) {
         return productReviewRepository.findAllByProductIdWithMember(productId).stream()
@@ -93,8 +93,7 @@ public class ProductReviewService {
         ProductReview productReview = ProductReview.builder()
             .rating(request.getRating())
             .content(request.getContent())
-            // ToDo: 이미지 url 수정
-            .imageUrl("/products/" + productId + "/reviews/")
+            .imageUrl("/")
             .member(member)
             .product(product)
             .build();
@@ -105,17 +104,19 @@ public class ProductReviewService {
         // 사진 업로드
         // ./images/reviews에서 {member_id} 폴더를 만들고, review_id로 파일명을 변경하여 저장
         // 폴더 만들기
-        File file = new File(imgUrl + member.getId());
+        String finalUrl = imageUrl + member.getId() + "/";
+        File file = new File(finalUrl);
         if (!file.exists()) {
             file.mkdirs();
         }
 
+        finalUrl += newProductReview.getId() + "." + extension;
+
         // 파일 저장
-        multipartFile.transferTo(new File(
-            imgUrl + member.getId() + "/" + newProductReview.getId() + "." + extension));
+        multipartFile.transferTo(new File(finalUrl));
 
         // 저장
-        newProductReview.updateImageUrl(newProductReview.getId());
+        newProductReview.updateImageUrl(finalUrl);
         productReviewRepository.save(newProductReview);
         productRepository.save(product);
         productReviewRepository.save(productReview);
