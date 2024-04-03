@@ -277,7 +277,8 @@ public class DressRoomService {
             .doOnNext(bytes -> {
                 try {
                     if (bytes == null) {
-                        throw new InferenceFailureException("AI 서버 오류가 발생했습니다.");
+                        log.info("byte is null");
+                        throw new InferenceFailureException("이미지 저장 실패");
                     }
 
                     String filename = imgUrl;
