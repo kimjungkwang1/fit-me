@@ -29,6 +29,7 @@ import site.chachacha.fitme.domain.dressroom.repository.DressRoomRepository;
 import site.chachacha.fitme.domain.dressroom.repository.ModelRepository;
 import site.chachacha.fitme.domain.member.entity.Member;
 import site.chachacha.fitme.domain.member.repository.MemberRepository;
+import site.chachacha.fitme.domain.product.entity.Product;
 import site.chachacha.fitme.domain.product.repository.ProductRepository;
 
 @Slf4j
@@ -178,11 +179,15 @@ public class DressRoomService {
             }
             // 상의만 있는 드레스룸이 존재하지 않는 경우
             else {
+                // 상의를 조회
+                Product top = productRepository.findById(productTopId)
+                    .orElseThrow(() -> new GoneException("존재하지 않는 상의입니다."));
+
                 // 저장
                 DressRoom dressRoom = DressRoom.builder()
                     .model(model)
-                    .productTop(dressRooms.get(0).getProductTop())
-                    .productBottom(dressRooms.get(0).getProductBottom())
+                    .productTop(top)
+                    .productBottom(null)
                     .member(member)
                     .build();
 
@@ -215,11 +220,15 @@ public class DressRoomService {
             }
             // 하의만 있는 드레스룸이 존재하지 않는 경우
             else {
+                // 하의를 조회
+                Product bottom = productRepository.findById(productBottomId)
+                    .orElseThrow(() -> new GoneException("존재하지 않는 하의입니다."));
+
                 // 저장
                 DressRoom dressRoom = DressRoom.builder()
                     .model(model)
-                    .productTop(dressRooms.get(0).getProductTop())
-                    .productBottom(dressRooms.get(0).getProductBottom())
+                    .productTop(null)
+                    .productBottom(bottom)
                     .member(member)
                     .build();
 
