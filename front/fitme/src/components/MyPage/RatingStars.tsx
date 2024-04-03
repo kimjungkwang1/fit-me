@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 
-const Rating = () => {
+type RatingProps = {
+  onRatingChange: (rating: number) => void;
+};
+
+const Rating: React.FC<RatingProps> = ({ onRatingChange }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+
+  const handleRatingChange = (newRating: number) => {
+    setRating(newRating);
+    onRatingChange(newRating);
+  };
 
   return (
     <>
@@ -18,7 +27,7 @@ const Rating = () => {
             <button
               key={index}
               className={`h-16 w-16 text-4xl ${style}`}
-              onClick={() => setRating(index)}
+              onClick={() => handleRatingChange(index)}
               onMouseEnter={() => setHover(index)}
               onMouseLeave={() => setHover(rating)}
             >
