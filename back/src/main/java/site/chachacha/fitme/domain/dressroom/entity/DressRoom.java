@@ -42,7 +42,6 @@ public class DressRoom extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Product productBottom;
 
-    @NotNull
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = LAZY)
     private Member member;

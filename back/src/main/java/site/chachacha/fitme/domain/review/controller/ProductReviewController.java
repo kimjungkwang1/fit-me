@@ -2,6 +2,8 @@ package site.chachacha.fitme.domain.review.controller;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
+import java.io.IOException;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -25,8 +27,6 @@ import site.chachacha.fitme.domain.review.exception.DuplicatedReviewException;
 import site.chachacha.fitme.domain.review.exception.ImageUploadException;
 import site.chachacha.fitme.domain.review.service.ProductReviewService;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping(value = "/api/products")
 @RequiredArgsConstructor
@@ -46,11 +46,12 @@ public class ProductReviewController {
         @PathVariable(name = "productId") Long productId,
         @Validated @RequestPart(name = "productReviewRequest") ProductReviewRequest productReviewRequest,
         @RequestPart(value = "image") MultipartFile multipartFile)
-            throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException, IOException {
+        throws GoneException, DuplicatedReviewException, IllegalArgumentException, ImageUploadException, IOException {
         // 리뷰 등록
         productReviewService.createReview(memberId, productId, productReviewRequest, multipartFile);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/api/products/" + productId + "/reviews"))
+            .build();
     }
 
     // 리뷰 수정

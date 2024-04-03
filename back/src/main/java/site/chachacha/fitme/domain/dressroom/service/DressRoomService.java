@@ -59,7 +59,7 @@ public class DressRoomService {
     }
 
     // DressRoom 생성
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DressRoomResponse createDressRoom(Long memberId, Long modelId, Long productTopId,
         Long productBottomId) throws BadRequestException, GoneException, InferenceFailureException {
         // productTopId, productBottomId 둘 다 null이면 BadRequestException 발생
