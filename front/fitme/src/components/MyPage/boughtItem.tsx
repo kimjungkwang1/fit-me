@@ -23,18 +23,24 @@ type Review = {
 export default function BoughtItem({ memberId, id, name, url, brandName }: ItemType) {
   const navigate = useNavigate();
   const [reviewCheck, setReviewCheck] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 추가
 
   useEffect(() => {
+    setIsLoading(true); // 데이터 로딩 시작
     api.get(`/api/products/${id}/reviews`).then(({ data }) => {
       const foundReview = data.find((review: Review) => review.memberId === memberId);
-
       if (foundReview) {
         setReviewCheck(true);
       } else {
         setReviewCheck(false);
       }
+      setIsLoading(false); // 데이터 로딩 완료
     });
   }, [id, memberId]);
+
+  if (isLoading) {
+    return <div>로딩 중...</div>; // 로딩 중 UI 표시
+  }
 
   return (
     <>
