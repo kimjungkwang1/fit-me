@@ -13,6 +13,7 @@ import CartPage from './pages/cart';
 import DressroomPage from './pages/dressroom';
 import MyPage from './pages/MyPage/MyPageMain';
 import ReviewPage from './pages/MyPage/ReviewPage';
+import ReviewList from './components/ItemDetail/ReviewList';
 import FeedPage from './pages/FeedPage';
 import FeedDetailPage from './pages/FeedDetailPage';
 import MyFeedPage from './pages/MyFeedPage';
@@ -54,6 +55,7 @@ const App: React.FC = () => {
                 <Route path='/dressroom' element={<PrivateRoute element={<DressroomPage />} />} />
                 <Route path='/mypage' element={<PrivateRoute element={<MyPage />} />} />
                 <Route path='/review' element={<ReviewPage />} />
+                <Route path='/review/:item_id' element={<ReviewList />} />
                 <Route path='/feed' element={<FeedPage />} />
                 <Route path='/feed/:feed_no' element={<FeedDetailPage />} />
                 <Route path='/feed/myfeed' element={<FeedPage />} />

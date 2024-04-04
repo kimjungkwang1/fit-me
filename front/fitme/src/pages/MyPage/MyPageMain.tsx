@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Review from './ReviewPage';
 import Modify from './modify';
 import MyItemList from '../../components/MyPage/MyItemList';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -70,11 +69,12 @@ const Mypage: React.FC = () => {
   };
 
   const getContent = (tabName: string) => {
+    if (!apiData) return null;
     switch (tabName) {
       case 'bought':
-        return <MyItemList tabName={tabName} />;
+        return <MyItemList memberId={apiData.id} tabName={tabName} />;
       case 'fav':
-        return <MyItemList tabName={tabName} />;
+        return <MyItemList memberId={apiData.id} tabName={tabName} />;
       case 'modify':
         return <>{apiData && <Modify userInfo={apiData} />}</>;
     }
@@ -92,7 +92,7 @@ const Mypage: React.FC = () => {
             로그아웃
           </button>
         </div>
-        <nav className='flex mb-2'>
+        <nav className='flex mb-2 border-b-[1px] border-gray-300'>
           <button className={getButtonStyle('bought')} onClick={() => changeTab('bought')}>
             구매 목록
           </button>
