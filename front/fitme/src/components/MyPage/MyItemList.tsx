@@ -5,6 +5,7 @@ import Item from '../Common/Item';
 import { useNavigate } from 'react-router-dom';
 
 interface TabProps {
+  memberId: number;
   tabName: string;
 }
 
@@ -58,7 +59,7 @@ type ItemType2 = {
   reviewCount: number;
 };
 
-const MyItemList: React.FC<TabProps> = ({ tabName }) => {
+const MyItemList: React.FC<TabProps> = ({ memberId, tabName }) => {
   const [boughtlist, setBoughtList] = useState<ItemType1[]>();
   const [favlist, setFavList] = useState<ItemType2[]>();
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ const MyItemList: React.FC<TabProps> = ({ tabName }) => {
               boughtlist.map((item) => (
                 <div className='flex justify-center p-1' key={item.id}>
                   <BoughtItem
+                    memberId={memberId}
                     id={item.id}
                     name={item.name}
                     url={item.url}
