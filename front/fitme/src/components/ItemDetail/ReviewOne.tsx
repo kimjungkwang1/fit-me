@@ -12,6 +12,21 @@ type ReviewProps = {
 };
 
 const ReviewOne: React.FC<ReviewProps> = ({ review }) => {
+  // Date 객체로 변환
+  const createdAtDate = new Date(review.createdAt);
+
+  // Intl.DateTimeFormat을 사용하여 한국 시간대로 포맷팅
+  const koreanTime = new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Seoul',
+  }).format(createdAtDate);
+
   return (
     <>
       <div className='flex flex-col my-5'>
@@ -31,7 +46,7 @@ const ReviewOne: React.FC<ReviewProps> = ({ review }) => {
           />
           <div className='ml-4'>
             <div className='text-xs mb-2'>
-              <div className='text-xs mb-2'>{review.createdAt.toString().replace('T', ' ')}</div>
+              <div className='text-xs mb-2'>{koreanTime}</div>
             </div>
             <div className='text-sm'>{review.content}</div>
           </div>
