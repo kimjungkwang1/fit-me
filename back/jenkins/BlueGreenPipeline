@@ -1,0 +1,212 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = 'yuyeoul/fitme-back:latest'
+        NGINX_CONTAINER_NAME = 'nginxs'
+    }
+    stages {
+        stage('Find Unused Port') {
+            steps {
+                script {
+                    // A와 B 중 사용되지 않는 경우를 찾습니다.
+                    if (sh(script: "docker ps -a --format '{{.Names}}' | grep -q 'BackendDev_A'", returnStatus: true) != 0) {
+                        // A가 사용되지 않는 경우
+                        // 로그 출력
+                        echo "Let's go with A"
+
+                        env.isA = true
+                        env.UNUSED_PORT = '8080'
+                        env.NEW_NAME = 'BackendDev_A'
+                        env.OLD_NAME = 'BackendDev_B'
+                    }
+                    else {
+                        // B가 사용되지 않는 경우
+                        // 로그 출력
+                        echo "Let's go with B"
+
+                        env.isA = false
+                        env.UNUSED_PORT = '8081'
+                        env.NEW_NAME = 'BackendDev_B'
+                        env.OLD_NAME = 'BackendDev_A'
+                    }
+                }
+            }
+        }
+        stage('Run New Image') {
+            steps {
+                script {
+                    sh "docker run -d -v /home/fitme/images/reviews:/fitme/backend/images/reviews -p 0.0.0.0:${env.UNUSED_PORT}:8080 --name ${env.NEW_NAME} yuyeoul/fitme-back:latest > container_id.txt"
+
+                    // Get the ID of the container
+                    containerId = readFile('container_id.txt').trim()
+
+                    // 어플리케이션이 시작될 때까지 기다립니다.
+                    // 최대 30초 동안 기다립니다.
+                    def healthy = false
+                    for (int i = 0; i < 60; i++) {
+                        def logs = sh(script: "docker logs ${containerId}", returnStdout: true)
+                        def result = (logs != null && logs.contains('Started FitmeApplication in '))
+                        if (result) {
+                            healthy = true
+                            break
+                        }
+
+                        sleep 0.5
+                    }
+
+                    if (!healthy) {
+                        error("Failed to start the application.")
+                    }
+                }
+            }
+        }
+		stage('Backup BackendDev Log') {
+            steps {
+                script {
+                    // 현재 날짜 및 시간을 가져옵니다.
+                    String date = sh(returnStdout: true, script: "date '+%Y-%m-%d-%H:%M:%S'").trim()
+
+                    // 해당 날짜 및 시간으로 이름이 지정된 폴더를 생성합니다.
+                    sh "mkdir -p /home/ubuntu/back/${date}"
+
+                    try {
+                        // 컨테이너에서 로그 파일을 가져와서 생성한 폴더에 복사합니다.
+                        sh "docker cp ${env.OLD_NAME}:/fitme/backend/logs/spring.log /home/ubuntu/back/${date}"
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
+        // 새로 시작된 컨테이너의 ip 주소를 알아낸다.
+        stage('Get New Container IP') {
+            steps {
+                script {
+                    // 새로 시작된 컨테이너의 IP 주소를 알아냅니다.
+                    def containerIP = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${env.NEW_NAME}", returnStdout: true).trim()
+                    echo "Container IP: ${containerIP}"
+                    env.NEW_CONTAINER_IP = containerIP
+                }
+            }
+        }
+        // Nginx 컨테이너의 설정 파일을 복제한다.
+        stage('Edit Nginx Conf File') {
+            steps {
+                script {
+                    // Jenkins 컨테이너 내 설정 파일을 Nginx 컨테이너 내 설정로 복사
+                    if (env.isA) {
+                        sh "docker cp ../../nginx-conf/a ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site"
+                    }
+                    else {
+                        sh "docker cp ../../nginx-conf/b ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site"
+                    }
+                }
+
+                script {
+                    // ${env.NGINX_CONTAINER_NAME}://etc/nginx/sites-available/fit-me.site 파일에서 0.0.0.0을 env.NEW_CONTAINER_IP로 바꿔준다.
+                    sh "docker exec ${env.NGINX_CONTAINER_NAME} sed -i 's/0.0.0.0/${env.NEW_CONTAINER_IP}/g' /etc/nginx/sites-available/fit-me.site"
+
+                    echo "docker exec ${env.NGINX_CONTAINER_NAME} cat /etc/nginx/sites-available/fit-me.site"
+                }
+
+                script {
+                    // Nginx 설정 reload
+                    sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
+                }
+            }
+        }
+        stage('Stop Existing Container') {
+            steps {
+                script {
+                    try {
+                        sh "docker stop ${env.OLD_NAME}"
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
+        stage('Remove Existing Container') {
+            steps {
+                script {
+                    try {
+                        sh "docker rm ${env.OLD_NAME}"
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
+//        stage('Remove Existing Image') {
+//            steps {
+//                script {
+//
+//                    try {
+//                        sh "docker rmi \$(docker images 'yuyeoul/fitme-back' -a -q)"
+//                    }
+//                    catch (err) {
+//                        echo err.getMessage()
+//                    }
+//                }
+//            }
+//        }
+//        stage('Health Check and Update Nginx') {
+//            steps {
+//                script {
+//                    // 30초간 1초 간격으로 health check를 수행합니다.
+//                    def healthy = false
+//                    for (int i = 0; i < 30; i++) {
+//                        if (sh(script: "curl -f http://${env.FIXED_IP}:${env.UNUSED_PORT}/health", returnStatus: true) == 0) {
+//                            healthy = true
+//                            break
+//                        }
+//                        sleep 1
+//                    }
+//
+//                    // health check에 성공하면 Nginx 컨테이너를 업데이트하고 구버전 컨테이너를 삭제합니다.
+//                    if (healthy) {
+//                        // Nginx 컨테이너 내 설정 파일을 교체하고 reload합니다.
+//                        sh "docker cp your-nginx-config-file ${env.NGINX_CONTAINER_NAME}:/etc/nginx/sites-available/fit-me.site"
+//                        sh "docker exec ${env.NGINX_CONTAINER_NAME} nginx -s reload"
+//
+//                        // 구버전 Docker 컨테이너를 삭제합니다.
+//                        sh "docker stop app_container_old && docker rm app_container_old"
+//                    } else {
+//                        error("Health check failed.")
+//                    }
+//                }
+//            }
+//        }
+    }
+    post {
+        success {
+        	script {
+                dir('../fitmeGitlab') {
+
+                    def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                    def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                    mattermostSend (color: 'good',
+                    message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                    endpoint: 'https://meeting.ssafy.com/hooks/zpo35zr5n78kjbfu4jtrzih3qa',
+                    channel: 'A306-A')
+        	    }
+            }
+        }
+        failure {
+        	script {
+        	    dir('../fitmeGitlab') {
+
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend (color: 'danger',
+                message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                endpoint: 'https://meeting.ssafy.com/hooks/zpo35zr5n78kjbfu4jtrzih3qa',
+                channel: 'A306-A')
+        	    }
+            }
+        }
+    }
+}
