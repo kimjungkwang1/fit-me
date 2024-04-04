@@ -32,7 +32,7 @@
     
 2. Dump
     
-    [Dump.sql](.3.\ /dump.sql)
+    [Dump.sql](.3. /dump.sql)
     
 
 # 4. 로컬 환경 세팅
