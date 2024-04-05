@@ -32,6 +32,39 @@
 
 # 📱 페이지 목록
 
+## 메인, 로그인 페이지
+
+<img src="/uploads/6aed45adf55dd3175bdf43061609f3a5/메인페이지.png" width="30%" />
+<img src="/uploads/ba0e603a0f996e46762242295d8288b4/로그인페이지.png" width="30%" />
+
+## 상품상세페이지
+
+<img src="/uploads/7228907278c9df023d23830115702417/상품상세페이지.png" width="30%" />
+<img src="/uploads/c3feb96b3556e9c37b22aa5eb6e0a6ee/리뷰_함께보면좋은상품페이지.png" width="30%" />
+<img src="/uploads/3a9837ceaa206abcf9edbc3408fe5c32/옵션페이지.png" width="30%" />
+
+## 카테고리, 검색 페이지
+
+<img src="/uploads/07f6719e740a6697c0b3d076c147e2ad/카테고리페이지.png" width="30%" />
+<img src="/uploads/77dc651634475e349d178f373bb3bbee/검색페이지.png" width="30%" />
+<img src="/uploads/e05b44b24bc9cff7c41417b6895e1b28/검색필터_페이지.png" width="30%" />
+
+## 장바구니, 드레스룸 페이지
+
+<img src="/uploads/27dfe851dbdf9867bc015622bf99d1e9/장바구니페이지.png" width="30%" />
+<img src="/uploads/8bc0d060144be545437b1e7b35219dc1/피팅해보기페이지.gif" width="30%" />
+<img src="/uploads/9aaef05cc895fc5c206bf504ab7dc668/내피팅목록페이지.png" width="30%" />
+
+## 마이페이지
+
+<img src="/uploads/7eb542bae715a2e00fbaa331401e3496/구매목록페이지.png" width="30%" />
+<img src="/uploads/e7dfa25342437422fc54879d4ccc63b7/좋아요페이지.png" width="30%" />
+<img src="/uploads/061efd478b71884e9d38889e64cb3c81/회원정보수정페이지.png" width="30%" />
+
+## 피드페이지
+
+<img src="/uploads/7f51fdc5624b3e3799cca6684c5fe3f7/피드페이지.png" width="30%" />
+
 <br />
 
 # ✔ 주요 기술
