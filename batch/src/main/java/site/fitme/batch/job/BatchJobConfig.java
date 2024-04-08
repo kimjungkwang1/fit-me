@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.LocalDate;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-import site.fitme.batch.entity.product.Product;
+import site.fitme.batch.domain.product.entity.Product;
 import site.fitme.batch.repository.OrderProductRepository;
 import site.fitme.batch.repository.ProductLikeRepository;
 

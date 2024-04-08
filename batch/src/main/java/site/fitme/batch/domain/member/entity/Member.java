@@ -1,4 +1,4 @@
-package site.fitme.batch.entity.memebr;
+package site.fitme.batch.domain.member.entity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;

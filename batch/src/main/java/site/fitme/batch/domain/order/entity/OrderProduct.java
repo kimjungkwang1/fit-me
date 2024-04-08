@@ -1,4 +1,4 @@
-package site.fitme.batch.entity.order;
+package site.fitme.batch.domain.order.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -14,8 +14,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.fitme.batch.entity.memebr.Member;
-import site.fitme.batch.entity.product.Product;
+import site.fitme.batch.domain.member.entity.Member;
+import site.fitme.batch.domain.product.entity.Product;
 import site.fitme.batch.entity.common.BaseEntity;
 
 @Getter
