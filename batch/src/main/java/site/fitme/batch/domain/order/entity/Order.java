@@ -1,4 +1,4 @@
-package site.fitme.batch.entity.order;
+package site.fitme.batch.domain.order.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -16,11 +16,10 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.fitme.batch.entity.common.BaseEntity;
-import site.fitme.batch.entity.memebr.Member;
+import site.fitme.batch.domain.member.entity.Member;
 
 @Getter
 @Entity
