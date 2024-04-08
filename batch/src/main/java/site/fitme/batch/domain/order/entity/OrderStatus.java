@@ -1,4 +1,4 @@
-package site.fitme.batch.entity.order;
+package site.fitme.batch.domain.order.entity;
 
 public enum     OrderStatus {
     ORDER, CANCEL

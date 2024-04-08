@@ -1,4 +1,4 @@
-package site.chachacha.fitme.domain.product.scheduler;
+package site.fitme.batch.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,27 +17,28 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import site.chachacha.fitme.domain.like.repository.ProductLikeRepository;
-import site.chachacha.fitme.domain.order.repository.OrderProductRepository;
-import site.chachacha.fitme.domain.product.dto.ProductRankingResponse;
-import site.chachacha.fitme.domain.product.entity.Product;
-import site.chachacha.fitme.domain.product.repository.ProductRepository;
+import site.fitme.batch.domain.product.dto.ProductRankingResponse;
+import site.fitme.batch.domain.product.entity.Product;
+import site.fitme.batch.repository.OrderProductRepository;
+import site.fitme.batch.repository.ProductLikeRepository;
+import site.fitme.batch.repository.ProductRepository;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Component
-public class ProductScheduler {
+public class RankingScheduler {
 
     private static final String RANKING_NAME = "product:rankings";
     private static final String RANKING_UPDATE_TIME_NAME = "updateTime";
     private static final int RANKING_SIZE = 200;
+
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
     private final ProductLikeRepository productLikeRepository;
     private final OrderProductRepository orderProductRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
     @Scheduled(fixedRate = 1800000) // 30분마다 실행
     public void updateRankings() {
 
@@ -97,4 +98,3 @@ public class ProductScheduler {
             .collect(Collectors.toList());
     }
 }
-

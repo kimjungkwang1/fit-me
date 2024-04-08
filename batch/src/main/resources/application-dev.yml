@@ -11,3 +11,8 @@ spring:
         url: jdbc:mysql://${MY_SQL.HOST}:${MY_SQL.PORT}/${MY_SQL.DATABASE}?useSSL=false&serverTimezone=Asia/Seoul
         username: ${DB.USERNAME}
         password: ${DB.PASSWORD}
+
+    redis:
+        host: ${REDIS.HOST}
+        port: 6379
+        password: ${REDIS.PASSWORD}

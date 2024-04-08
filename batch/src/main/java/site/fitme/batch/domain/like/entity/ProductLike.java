@@ -1,4 +1,4 @@
-package site.fitme.batch.entity.like;
+package site.fitme.batch.domain.like.entity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -13,8 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.fitme.batch.entity.common.BaseEntity;
-import site.fitme.batch.entity.memebr.Member;
-import site.fitme.batch.entity.product.Product;
+import site.fitme.batch.domain.member.entity.Member;
+import site.fitme.batch.domain.product.entity.Product;
 
 @Getter
 @Entity
