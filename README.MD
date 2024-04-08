@@ -14,7 +14,7 @@
 
 <br />
 
-#  **📘** 프로젝트 진행 기간
+#  📘 프로젝트 진행 기간
 
 2024.02 ~ 202.04 (6주)
 
@@ -29,6 +29,49 @@
 
 <br />
 
+# 📚 목차
+1. [✔ 주요 기술](#-주요-기술)
+   1. [피팅 AI로 미리 입어보는 드레스룸 기능](#피팅-AI로-미리-입어보는-드레스룸-기능)
+   2. [메타 데이터를 활용한 유사 상품 추천(Content-based Filtering)](#메타-데이터를-활용한-유사-상품-추천content-based-filtering)
+   3. [Batch를 활용한 실시간 랭킹 / 인기도 계산](#batch를-활용한-실시간-랭킹--인기도-계산)
+2. [📱 페이지 목록](#-페이지-목록)
+3. [🖥️ 인프라](#-인프라)
+   1. [시스템 아키텍처](#시스템-아키텍처)
+   2. [블루-그린방식을 사용한 무중단 배포](#블루-그린방식을-사용한-무중단-배포)
+4. [🛠️ 기술 스택](#-기술-스택)
+5. [👪 팀원](#-팀원)
+
+# ✔ 주요 기술
+
+## 피팅 AI로 미리 입어보는 드레스룸 기능
+
+<p align="center">
+  <img src="/exec/resources/ai-fitting.png">
+</p>
+
+* openpose를 통한 모델 전처리
+* COTTON-size-does-matter를 사용한 옷 전처리 및 합성
+* 8300여개의 데이터를 통한 하의 학습 weights 생성 및 사용
+
+## 메타 데이터를 활용한 유사 상품 추천(Content-based Filtering)
+
+<p align="center">
+    <img src="/exec/resources/코사인유사도.png">
+</p>
+
+* 상품의 태그를 활용한 코사인 유사도 계산
+<p align="center">
+    <img src="/exec/resources/상품추천.png">
+</p>
+
+* 함께 보면 좋은 상품 추천
+
+## Batch를 활용한 실시간 랭킹 / 인기도 계산
+<p align="center">
+    <img src="/exec/resources/실시간랭킹.png">
+</p>
+
+<br />
 
 # 📱 페이지 목록
 
@@ -64,38 +107,6 @@
 ## 피드페이지
 
 <img src="/exec/resources/피드페이지.png" width="30%" />
-
-<br />
-
-# ✔ 주요 기술
-
-## 피팅 AI로 미리 입어보는 드레스룸 기능
-
-<p align="center">
-  <img src="/exec/resources/ai-fitting.png">
-</p>
-
-* openpose를 통한 모델 전처리
-* COTTON-size-does-matter를 사용한 옷 전처리 및 합성
-* 8300여개의 데이터를 통한 하의 학습 weights 생성 및 사용
-
-## 메타 데이터를 활용한 유사 상품 추천(Content-based Filtering)
-
-<p align="center">
-    <img src="/exec/resources/코사인유사도.png">
-</p>
-
-* 상품의 태그를 활용한 코사인 유사도 계산
-<p align="center">
-    <img src="/exec/resources/상품추천.png">
-</p>
-
-* 함께 보면 좋은 상품 추천
-
-## Batch를 활용한 실시간 랭킹 / 인기도 계산
-<p align="center">
-    <img src="/exec/resources/실시간랭킹.png">
-</p>
 
 <br />
 
