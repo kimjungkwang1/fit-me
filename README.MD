@@ -1,6 +1,6 @@
 
 <div style="text-align:center;">
-    <img src="./exec/resources/logo.png" width="50%" />
+    <img src="/exec/resources/logo.png" width="50%" />
 </div>
 
 <br />
@@ -34,50 +34,68 @@
 
 ## 메인, 로그인 페이지
 
-<img src="/uploads/6aed45adf55dd3175bdf43061609f3a5/메인페이지.png" width="30%" />
-<img src="/uploads/ba0e603a0f996e46762242295d8288b4/로그인페이지.png" width="30%" />
+<img src="/exec/resources/메인페이지.png" width="30%" />
+<img src="/exec/resources/로그인페이지.png" width="30%" />
 
 ## 상품상세페이지
 
-<img src="/uploads/7228907278c9df023d23830115702417/상품상세페이지.png" width="30%" />
-<img src="/uploads/c3feb96b3556e9c37b22aa5eb6e0a6ee/리뷰_함께보면좋은상품페이지.png" width="30%" />
-<img src="/uploads/3a9837ceaa206abcf9edbc3408fe5c32/옵션페이지.png" width="30%" />
+<img src="/exec/resources/상품상세페이지.png" width="30%" />
+<img src="/exec/resources/리뷰_함께보면좋은상품페이지.png" width="30%" />
+<img src="/exec/resources/옵션페이지.png" width="30%" />
 
 ## 카테고리, 검색 페이지
 
-<img src="/uploads/07f6719e740a6697c0b3d076c147e2ad/카테고리페이지.png" width="30%" />
-<img src="/uploads/77dc651634475e349d178f373bb3bbee/검색페이지.png" width="30%" />
-<img src="/uploads/e05b44b24bc9cff7c41417b6895e1b28/검색필터_페이지.png" width="30%" />
+<img src="/exec/resources/카테고리페이지.png" width="30%" />
+<img src="/exec/resources/검색페이지.png" width="30%" />
+<img src="/exec/resources/검색필터_페이지.png" width="30%" />
 
 ## 장바구니, 드레스룸 페이지
 
-<img src="/uploads/27dfe851dbdf9867bc015622bf99d1e9/장바구니페이지.png" width="30%" />
-<img src="/uploads/8bc0d060144be545437b1e7b35219dc1/피팅해보기페이지.gif" width="30%" />
-<img src="/uploads/9aaef05cc895fc5c206bf504ab7dc668/내피팅목록페이지.png" width="30%" />
+<img src="/exec/resources/장바구니페이지.png" width="30%" />
+<img src="/exec/resources/피팅해보기페이지.gif" width="30%" />
+<img src="/exec/resources/내피팅목록페이지.png" width="30%" />
 
 ## 마이페이지
 
-<img src="/uploads/7eb542bae715a2e00fbaa331401e3496/구매목록페이지.png" width="30%" />
-<img src="/uploads/e7dfa25342437422fc54879d4ccc63b7/좋아요페이지.png" width="30%" />
-<img src="/uploads/061efd478b71884e9d38889e64cb3c81/회원정보수정페이지.png" width="30%" />
+<img src="/exec/resources/구매목록페이지.png" width="30%" />
+<img src="/exec/resources/좋아요페이지.png" width="30%" />
+<img src="/exec/resources/회원정보수정페이지.png" width="30%" />
 
 ## 피드페이지
 
-<img src="/uploads/7f51fdc5624b3e3799cca6684c5fe3f7/피드페이지.png" width="30%" />
+<img src="/exec/resources/피드페이지.png" width="30%" />
 
 <br />
 
 # ✔ 주요 기술
 
-## AI 피팅
+## 피팅 AI로 미리 입어보는 드레스룸 기능
 
 <p align="center">
-  <img src="./exec/resources/ai-fitting.png">
+  <img src="/exec/resources/ai-fitting.png">
 </p>
 
 * openpose를 통한 모델 전처리
 * COTTON-size-does-matter를 사용한 옷 전처리 및 합성
 * 8300여개의 데이터를 통한 하의 학습 weights 생성 및 사용
+
+## 메타 데이터를 활용한 유사 상품 추천(Content-based Filtering)
+
+<p align="center">
+    <img src="/exec/resources/코사인유사도.png">
+</p>
+
+* 상품의 태그를 활용한 코사인 유사도 계산
+<p align="center">
+    <img src="/exec/resources/상품추천.png">
+</p>
+
+* 함께 보면 좋은 상품 추천
+
+## Batch를 활용한 실시간 랭킹 / 인기도 계산
+<p align="center">
+    <img src="/exec/resources/실시간랭킹.png">
+</p>
 
 <br />
 
@@ -85,7 +103,7 @@
 
 ## 시스템 아키텍처
 <p align="center">
-  <img src="./exec/resources/infra.png">
+  <img src="/exec/resources/infra.png">
 </p>
 
 - 자체 이미지 서버 직접 구축
@@ -93,7 +111,7 @@
 
 ## 블루-그린방식을 사용한 무중단 배포
 <p align="center">
-  <img src="./exec/resources/blue-green.png">
+  <img src="/exec/resources/blue-green.png">
 </p>
 
 <br />
